@@ -30,20 +30,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class User implements UserDetails{
-    // Enum
-    public enum Role {
-        USER,
-        ADMIN
-    }
-
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long personId;
+    private long userId;
 
-    @Size(min = 6, max = 10)
+    @Size(min = 3, max = 12)
     @NotNull
-    private String login;
+    private String username;
 
     @NotNull
     private String password;
@@ -51,33 +45,35 @@ public class User implements UserDetails{
     @NotNull
     private String name;
 
+    @NotNull
     private String firstSurname;
 
     private String secondSurname;
 
     @NotNull
-    private String personalEmail;
+    private String email;
+
+    @NotNull
+    private String phone;
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    private String imageUrl;
+    private boolean theme;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date terminationDate;
+    private List<Team> teams;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    // Authentication
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(this.username));
     }
 
     @Override
-    public String getUsername() {
-        return login;
+    public @NotNull String getUsername() {
+        return username;
     }
 
     @Override

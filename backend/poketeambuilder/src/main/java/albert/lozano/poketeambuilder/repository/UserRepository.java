@@ -23,5 +23,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
 
     // Custom methods
-    public Optional<UserOutputDTO> findByLogin(String login);
+    public Optional<UserOutputDTO> findByUsername(String username);
 }

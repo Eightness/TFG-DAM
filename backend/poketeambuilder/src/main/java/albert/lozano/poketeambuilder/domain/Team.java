@@ -5,5 +5,48 @@
 
 package albert.lozano.poketeambuilder.domain;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Team class. Defines a team.
+ */
+@Entity
+@Table(name = "Team")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Team {
+    // Attributes
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long teamId;
+
+    @NotNull
+    private String name;
+
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    private Date createdDate;
+
+    private boolean isPublic;
+
+    private int numLikes;
+
+    private int generation;
+
+    @NotNull
+    private List<Pokemon> pokemon;
+
+    @NotNull
+    private User user;
+
+    @NotNull
+    private List<Comment> comments;
 }

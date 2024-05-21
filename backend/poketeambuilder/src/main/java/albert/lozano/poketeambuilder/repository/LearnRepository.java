@@ -5,5 +5,5 @@
 
 package albert.lozano.poketeambuilder.repository;
 
-public class LearnRepository {
+public interface LearnRepository {
 }

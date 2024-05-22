@@ -70,4 +70,9 @@ public class Pokemon {
     private int evSpeed;
 
     private int evHealth;
+
+    // Methods
+    public boolean getShiny() {
+        return this.isShiny;
+    }
 }

@@ -49,4 +49,8 @@ public class Team {
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
+
+    public boolean getPublic() {
+        return this.isPublic;
+    }
 }

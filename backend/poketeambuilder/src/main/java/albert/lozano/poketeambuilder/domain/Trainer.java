@@ -69,4 +69,8 @@ public class Trainer {
 
     @OneToMany(mappedBy = "trainer")
     private List<Team> teams;
+
+    public boolean getTheme() {
+        return this.theme;
+    }
 }

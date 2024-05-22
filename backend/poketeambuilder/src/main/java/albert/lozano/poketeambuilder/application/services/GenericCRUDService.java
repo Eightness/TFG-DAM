@@ -13,7 +13,7 @@ import java.util.List;
  * @param <OutputDTO> Output class
  * @param <PK> Primary key
  */
-public interface GenericService<InputDTO, OutputDTO, PK> {
+public interface GenericCRUDService<InputDTO, OutputDTO, PK> {
     // Get methods
     OutputDTO getEntityById(PK id);
     List<OutputDTO> getEntityByIds(List<PK> ids);

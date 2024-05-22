@@ -8,16 +8,14 @@ package albert.lozano.poketeambuilder.repository;
 import albert.lozano.poketeambuilder.domain.Trainer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
 /**
- * UserRepository interface. Extends from JpaRepository and contains all methods related to User's persistence.
+ * TrainerRepository interface. Extends from JpaRepository and contains all methods related to User's persistence.
  */
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     /*
     Thanks to extending from JpaRepository, we can persist and read data (Access to CRUD methods).
-    <User, Long>
-        User -> Defines entity to persist.
+    <Trainer, Long>
+        Trainer -> Defines entity to persist.
         Long -> Defines entity's primary key type.
      */
 

@@ -42,11 +42,11 @@ public class Team {
     private int generation;
 
     @NotNull
+    @OneToMany(mappedBy = "team")
     private List<Pokemon> pokemon;
 
     @NotNull
-    private User user;
-
-    @NotNull
-    private List<Comment> comments;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private Trainer trainer;
 }

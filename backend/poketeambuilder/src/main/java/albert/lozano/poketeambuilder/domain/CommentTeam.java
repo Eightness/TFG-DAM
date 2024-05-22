@@ -6,25 +6,29 @@
 package albert.lozano.poketeambuilder.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Move class. Defines a move.
+ * CommentTeam class. Serves as a junction table between Comment and Team.
  */
 @Entity
-@Table(name = "Move")
+@Table(name = "CommentTeam")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Move {
+public class CommentTeam {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long moveId;
+    private long commentTeamId;
 
-    @NotNull
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 }

@@ -5,5 +5,5 @@
 
 package albert.lozano.poketeambuilder.application.implementation;
 
-public class UserServiceImpl {
+public class TrainerServiceImpl {
 }

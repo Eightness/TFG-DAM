@@ -41,7 +41,10 @@ public class Pokemon {
 
     private boolean isShiny;
 
-    private List<Move> moves;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     // Statistics
     private int ivDef;

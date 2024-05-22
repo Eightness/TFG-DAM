@@ -12,11 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -24,75 +20,53 @@ import java.util.List;
  * User class. Defines a user.
  */
 @Entity
-@Table(name = "User")
+@Table(name = "Trainer")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User implements UserDetails{
+public class Trainer {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
+    private long trainerId;
 
     @Size(min = 3, max = 12)
     @NotNull
+    @Column
     private String username;
 
     @NotNull
+    @Column
     private String password;
 
     @NotNull
+    @Column
     private String name;
 
     @NotNull
+    @Column
     private String firstSurname;
 
+    @Column
     private String secondSurname;
 
     @NotNull
+    @Column
     private String email;
 
     @NotNull
+    @Column
     private String phone;
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
+    @Column
     private Date createdDate;
 
+    @Column
     private boolean theme;
 
+    @OneToMany(mappedBy = "trainer")
     private List<Team> teams;
-
-    // Authentication
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.username));
-    }
-
-    @Override
-    public @NotNull String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

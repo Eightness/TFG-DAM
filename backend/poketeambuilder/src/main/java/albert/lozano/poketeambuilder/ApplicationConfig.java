@@ -5,7 +5,7 @@
 
 package albert.lozano.poketeambuilder;
 
-import albert.lozano.poketeambuilder.repository.UserRepository;
+import albert.lozano.poketeambuilder.repository.TrainerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class ApplicationConfig {
     // Attributes
-    private final UserRepository userRepository;
+    private final TrainerRepository trainerRepository;
 
     // Beans
 

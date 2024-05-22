@@ -35,8 +35,7 @@ public class Comment {
     private String body;
 
     @NotNull
-    private Team team;
-
-    @NotNull
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private Trainer trainer;
 }

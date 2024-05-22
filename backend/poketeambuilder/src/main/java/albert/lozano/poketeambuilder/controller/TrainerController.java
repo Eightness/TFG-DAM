@@ -5,5 +5,5 @@
 
 package albert.lozano.poketeambuilder.controller;
 
-public class UserController {
+public class TrainerController {
 }

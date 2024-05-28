@@ -18,7 +18,7 @@ class AppTheme {
           onSecondary: Constants.grey,
 
           tertiary: Constants.brown,
-          tertiaryContainer: Constants.darkBrown,
+          tertiaryContainer: Constants.red,
           onTertiary: Constants.grey,
 
           error: Constants.darkRed,

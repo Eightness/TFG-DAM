@@ -11,46 +11,54 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('images/app_logo.png', height: 300.0, width: 300.0),
+        title: Image.asset(
+          'assets/images/app_logo.png',
+          height: 125.0,
+          width: 300.0,
+        ),
         centerTitle: true,
         actions: [
           PopupMenuButton<MenuItem>(
-            itemBuilder: (context) => [
-              ...MenuItems.itemsList.map(buildItem).toList(),
-            ],
+            itemBuilder: (context) => MenuItems.itemsList.map(buildItem).toList(),
             icon: const Icon(Icons.person, color: Colors.white, size: 40),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 5),
           const Text(
             'Username',
             style: TextStyle(
-                color: Colors.white,
-                fontSize: 25
+              color: Colors.white,
+              fontSize: 20,
             ),
           ),
-          const SizedBox(width: 100),
+          const SizedBox(width: 50),
         ],
         backgroundColor: Constants.darkBlue,
         toolbarHeight: 150.0,
-        shadowColor: Constants.black
+        shadowColor: Constants.black,
       ),
-      body: const Center(
-        child: Text(
-          'Body',
-          style: TextStyle(fontSize: 24),
-        )
+      body: Center(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Constants.blue, Constants.darkBlue],
+              stops: [0.0, 1.0],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  PopupMenuItem<MenuItem> buildItem(MenuItem item) => PopupMenuItem(
+  PopupMenuItem<MenuItem> buildItem(MenuItem item) => PopupMenuItem<MenuItem>(
+    value: item,
     child: Row(
       children: [
         Icon(item.icon, color: Colors.black, size: 20),
         const SizedBox(width: 12),
         Text(item.text),
       ],
-    )
+    ),
   );
 }
-

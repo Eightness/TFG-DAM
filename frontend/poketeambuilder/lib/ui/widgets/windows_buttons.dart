@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 
 var buttonColors = WindowButtonColors(
-  iconNormal: Constants.blue,
-  mouseOver: Constants.blue,
-  mouseDown: Constants.red,
-  iconMouseOver: Constants.darkBlue,
-  iconMouseDown: Constants.grey,
+  iconNormal: Constants.white,
+  mouseOver: Constants.darkRed,
+  mouseDown: Constants.blue,
+  iconMouseOver: Constants.grey,
+  iconMouseDown: Constants.darkBlue,
 );
 
 class WindowButtons extends StatelessWidget {

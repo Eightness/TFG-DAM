@@ -5,13 +5,13 @@ class AppTheme {
 
   ThemeData generateTheme() {
     return ThemeData(
-      primaryColor: Constants.blue,
+      primaryColor: Constants.red,
       colorScheme: const ColorScheme(
           brightness: Brightness.light,
 
           primary: Constants.blue,
-          primaryContainer: Constants.darkBlue,
-          onPrimary: Constants.darkBrown,
+          primaryContainer: Constants.white,
+          onPrimary: Constants.white,
 
           secondary: Constants.red,
           secondaryContainer: Constants.darkRed,
@@ -24,8 +24,8 @@ class AppTheme {
           error: Constants.darkRed,
           onError: Constants.grey,
 
-          background: Constants.blue,
-          onBackground: Constants.grey,
+          background: Constants.grey,
+          onBackground: Constants.darkBrown,
 
           surface: Constants.grey,
           onSurface: Constants.darkBrown,

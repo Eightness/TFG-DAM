@@ -1,16 +1,17 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:poketeambuilder/ui/screens/home.dart';
 import 'package:poketeambuilder/config/theme/app_theme.dart';
+import 'package:poketeambuilder/ui/widgets/app_structure.dart';
+import 'package:poketeambuilder/ui/widgets/team_builder.dart';
 import 'package:poketeambuilder/ui/widgets/windows_buttons.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 
 void main() {
   runApp(const MyApp());
   doWhenWindowReady(() {
-    var initialSize = const Size(1280, 720);
+    var initialSize = const Size(1920, 1080);
     appWindow.size = initialSize;
-    appWindow.minSize = const Size(600, 600);
+    appWindow.minSize = const Size(850, 850);
   });
 }
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       home: Column(
         children: [
           Container(
-            color: Constants.darkBlue,
+            color: Constants.red,
             child: WindowTitleBarBox(
               child: MoveWindow(
                 child: const Row(
@@ -38,8 +39,20 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          const Expanded(
-            child: Home(),
+          Expanded(
+            child: AppStructure(
+              teamContent: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Constants.blue, Constants.darkBlue],
+                  ),
+                ),
+                child: TeamBuilder(),
+              ),
+              communityContent: Container(),
+            ),
           ),
         ],
       ),

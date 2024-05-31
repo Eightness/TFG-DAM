@@ -6,8 +6,8 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import '../../utils/constants.dart';
 import '../widgets/windows_buttons.dart';
 
-class Profile extends StatelessWidget {
-  Profile({Key? key}) : super(key: key);
+class Settings extends StatelessWidget {
+  Settings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +71,8 @@ class Profile extends StatelessWidget {
                   tabs: [
                     Tab(
                       height: 75,
-                      text: ' P R O F I L E ',
-                      icon: Icon(Icons.person),
+                      text: ' S E T T I N G S ',
+                      icon: Icon(Icons.settings),
                     ),
                   ],
                 ),
@@ -112,7 +112,7 @@ class Profile extends StatelessWidget {
                                       child: Column(
                                         children: [
                                           Text(
-                                            'Username',
+                                            'Settings',
                                             style: TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.bold,

@@ -1,9 +1,10 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:poketeambuilder/config/theme/app_theme.dart';
+import 'package:poketeambuilder/ui/screens/community.dart';
+import 'package:poketeambuilder/ui/screens/team.dart';
+import 'package:poketeambuilder/ui/screens/profile.dart';
 import 'package:poketeambuilder/ui/widgets/app_structure.dart';
-import 'package:poketeambuilder/ui/widgets/community_widget.dart';
-import 'package:poketeambuilder/ui/widgets/team_builder.dart';
 import 'package:poketeambuilder/ui/widgets/windows_buttons.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
                     colors: [Constants.blue, Constants.darkBlue],
                   ),
                 ),
-                child: TeamBuilder(),
+                child: Team(),
               ),
               communityContent: Container(
                 decoration: BoxDecoration(

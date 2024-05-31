@@ -8,7 +8,7 @@ class PokemonBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(25.0),
+      padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -21,7 +21,7 @@ class PokemonBuilder extends StatelessWidget {
         children: [
           // First Column
           SizedBox(
-            width: 200.0,
+            width: 125.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -34,9 +34,8 @@ class PokemonBuilder extends StatelessWidget {
                   hint: const Text('Pokémon'),
                 ),
                 const SizedBox(height: 8.0),
-                // Utiliza un Image.asset para mostrar la imagen del sprite
                 Image.asset(
-                  'assets/images/pokeball.png', // Ruta de la imagen
+                  'assets/images/pokeball.png',
                   height: 110.0,
                   width: 110.0,
                 ),
@@ -60,10 +59,9 @@ class PokemonBuilder extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12.0),
           // Second Column
           SizedBox(
-            width: 200.0, // Ancho fijo para la segunda columna
+            width: 125.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -87,25 +85,44 @@ class PokemonBuilder extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12.0),
           // Third Column
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('EVs'),
-              for (int i = 0; i < 6; i++)
-                _buildStatInput('', 252), // Sin etiqueta para los EVs
-            ],
-          ),
-          const SizedBox(width: 12.0),
-          // Fourth Column
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('IVs'),
-              for (int i = 0; i < 6; i++)
-                _buildStatInput('', 31), // Sin etiqueta para los IVs
-            ],
+            children: List.generate(6, (index) {
+              String statLabel;
+              switch (index) {
+                case 0:
+                  statLabel = 'Attack';
+                  break;
+                case 1:
+                  statLabel = 'Special Attack';
+                  break;
+                case 2:
+                  statLabel = 'Defense';
+                  break;
+                case 3:
+                  statLabel = 'Special Defense';
+                  break;
+                case 4:
+                  statLabel = 'Speed';
+                  break;
+                case 5:
+                default:
+                  statLabel = 'Health Points';
+                  break;
+              }
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: [
+                    SizedBox(width: 60.0, child: Text(statLabel)),
+                    const SizedBox(width: 8.0),
+                    SizedBox(width: 60.0, child: _buildStatInput('EV', 252)),
+                    const SizedBox(width: 8.0),
+                    SizedBox(width: 60.0, child: _buildStatInput('IV', 31)),
+                  ],
+                ),
+              );
+            }),
           ),
         ],
       ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:poketeambuilder/config/theme/app_theme.dart';
 import 'package:poketeambuilder/ui/screens/community.dart';
 import 'package:poketeambuilder/ui/screens/team.dart';
-import 'package:poketeambuilder/ui/screens/profile.dart';
 import 'package:poketeambuilder/ui/widgets/app_structure.dart';
 import 'package:poketeambuilder/ui/widgets/windows_buttons.dart';
 import 'package:poketeambuilder/utils/constants.dart';

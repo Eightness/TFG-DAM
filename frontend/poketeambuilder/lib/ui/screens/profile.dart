@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:poketeambuilder/ui/widgets/menu_item.dart';
-import 'package:poketeambuilder/ui/widgets/menu_items.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 import '../../utils/constants.dart';
@@ -37,32 +35,6 @@ class Profile extends StatelessWidget {
                   width: 300.0,
                 ),
                 centerTitle: true,
-                actions: [
-                  PopupMenuButton<MenuItem>(
-                    itemBuilder: (context) => MenuItems.itemsList.map((item) {
-                      return PopupMenuItem<MenuItem>(
-                        value: item,
-                        child: Row(
-                          children: [
-                            Icon(item.icon, color: Colors.black, size: 20),
-                            const SizedBox(width: 12),
-                            Text(item.text),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                    icon: const Icon(Icons.person, color: Colors.white, size: 40),
-                  ),
-                  const SizedBox(width: 5),
-                  const Text(
-                    'Username',
-                    style: TextStyle(
-                      color: Constants.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 50),
-                ],
                 backgroundColor: Constants.red,
                 toolbarHeight: 150.0,
                 shadowColor: Constants.black,
@@ -90,15 +62,15 @@ class Profile extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 100.0, horizontal: 300.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                            vertical: 50.0, horizontal: 50.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Expanded(
                               child: LayoutBuilder(
                                 builder: (context, constraints) {
                                   return ConstrainedBox(
-                                    constraints: BoxConstraints(minWidth: 600),
+                                    constraints: BoxConstraints(maxWidth: 800),
                                     child: Container(
                                       padding: const EdgeInsets.all(25.0),
                                       decoration: BoxDecoration(
@@ -110,12 +82,111 @@ class Profile extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(25.0),
                                       ),
                                       child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             'Username',
                                             style: TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 20),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 70,
+                                                backgroundImage: AssetImage('assets/images/profile_picture.png'),
+                                              ),
+                                              SizedBox(width: 20),
+                                              Expanded(
+                                                child: Text(
+                                                  'This is the bio of the trainer. It contains a brief description about the trainer.',
+                                                  style: TextStyle(fontSize: 18),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 40),
+                                          Text(
+                                            'Teams',
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount: 8, // Número de equipos
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                                                  child: Container(
+                                                    padding: const EdgeInsets.all(15.0),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.circular(15.0),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black12,
+                                                          blurRadius: 10.0,
+                                                          offset: Offset(0, 5),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Stack(
+                                                      children: [
+                                                        Positioned(
+                                                          left: 10,
+                                                          top: 10,
+                                                          child: Text(
+                                                            'Team${index + 1} - Username',
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top: 50.0),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                            children: [
+                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
+                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
+                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
+                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
+                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
+                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          right: 0,
+                                                          top: 0,
+                                                          child: Row(
+                                                            children: [
+                                                              IconButton(
+                                                                icon: Icon(Icons.edit, color: Constants.blue),
+                                                                onPressed: () {
+                                                                  // Acción de editar equipo
+                                                                },
+                                                              ),
+                                                              IconButton(
+                                                                icon: Icon(Icons.delete, color: Constants.red),
+                                                                onPressed: () {
+                                                                  // Acción de eliminar equipo
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
                                             ),
                                           ),
                                         ],

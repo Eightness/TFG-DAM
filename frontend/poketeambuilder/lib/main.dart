@@ -1,11 +1,9 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:poketeambuilder/config/theme/app_theme.dart';
-import 'package:poketeambuilder/ui/screens/community.dart';
-import 'package:poketeambuilder/ui/screens/team.dart';
-import 'package:poketeambuilder/ui/widgets/app_structure.dart';
-import 'package:poketeambuilder/ui/widgets/windows_buttons.dart';
-import 'package:poketeambuilder/utils/constants.dart';
+import 'package:poketeambuilder/ui/screens/tabs/register.dart';
+import 'package:poketeambuilder/ui/screens/tabs/signin.dart';
+import 'package:poketeambuilder/ui/screens/welcome.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,50 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PokeTeam Builder',
-      theme: AppTheme().generateTheme(),
-      debugShowCheckedModeBanner: false,
-      home: Column(
-        children: [
-          Container(
-            color: Constants.red,
-            child: WindowTitleBarBox(
-              child: MoveWindow(
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    WindowButtons(),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: AppStructure(
-              teamContent: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Constants.blue, Constants.darkBlue],
-                  ),
-                ),
-                child: Team(),
-              ),
-              communityContent: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Constants.blue, Constants.darkBlue],
-                  ),
-                ),
-                child: Community(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        title: 'PokeTeam Builder',
+        theme: AppTheme().generateTheme(),
+        debugShowCheckedModeBanner: false,
+        home: Welcome(
+          signIn: SignIn(),
+          register: Register(),
+        ));
   }
 }

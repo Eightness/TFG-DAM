@@ -1,7 +1,4 @@
-import '/ui/screens/team.dart';
-import '/ui/screens/community.dart';
+import '../../ui/screens/tabs/team_builder.dart';
+import '../../ui/screens/tabs/community.dart';
 
-
-final appRouter = {
-
-};
+final appRouter = {};

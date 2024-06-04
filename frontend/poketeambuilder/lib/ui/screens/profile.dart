@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:intl/intl.dart';
 
 import '../../utils/constants.dart';
+import '../widgets/team_showcase_mini.dart';
 import '../widgets/windows_buttons.dart';
+import '../../data/models/trainer.dart';
 
 class Profile extends StatelessWidget {
-  Profile({Key? key}) : super(key: key);
+  final Trainer trainer;
+  final bool isCurrentTrainer;
+
+  Profile({Key? key, required this.trainer, required this.isCurrentTrainer})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -77,35 +84,66 @@ class Profile extends StatelessWidget {
                                         gradient: LinearGradient(
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
-                                          colors: [Constants.white, Constants.grey],
+                                          colors: [
+                                            Constants.white,
+                                            Constants.grey
+                                          ],
                                         ),
-                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderRadius:
+                                        BorderRadius.circular(25.0),
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Username',
+                                            trainer.username,
                                             style: TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
+                                          Text(
+                                            'Member since ${DateFormat('yyyy-MM-dd').format(trainer.creationDate)}',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Constants.darkBrown,
+                                            ),
+                                          ),
                                           SizedBox(height: 20),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                          Stack(
                                             children: [
-                                              CircleAvatar(
-                                                radius: 70,
-                                                backgroundImage: AssetImage('assets/images/profile_picture.png'),
+                                              Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 70,
+                                                    backgroundImage: AssetImage(
+                                                        'assets/images/profile_picture.png'),
+                                                  ),
+                                                  SizedBox(width: 20),
+                                                  Expanded(
+                                                    child: Text(
+                                                      trainer.bio,
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBox(width: 20),
-                                              Expanded(
-                                                child: Text(
-                                                  'This is the bio of the trainer. It contains a brief description about the trainer.',
-                                                  style: TextStyle(fontSize: 18),
+                                              if (isCurrentTrainer)
+                                                Positioned(
+                                                  right: 0,
+                                                  top: 0,
+                                                  child: IconButton(
+                                                    icon: Icon(Icons.edit,
+                                                        color: Constants.blue),
+                                                    onPressed: () {
+                                                      // Acción de editar biografía
+                                                    },
+                                                  ),
                                                 ),
-                                              ),
                                             ],
                                           ),
                                           SizedBox(height: 40),
@@ -118,74 +156,9 @@ class Profile extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: ListView.builder(
-                                              itemCount: 8, // Número de equipos
+                                              itemCount: 6, // Número de equipos
                                               itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                                                  child: Container(
-                                                    padding: const EdgeInsets.all(15.0),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius: BorderRadius.circular(15.0),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.black12,
-                                                          blurRadius: 10.0,
-                                                          offset: Offset(0, 5),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Stack(
-                                                      children: [
-                                                        Positioned(
-                                                          left: 10,
-                                                          top: 10,
-                                                          child: Text(
-                                                            'Team${index + 1} - Username',
-                                                            style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(top: 50.0),
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                            children: [
-                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
-                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
-                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
-                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
-                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
-                                                              Icon(Icons.catching_pokemon, size: 50, color: Constants.red,),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Positioned(
-                                                          right: 0,
-                                                          top: 0,
-                                                          child: Row(
-                                                            children: [
-                                                              IconButton(
-                                                                icon: Icon(Icons.edit, color: Constants.blue),
-                                                                onPressed: () {
-                                                                  // Acción de editar equipo
-                                                                },
-                                                              ),
-                                                              IconButton(
-                                                                icon: Icon(Icons.delete, color: Constants.red),
-                                                                onPressed: () {
-                                                                  // Acción de eliminar equipo
-                                                                },
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
+                                                return TeamShowcaseMini(index: index, isCurrentTrainer: this.isCurrentTrainer,);
                                               },
                                             ),
                                           ),

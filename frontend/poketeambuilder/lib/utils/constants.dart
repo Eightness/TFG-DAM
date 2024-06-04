@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Constants extends StatelessWidget {
-  const Constants({Key? key}) : super(key: key);
+class Constants {
   static const Color blue = Color(0xFF9FBCC1);
   static const Color darkBlue = Color(0xFF4E6466);
   static const Color red = Color(0xFFBF4747);
@@ -12,11 +11,4 @@ class Constants extends StatelessWidget {
   static const Color grey = Color(0xFFD8D8D6);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
 }
-

@@ -1,9 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:poketeambuilder/utils/constants.dart';
 
-class PokemonBuilder extends StatelessWidget {
-  const PokemonBuilder({Key? key}) : super(key: key);
+import '../../utils/constants.dart';
+
+class PokemonBuilder extends StatefulWidget {
+  final List<String>? pokemonOptions;
+  final List<String>? itemOptions;
+  final List<String>? abilityOptions;
+  final List<String>? natureOptions;
+  final List<String>? moveOptions;
+  final List<int?>? initialEVs;
+  final List<int?>? initialIVs;
+
+  const PokemonBuilder({
+    Key? key,
+    this.pokemonOptions,
+    this.itemOptions,
+    this.abilityOptions,
+    this.natureOptions,
+    this.moveOptions,
+    this.initialEVs,
+    this.initialIVs,
+  }) : super(key: key);
+
+  @override
+  _PokemonBuilderState createState() => _PokemonBuilderState();
+}
+
+class _PokemonBuilderState extends State<PokemonBuilder> {
+  String? _selectedPokemon;
+  String? _selectedItem;
+  String? _selectedAbility;
+  String? _selectedNature;
+  List<String?> _selectedMoves = List.filled(4, null);
+  List<int?> _selectedEVs = List.filled(6, null);
+  List<int?> _selectedIVs = List.filled(6, null);
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedEVs = List.from(widget.initialEVs ?? List.filled(6, null));
+    _selectedIVs = List.from(widget.initialIVs ?? List.filled(6, null));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +64,16 @@ class PokemonBuilder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DropdownButton<String>(
+                  value: _selectedPokemon,
                   items: const [
-                    DropdownMenuItem(value: 'Option1', child: Text('Pikachu')),
-                    DropdownMenuItem(value: 'Option2', child: Text('Bulbasaur')),
+                    DropdownMenuItem(value: 'Pikachu', child: Text('Pikachu')),
+                    DropdownMenuItem(value: 'Bulbasaur', child: Text('Bulbasaur')),
                   ],
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedPokemon = value;
+                    });
+                  },
                   hint: const Text('Pokémon'),
                 ),
                 const SizedBox(height: 8.0),
@@ -41,19 +84,29 @@ class PokemonBuilder extends StatelessWidget {
                 ),
                 const SizedBox(height: 8.0),
                 DropdownButton<String>(
+                  value: _selectedItem,
                   items: const [
-                    DropdownMenuItem(value: 'Option1', child: Text('Poké Ball')),
-                    DropdownMenuItem(value: 'Option2', child: Text('Potion')),
+                    DropdownMenuItem(value: 'Poké Ball', child: Text('Poké Ball')),
+                    DropdownMenuItem(value: 'Potion', child: Text('Potion')),
                   ],
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedItem = value;
+                    });
+                  },
                   hint: const Text('Item'),
                 ),
                 DropdownButton<String>(
+                  value: _selectedAbility,
                   items: const [
-                    DropdownMenuItem(value: 'Option1', child: Text('Intimidate')),
-                    DropdownMenuItem(value: 'Option2', child: Text('Transform')),
+                    DropdownMenuItem(value: 'Intimidate', child: Text('Intimidate')),
+                    DropdownMenuItem(value: 'Transform', child: Text('Transform')),
                   ],
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedAbility = value;
+                    });
+                  },
                   hint: const Text('Ability'),
                 ),
               ],
@@ -66,20 +119,30 @@ class PokemonBuilder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DropdownButton<String>(
+                  value: _selectedNature,
                   items: const [
-                    DropdownMenuItem(value: 'Option1', child: Text('Adamant')),
-                    DropdownMenuItem(value: 'Option2', child: Text('Modest')),
+                    DropdownMenuItem(value: 'Adamant', child: Text('Adamant')),
+                    DropdownMenuItem(value: 'Modest', child: Text('Modest')),
                   ],
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedNature = value;
+                    });
+                  },
                   hint: const Text('Nature'),
                 ),
                 for (int i = 1; i <= 4; i++)
                   DropdownButton<String>(
+                    value: _selectedMoves[i - 1],
                     items: const [
-                      DropdownMenuItem(value: 'Option1', child: Text('Tackle')),
-                      DropdownMenuItem(value: 'Option2', child: Text('Tail')),
+                      DropdownMenuItem(value: 'Tackle', child: Text('Tackle')),
+                      DropdownMenuItem(value: 'Tail', child: Text('Tail')),
                     ],
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedMoves[i - 1] = value;
+                      });
+                    },
                     hint: Text('Move $i'),
                   ),
               ],
@@ -116,9 +179,9 @@ class PokemonBuilder extends StatelessWidget {
                   children: [
                     SizedBox(width: 60.0, child: Text(statLabel)),
                     const SizedBox(width: 8.0),
-                    SizedBox(width: 60.0, child: _buildStatInput('EV', 252)),
+                    SizedBox(width: 60.0, child: _buildStatInput('EV', 252, index)),
                     const SizedBox(width: 8.0),
-                    SizedBox(width: 60.0, child: _buildStatInput('IV', 31)),
+                    SizedBox(width: 60.0, child: _buildStatInput('IV', 31, index)),
                   ],
                 ),
               );
@@ -129,31 +192,43 @@ class PokemonBuilder extends StatelessWidget {
     );
   }
 
-  Widget _buildStatInput(String label, int maxValue) {
+  Widget _buildStatInput(String label, int maxValue, int index) {
     return SizedBox(
       width: 60.0,
       child: TextFormField(
         keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^[0-9]{1,3}$')),
+          _StatInputFormatter(maxValue),
+        ],
+        onChanged: (value) {
+          int? intValue = int.tryParse(value);
+          if (intValue != null) {
+            setState(() {
+              if (label == 'EV') {
+                _selectedEVs[index] = intValue;
+              } else if (label == 'IV') {
+                _selectedIVs[index] = intValue;
+              }
+            });
+          }
+        },
         decoration: InputDecoration(
           hintText: '0-$maxValue',
           labelText: label,
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          contentPadding:
+          const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         ),
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(3),
-          _MaxValueInputFormatter(maxValue),
-        ],
       ),
     );
   }
 }
 
-class _MaxValueInputFormatter extends TextInputFormatter {
+class _StatInputFormatter extends TextInputFormatter {
   final int maxValue;
 
-  _MaxValueInputFormatter(this.maxValue);
+  _StatInputFormatter(this.maxValue);
 
   @override
   TextEditingValue formatEditUpdate(
@@ -163,7 +238,10 @@ class _MaxValueInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
     final intValue = int.tryParse(newValue.text);
     if (intValue == null || intValue > maxValue) {
-      return oldValue;
+      return TextEditingValue(
+        text: oldValue.text,
+        selection: oldValue.selection,
+      );
     }
     return newValue;
   }

@@ -14,8 +14,8 @@ class MenuItems {
   );
 
   static const itemSettings = MenuItem(
-      text: 'Settings',
-      icon: Icons.settings,
+    text: 'Settings',
+    icon: Icons.settings,
   );
 
   static const itemLogOut = MenuItem(

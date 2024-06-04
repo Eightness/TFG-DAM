@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package albert.lozano.poketeambuilder.controller.dto.inputDTO;
+package albert.lozano.poketeambuilder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerInputDTO {
+public class TrainerDTO {
     // Attributes
     private String username;
 
@@ -40,5 +40,9 @@ public class TrainerInputDTO {
 
     private String bio;
 
-    private List<TeamInputDTO> teams;
+    private List<TeamDTO> teams;
+
+    public boolean getTheme() {
+        return this.theme;
+    }
 }

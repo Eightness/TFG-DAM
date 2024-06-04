@@ -9,27 +9,26 @@ import java.util.List;
 
 /**
  * GenericService interface. Contains methods that defines most business' logic in this app.
- * @param <InputDTO> Input class
- * @param <OutputDTO> Output class
+ * @param <DTO> Data Transfer Object
  * @param <PK> Primary key
  */
-public interface GenericCRUDService<InputDTO, OutputDTO, PK> {
+public interface GenericCRUDService<DTO, PK> {
     // Get methods
-    OutputDTO getEntityById(PK id);
-    List<OutputDTO> getEntityByIds(List<PK> ids);
-    List<OutputDTO> getAllEntities(int pageNumber, int pageSize);
+    DTO getEntityById(PK id);
+    List<DTO> getEntityByIds(List<PK> ids);
+    List<DTO> getAllEntities(int pageNumber, int pageSize);
 
     // Post methods
-    OutputDTO addEntity(InputDTO inputEntity);
-    List<OutputDTO> addEntities(List<InputDTO> inputEntities);
+    DTO addEntity(DTO EntityDTO);
+    List<DTO> addEntities(List<DTO> EntitiesDTO);
 
     // Put methods
-    OutputDTO updateEntity(PK id, InputDTO inputEntity);
-    List<OutputDTO> updateEntities(PK ids, List<InputDTO> inputEntities);
+    DTO updateEntity(PK id, DTO EntityDTO);
+    List<DTO> updateEntities(PK ids, List<DTO> EntitiesDTO);
 
     // Patch methods
-    OutputDTO modifyEntity(PK id, InputDTO inputEntity);
-    List<OutputDTO> modifyEntitiesByIds(List<PK> ids, List<InputDTO> inputEntities);
+    DTO modifyEntity(PK id, DTO EntityDTO);
+    List<DTO> modifyEntitiesByIds(List<PK> ids, List<DTO> EntitiesDTO);
 
     // Delete methods
     void deleteEntityById(PK id);

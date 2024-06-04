@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:poketeambuilder/data/models/pokemon.dart';
 import 'package:poketeambuilder/data/models/trainer.dart';
 import 'package:poketeambuilder/data/models/comment.dart';
@@ -7,13 +9,12 @@ class Team {
   final DateTime createdDate;
   final bool isPublic;
   final int numLikes;
-  final String generation;
+  final int generation;
   final List<Pokemon> pokemon;
   final List<Comment> comments;
   final Trainer trainer;
 
-  Team(
-      this.comments, {
+  Team({
         required this.isPublic,
         required this.numLikes,
         required this.generation,
@@ -21,6 +22,7 @@ class Team {
         required this.trainer,
         required this.name,
         required this.createdDate,
+        required this.comments,
       });
 
   Map<String, dynamic> toJson() {
@@ -34,5 +36,24 @@ class Team {
       'comments': comments.map((comment) => comment.toJson()).toList(),
       'trainer': trainer.toJson(),
     };
+  }
+
+  factory Team.fromJson(String json) {
+    final decodedJson = jsonDecode(json) as Map<String, dynamic>;
+
+    return Team(
+      comments: (decodedJson['comments'] as List<dynamic>)
+          .map((commentJson) => Comment.fromJson(jsonEncode(commentJson)))
+          .toList(),
+      name: decodedJson['name'] as String,
+      createdDate: DateTime.parse(decodedJson['createdDate'] as String),
+      isPublic: decodedJson['isPublic'] as bool,
+      numLikes: decodedJson['numLikes'] as int,
+      generation: decodedJson['generation'] as int,
+      pokemon: (decodedJson['pokemon'] as List<dynamic>)
+          .map((pokemonJson) => Pokemon.fromJson(jsonEncode(pokemonJson)))
+          .toList(),
+      trainer: Trainer.fromJson(decodedJson['trainer'] as String),
+    );
   }
 }

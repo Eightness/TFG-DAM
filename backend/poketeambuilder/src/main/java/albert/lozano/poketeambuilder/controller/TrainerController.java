@@ -6,8 +6,7 @@
 package albert.lozano.poketeambuilder.controller;
 
 import albert.lozano.poketeambuilder.application.implementation.TrainerServiceImpl;
-import albert.lozano.poketeambuilder.controller.dto.inputDTO.TrainerInputDTO;
-import albert.lozano.poketeambuilder.controller.dto.outputDTO.TrainerOutputDTO;
+import albert.lozano.poketeambuilder.dto.TrainerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,40 +27,40 @@ public class TrainerController {
     // CRUD Methods
     // Create methods
     @PostMapping("/add")
-    public ResponseEntity<TrainerOutputDTO> postTrainer(@RequestBody TrainerInputDTO trainerInputDTO) {
-        TrainerOutputDTO newTrainer = trainerService.addEntity(trainerInputDTO);
+    public ResponseEntity<TrainerDTO> postTrainer(@RequestBody TrainerDTO trainerDTO) {
+        TrainerDTO newTrainer = trainerService.addEntity(trainerDTO);
         return new ResponseEntity<>(newTrainer, HttpStatus.OK);
     }
 
     // Read methods
     @GetMapping("/get")
-    public ResponseEntity<TrainerOutputDTO> getTrainerById(@RequestParam long id) {
-        TrainerOutputDTO trainer = trainerService.getEntityById(id);
+    public ResponseEntity<TrainerDTO> getTrainerByUsername(@RequestParam String username) {
+        TrainerDTO trainer = trainerService.getTrainerByUsername(username);
         return new ResponseEntity<>(trainer, HttpStatus.OK);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<TrainerOutputDTO>> getAllTrainers() {
-        List<TrainerOutputDTO> allTrainers = trainerService.getAllEntities(0, 10);
+    public ResponseEntity<List<TrainerDTO>> getAllTrainers() {
+        List<TrainerDTO> allTrainers = trainerService.getAllEntities(0, 10);
         return new ResponseEntity<>(allTrainers, HttpStatus.OK);
     }
 
     // Update Methods
     @PutMapping("/update")
-    public ResponseEntity<TrainerOutputDTO> updateTrainerById(@RequestParam long id, @RequestBody TrainerInputDTO trainerInputDTO) {
-        TrainerOutputDTO updatedTrainer = trainerService.updateEntity(id, trainerInputDTO);
+    public ResponseEntity<TrainerDTO> updateTrainerById(@RequestParam long id, @RequestBody TrainerDTO trainerDTO) {
+        TrainerDTO updatedTrainer = trainerService.updateEntity(id, trainerDTO);
         return new ResponseEntity<>(updatedTrainer, HttpStatus.OK);
     }
 
     // Delete methods
     @DeleteMapping("/delete")
-    public ResponseEntity<TrainerOutputDTO> deleteTrainerById(@RequestParam long id) {
+    public ResponseEntity<TrainerDTO> deleteTrainerById(@RequestParam long id) {
         trainerService.deleteEntityById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-all")
-    public ResponseEntity<TrainerOutputDTO> deleteAllTrainers() {
+    public ResponseEntity<TrainerDTO> deleteAllTrainers() {
         trainerService.deleteAllEntities();
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -84,5 +83,14 @@ public class TrainerController {
         }
     }
 
+    @GetMapping("/check-credentials")
+    public boolean checkTrainerCredentials(@RequestParam String username,
+                                           @RequestParam String password) {
+        if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
+            return trainerService.checkCredentials(username, password);
+        } else {
+            return false;
+        }
+    }
 
 }

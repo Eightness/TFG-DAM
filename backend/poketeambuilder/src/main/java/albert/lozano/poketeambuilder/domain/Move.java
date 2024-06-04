@@ -7,9 +7,7 @@ package albert.lozano.poketeambuilder.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * Move class. Defines a move.
@@ -17,6 +15,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Move")
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Move {

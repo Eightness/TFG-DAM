@@ -6,9 +6,8 @@
 package albert.lozano.poketeambuilder.application.implementation;
 
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
-import albert.lozano.poketeambuilder.controller.dto.inputDTO.PokemonInputDTO;
-import albert.lozano.poketeambuilder.controller.dto.mappers.PokemonMapper;
-import albert.lozano.poketeambuilder.controller.dto.outputDTO.PokemonOutputDTO;
+import albert.lozano.poketeambuilder.dto.PokemonDTO;
+import albert.lozano.poketeambuilder.dto.mappers.PokemonMapper;
 import albert.lozano.poketeambuilder.domain.Pokemon;
 import albert.lozano.poketeambuilder.repository.PokemonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.util.List;
  * PokemonServiceImpl class. Implements GenericService interface and contains all methods related to Team's CRUD.
  */
 @Service
-public class PokemonServiceImpl implements GenericCRUDService<PokemonInputDTO, PokemonOutputDTO, Long> {
+public class PokemonServiceImpl implements GenericCRUDService<PokemonDTO, Long> {
     // Attributes
     @Autowired
     PokemonRepository pokemonRepository;
@@ -29,38 +28,38 @@ public class PokemonServiceImpl implements GenericCRUDService<PokemonInputDTO, P
 
     // Methods
     @Override
-    public PokemonOutputDTO getEntityById(Long id) {
+    public PokemonDTO getEntityById(Long id) {
         Pokemon pokemon = pokemonRepository.findById(id).orElseThrow();
-        return pokemonMapper.domainToOutput(pokemon);
+        return pokemonMapper.domainToDTO(pokemon);
     }
 
     @Override
-    public List<PokemonOutputDTO> getEntityByIds(List<Long> ids) {
+    public List<PokemonDTO> getEntityByIds(List<Long> ids) {
         return null;
     }
 
     @Override
-    public List<PokemonOutputDTO> getAllEntities(int pageNumber, int pageSize) {
+    public List<PokemonDTO> getAllEntities(int pageNumber, int pageSize) {
         List<Pokemon> allPokemon = pokemonRepository.findAll();
-        return pokemonMapper.domainToOutput(allPokemon);
+        return pokemonMapper.domainToDTO(allPokemon);
     }
 
     @Override
-    public PokemonOutputDTO addEntity(PokemonInputDTO inputEntity) {
-        Pokemon pokemon = pokemonMapper.inputToDomain(inputEntity);
+    public PokemonDTO addEntity(PokemonDTO entityDTO) {
+        Pokemon pokemon = pokemonMapper.DTOToDomain(entityDTO);
         pokemonRepository.save(pokemon);
-        return pokemonMapper.domainToOutput(pokemon);
+        return pokemonMapper.domainToDTO(pokemon);
     }
 
     @Override
-    public List<PokemonOutputDTO> addEntities(List<PokemonInputDTO> inputEntities) {
+    public List<PokemonDTO> addEntities(List<PokemonDTO> entitiesDTO) {
         return null;
     }
 
     @Override
-    public PokemonOutputDTO updateEntity(Long id, PokemonInputDTO inputEntity) {
+    public PokemonDTO updateEntity(Long id, PokemonDTO entityDTO) {
         Pokemon pokemon = pokemonRepository.findById(id).orElseThrow();
-        Pokemon updatedPokemon = pokemonMapper.inputToDomain(inputEntity);
+        Pokemon updatedPokemon = pokemonMapper.DTOToDomain(entityDTO);
 
         pokemon.setName(updatedPokemon.getName());
         pokemon.setSpriteUrl(updatedPokemon.getSpriteUrl());
@@ -85,21 +84,21 @@ public class PokemonServiceImpl implements GenericCRUDService<PokemonInputDTO, P
         pokemon.setIvHealth(updatedPokemon.getIvHealth());
 
         pokemonRepository.save(pokemon);
-        return pokemonMapper.domainToOutput(pokemon);
+        return pokemonMapper.domainToDTO(pokemon);
     }
 
     @Override
-    public List<PokemonOutputDTO> updateEntities(Long ids, List<PokemonInputDTO> inputEntities) {
+    public List<PokemonDTO> updateEntities(Long ids, List<PokemonDTO> entitiesDTO) {
         return null;
     }
 
     @Override
-    public PokemonOutputDTO modifyEntity(Long id, PokemonInputDTO inputEntity) {
+    public PokemonDTO modifyEntity(Long id, PokemonDTO entityDTO) {
         return null;
     }
 
     @Override
-    public List<PokemonOutputDTO> modifyEntitiesByIds(List<Long> ids, List<PokemonInputDTO> inputEntities) {
+    public List<PokemonDTO> modifyEntitiesByIds(List<Long> ids, List<PokemonDTO> entitiesDTO) {
         return null;
     }
 

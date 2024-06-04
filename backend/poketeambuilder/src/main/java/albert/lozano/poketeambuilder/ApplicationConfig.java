@@ -7,8 +7,8 @@ package albert.lozano.poketeambuilder;
 
 import albert.lozano.poketeambuilder.application.implementation.*;
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
-import albert.lozano.poketeambuilder.controller.dto.inputDTO.*;
-import albert.lozano.poketeambuilder.controller.dto.outputDTO.*;
+import albert.lozano.poketeambuilder.dto.*;
+import albert.lozano.poketeambuilder.dto.mappers.*;
 import albert.lozano.poketeambuilder.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,29 +28,57 @@ public class ApplicationConfig {
     private final CommentRepository commentRepository;
 
     // Beans
+
+    // Services
     @Bean
-    public GenericCRUDService<TrainerInputDTO, TrainerOutputDTO, Long> trainerService() {
+    public GenericCRUDService<TrainerDTO, Long> trainerService() {
         return new TrainerServiceImpl();
     }
 
     @Bean
-    public GenericCRUDService<TeamInputDTO, TeamOutputDTO, Long> teamService() {
+    public GenericCRUDService<TeamDTO, Long> teamService() {
         return new TeamServiceImpl();
     }
 
     @Bean
-    public GenericCRUDService<PokemonInputDTO, PokemonOutputDTO, Long> pokemonService() {
+    public GenericCRUDService<PokemonDTO, Long> pokemonService() {
         return new PokemonServiceImpl();
     }
 
     @Bean
-    public GenericCRUDService<MoveInputDTO, MoveOutputDTO, Long> moveService() {
+    public GenericCRUDService<MoveDTO, Long> moveService() {
         return new MoveServiceImpl();
     }
 
     @Bean
-    public GenericCRUDService<CommentInputDTO, CommentOutputDTO, Long> commentService() {
+    public GenericCRUDService<CommentDTO, Long> commentService() {
         return new CommentServiceImpl();
+    }
+
+    // Mappers
+    @Bean
+    public CommentMapper commentMapper() {
+        return new CommentMapper();
+    }
+
+    @Bean
+    public MoveMapper moveMapper() {
+        return new MoveMapper();
+    }
+
+    @Bean
+    public PokemonMapper pokemonMapper() {
+        return new PokemonMapper();
+    }
+
+    @Bean
+    public TeamMapper teamMapper() {
+        return new TeamMapper();
+    }
+
+    @Bean
+    public TrainerMapper trainerMapper() {
+        return new TrainerMapper();
     }
 
 }

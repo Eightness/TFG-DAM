@@ -6,8 +6,7 @@
 package albert.lozano.poketeambuilder.controller;
 
 import albert.lozano.poketeambuilder.application.implementation.CommentServiceImpl;
-import albert.lozano.poketeambuilder.controller.dto.inputDTO.CommentInputDTO;
-import albert.lozano.poketeambuilder.controller.dto.outputDTO.CommentOutputDTO;
+import albert.lozano.poketeambuilder.dto.CommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,40 +27,40 @@ public class CommentController {
     // CRUD Methods
     // Create methods
     @PostMapping("/add")
-    public ResponseEntity<CommentOutputDTO> postComment(@RequestBody CommentInputDTO commentInputDTO) {
-        CommentOutputDTO newComment = commentService.addEntity(commentInputDTO);
+    public ResponseEntity<CommentDTO> postComment(@RequestBody CommentDTO commentDTO) {
+        CommentDTO newComment = commentService.addEntity(commentDTO);
         return new ResponseEntity<>(newComment, HttpStatus.OK);
     }
 
     // Read methods
     @GetMapping("/get")
-    public ResponseEntity<CommentOutputDTO> getCommentById(@RequestParam long id) {
-        CommentOutputDTO comment = commentService.getEntityById(id);
+    public ResponseEntity<CommentDTO> getCommentById(@RequestParam long id) {
+        CommentDTO comment = commentService.getEntityById(id);
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<CommentOutputDTO>> getAllComments() {
-        List<CommentOutputDTO> allComments = commentService.getAllEntities(0, 10);
+    public ResponseEntity<List<CommentDTO>> getAllComments() {
+        List<CommentDTO> allComments = commentService.getAllEntities(0, 10);
         return new ResponseEntity<>(allComments, HttpStatus.OK);
     }
 
     // Update methods
     @PutMapping("/update")
-    public ResponseEntity<CommentOutputDTO> updateComment(@RequestParam long id, @RequestBody CommentInputDTO commentInputDTO) {
-        CommentOutputDTO updatedComment = commentService.updateEntity(id, commentInputDTO);
+    public ResponseEntity<CommentDTO> updateComment(@RequestParam long id, @RequestBody CommentDTO commentDTO) {
+        CommentDTO updatedComment = commentService.updateEntity(id, commentDTO);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
 
     // Delete methods
     @DeleteMapping("/delete")
-    public ResponseEntity<CommentOutputDTO> deleteCommentById(@RequestParam long id) {
+    public ResponseEntity<CommentDTO> deleteCommentById(@RequestParam long id) {
         commentService.deleteEntityById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-all")
-    public ResponseEntity<CommentOutputDTO> deleteAllComments() {
+    public ResponseEntity<CommentDTO> deleteAllComments() {
         commentService.deleteAllEntities();
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -6,9 +6,8 @@
 package albert.lozano.poketeambuilder.application.implementation;
 
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
-import albert.lozano.poketeambuilder.controller.dto.inputDTO.MoveInputDTO;
-import albert.lozano.poketeambuilder.controller.dto.mappers.MoveMapper;
-import albert.lozano.poketeambuilder.controller.dto.outputDTO.MoveOutputDTO;
+import albert.lozano.poketeambuilder.dto.MoveDTO;
+import albert.lozano.poketeambuilder.dto.mappers.MoveMapper;
 import albert.lozano.poketeambuilder.domain.Move;
 import albert.lozano.poketeambuilder.repository.MoveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.util.List;
  * MoveServiceImpl class. Implements GenericService interface and contains all methods related to Trainer's CRUD.
  */
 @Service
-public class MoveServiceImpl implements GenericCRUDService<MoveInputDTO, MoveOutputDTO, Long> {
+public class MoveServiceImpl implements GenericCRUDService<MoveDTO, Long> {
     // Attributes
     @Autowired
     MoveRepository moveRepository;
@@ -29,57 +28,57 @@ public class MoveServiceImpl implements GenericCRUDService<MoveInputDTO, MoveOut
 
     // Methods
     @Override
-    public MoveOutputDTO getEntityById(Long id) {
+    public MoveDTO getEntityById(Long id) {
         Move move = moveRepository.findById(id).orElseThrow();
-        return moveMapper.domainToOutput(move);
+        return moveMapper.domainToDTO(move);
     }
 
     @Override
-    public List<MoveOutputDTO> getEntityByIds(List<Long> ids) {
+    public List<MoveDTO> getEntityByIds(List<Long> ids) {
         return null;
     }
 
     @Override
-    public List<MoveOutputDTO> getAllEntities(int pageNumber, int pageSize) {
+    public List<MoveDTO> getAllEntities(int pageNumber, int pageSize) {
         List<Move> allMoves = moveRepository.findAll();
-        return moveMapper.domainToOutput(allMoves);
+        return moveMapper.domainToDTO(allMoves);
     }
 
     @Override
-    public MoveOutputDTO addEntity(MoveInputDTO inputEntity) {
-        Move move = moveMapper.inputToDomain(inputEntity);
+    public MoveDTO addEntity(MoveDTO entityDTO) {
+        Move move = moveMapper.DTOToDomain(entityDTO);
         moveRepository.save(move);
-        return moveMapper.domainToOutput(move);
+        return moveMapper.domainToDTO(move);
     }
 
     @Override
-    public List<MoveOutputDTO> addEntities(List<MoveInputDTO> inputEntities) {
+    public List<MoveDTO> addEntities(List<MoveDTO> entitiesDTO) {
         return null;
     }
 
     @Override
-    public MoveOutputDTO updateEntity(Long id, MoveInputDTO inputEntity) {
+    public MoveDTO updateEntity(Long id, MoveDTO entityDTO) {
         Move move = moveRepository.findById(id).orElseThrow();
-        Move updatedMove = moveMapper.inputToDomain(inputEntity);
+        Move updatedMove = moveMapper.DTOToDomain(entityDTO);
 
         move.setName(updatedMove.getName());
 
         moveRepository.save(move);
-        return moveMapper.domainToOutput(move);
+        return moveMapper.domainToDTO(move);
     }
 
     @Override
-    public List<MoveOutputDTO> updateEntities(Long ids, List<MoveInputDTO> inputEntities) {
+    public List<MoveDTO> updateEntities(Long ids, List<MoveDTO> entitiesDTO) {
         return null;
     }
 
     @Override
-    public MoveOutputDTO modifyEntity(Long id, MoveInputDTO inputEntity) {
+    public MoveDTO modifyEntity(Long id, MoveDTO entityDTO) {
         return null;
     }
 
     @Override
-    public List<MoveOutputDTO> modifyEntitiesByIds(List<Long> ids, List<MoveInputDTO> inputEntities) {
+    public List<MoveDTO> modifyEntitiesByIds(List<Long> ids, List<MoveDTO> entitiesDTO) {
         return null;
     }
 

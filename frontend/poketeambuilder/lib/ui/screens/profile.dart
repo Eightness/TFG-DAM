@@ -8,10 +8,10 @@ import '../widgets/windows_buttons.dart';
 import '../../data/models/trainer.dart';
 
 class Profile extends StatelessWidget {
-  final Trainer trainer;
+  final Trainer currentTrainer;
   final bool isCurrentTrainer;
 
-  Profile({Key? key, required this.trainer, required this.isCurrentTrainer})
+  Profile({Key? key, required this.currentTrainer, required this.isCurrentTrainer})
       : super(key: key);
 
   @override
@@ -97,14 +97,14 @@ class Profile extends StatelessWidget {
                                         MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            trainer.username,
+                                            currentTrainer.username,
                                             style: TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
-                                            'Member since ${DateFormat('yyyy-MM-dd').format(trainer.createdDate)}',
+                                            'Member since ${DateFormat('yyyy-MM-dd').format(currentTrainer.createdDate)}',
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Constants.darkBrown,
@@ -125,7 +125,7 @@ class Profile extends StatelessWidget {
                                                   SizedBox(width: 20),
                                                   Expanded(
                                                     child: Text(
-                                                      trainer.bio,
+                                                      currentTrainer.bio,
                                                       style: TextStyle(
                                                           fontSize: 18),
                                                     ),

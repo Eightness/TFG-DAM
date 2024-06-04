@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:poketeambuilder/data/models/team.dart';
 
 class Trainer {
@@ -42,4 +44,25 @@ class Trainer {
       'teams': teams.map((team) => team.toJson()).toList(),
     };
   }
+
+  factory Trainer.fromJson(String json) {
+    final decodedJson = jsonDecode(json) as Map<String, dynamic>;
+
+    return Trainer(
+      name: decodedJson['name'] as String,
+      firstSurname: decodedJson['firstSurname'] as String,
+      secondSurname: decodedJson['secondSurname'] as String,
+      email: decodedJson['email'] as String,
+      phone: decodedJson['phone'] as String,
+      username: decodedJson['username'] as String,
+      password: decodedJson['password'] as String,
+      createdDate: DateTime.parse(decodedJson['createdDate'] as String),
+      theme: decodedJson['theme'] as bool,
+      bio: decodedJson['bio'] as String,
+      teams: (decodedJson['teams'] as List<dynamic>)
+          .map((teamJson) => Team.fromJson(jsonEncode(teamJson)))
+          .toList(),
+    );
+  }
+
 }

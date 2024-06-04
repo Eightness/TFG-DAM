@@ -7,11 +7,11 @@ class Comment {
   final String body;
   final Trainer trainer;
 
-  Comment(
-      this.createdDate,
-      this.trainer, {
-        required this.body,
-      });
+  Comment({
+    required this.createdDate,
+    required this.trainer,
+    required this.body,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -19,5 +19,15 @@ class Comment {
       'body': body,
       'trainer': trainer.toJson(),
     };
+  }
+
+  factory Comment.fromJson(String json) {
+    final decodedJson = jsonDecode(json) as Map<String, dynamic>;
+
+    return Comment(
+      createdDate: DateTime.parse(decodedJson['createdDate'] as String),
+      body: decodedJson['body'] as String,
+      trainer: Trainer.fromJson(decodedJson['trainer'] as String),
+    );
   }
 }

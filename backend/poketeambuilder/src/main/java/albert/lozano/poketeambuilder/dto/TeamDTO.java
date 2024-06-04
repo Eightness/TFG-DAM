@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package albert.lozano.poketeambuilder.controller.dto.inputDTO;
+package albert.lozano.poketeambuilder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeamInputDTO {
+public class TeamDTO {
     // Attributes
     private String name;
 
@@ -26,11 +26,17 @@ public class TeamInputDTO {
 
     private boolean isPublic;
 
+    private int numLikes;
+
     private int generation;
 
-    private List<PokemonInputDTO> pokemon;
+    private List<PokemonDTO> pokemon;
 
-    private List<CommentInputDTO> comments;
+    private List<CommentDTO> comments;
 
-    private TrainerInputDTO trainer;
+    private TrainerDTO trainer;
+
+    public boolean getPublic() {
+        return this.isPublic;
+    }
 }

@@ -6,9 +6,8 @@
 package albert.lozano.poketeambuilder.application.implementation;
 
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
-import albert.lozano.poketeambuilder.controller.dto.inputDTO.TeamInputDTO;
-import albert.lozano.poketeambuilder.controller.dto.mappers.TeamMapper;
-import albert.lozano.poketeambuilder.controller.dto.outputDTO.TeamOutputDTO;
+import albert.lozano.poketeambuilder.dto.TeamDTO;
+import albert.lozano.poketeambuilder.dto.mappers.TeamMapper;
 import albert.lozano.poketeambuilder.domain.Team;
 import albert.lozano.poketeambuilder.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.util.List;
  * TeamServiceImpl class. Implements GenericService interface and contains all methods related to Team's CRUD.
  */
 @Service
-public class TeamServiceImpl implements GenericCRUDService<TeamInputDTO, TeamOutputDTO, Long> {
+public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
     // Attributes
     @Autowired
     TeamRepository teamRepository;
@@ -29,38 +28,38 @@ public class TeamServiceImpl implements GenericCRUDService<TeamInputDTO, TeamOut
 
     // Methods
     @Override
-    public TeamOutputDTO getEntityById(Long id) {
+    public TeamDTO getEntityById(Long id) {
         Team team = teamRepository.findById(id).orElseThrow();
-        return teamMapper.domainToOutput(team);
+        return teamMapper.domainToDTO(team);
     }
 
     @Override
-    public List<TeamOutputDTO> getEntityByIds(List<Long> ids) {
+    public List<TeamDTO> getEntityByIds(List<Long> ids) {
         return null;
     }
 
     @Override
-    public List<TeamOutputDTO> getAllEntities(int pageNumber, int pageSize) {
+    public List<TeamDTO> getAllEntities(int pageNumber, int pageSize) {
         List<Team> allTrainers = teamRepository.findAll();
-        return teamMapper.domainToOutput(allTrainers);
+        return teamMapper.domainToDTO(allTrainers);
     }
 
     @Override
-    public TeamOutputDTO addEntity(TeamInputDTO inputEntity) {
-        Team team = teamMapper.inputToDomain(inputEntity);
+    public TeamDTO addEntity(TeamDTO EntityDTO) {
+        Team team = teamMapper.DTOToDomain(EntityDTO);
         teamRepository.save(team);
-        return teamMapper.domainToOutput(team);
+        return teamMapper.domainToDTO(team);
     }
 
     @Override
-    public List<TeamOutputDTO> addEntities(List<TeamInputDTO> inputEntities) {
+    public List<TeamDTO> addEntities(List<TeamDTO> EntitiesDTO) {
         return null;
     }
 
     @Override
-    public TeamOutputDTO updateEntity(Long id, TeamInputDTO inputEntity) {
+    public TeamDTO updateEntity(Long id, TeamDTO EntityDTO) {
         Team team = teamRepository.findById(id).orElseThrow();
-        Team updatedTeam = teamMapper.inputToDomain(inputEntity);
+        Team updatedTeam = teamMapper.DTOToDomain(EntityDTO);
 
         team.setName(updatedTeam.getName());
         team.setPublic(updatedTeam.getPublic());
@@ -68,21 +67,21 @@ public class TeamServiceImpl implements GenericCRUDService<TeamInputDTO, TeamOut
         team.setPokemon(updatedTeam.getPokemon());
 
         teamRepository.save(team);
-        return teamMapper.domainToOutput(team);
+        return teamMapper.domainToDTO(team);
     }
 
     @Override
-    public List<TeamOutputDTO> updateEntities(Long ids, List<TeamInputDTO> inputEntities) {
+    public List<TeamDTO> updateEntities(Long ids, List<TeamDTO> EntitiesDTO) {
         return null;
     }
 
     @Override
-    public TeamOutputDTO modifyEntity(Long id, TeamInputDTO inputEntity) {
+    public TeamDTO modifyEntity(Long id, TeamDTO EntityDTO) {
         return null;
     }
 
     @Override
-    public List<TeamOutputDTO> modifyEntitiesByIds(List<Long> ids, List<TeamInputDTO> inputEntities) {
+    public List<TeamDTO> modifyEntitiesByIds(List<Long> ids, List<TeamDTO> EntitiesDTO) {
         return null;
     }
 

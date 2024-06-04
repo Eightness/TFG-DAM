@@ -5,6 +5,7 @@
 
 package albert.lozano.poketeambuilder.repository;
 
+import albert.lozano.poketeambuilder.dto.TrainerDTO;
 import albert.lozano.poketeambuilder.domain.Trainer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -22,4 +23,6 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     // Custom methods
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+    boolean existsByUsernameAndPassword(String username, String password);
+    Trainer findByUsername(String username);
 }

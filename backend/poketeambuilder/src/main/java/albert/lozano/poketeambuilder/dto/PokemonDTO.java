@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package albert.lozano.poketeambuilder.controller.dto.outputDTO;
+package albert.lozano.poketeambuilder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * PokemonOutputDTO class. Contains all Pokémon attributes to display.
+ * PokemonInputDTO class. Contains all Pokémon attributes obtainable by user's input.
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class PokemonOutputDTO {
+@AllArgsConstructor
+public class PokemonDTO {
     // Attributes
     private String name;
 
@@ -31,7 +31,7 @@ public class PokemonOutputDTO {
 
     private boolean isShiny;
 
-    private List<MoveOutputDTO> moves;
+    private List<MoveDTO> moves;
 
     // Statistics
     private int ivDef;

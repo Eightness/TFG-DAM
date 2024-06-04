@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'move.dart';
 
 class Pokemon {
@@ -67,5 +69,33 @@ class Pokemon {
       'evSpeed': evSpeed,
       'evHealth': evHealth,
     };
+  }
+
+  factory Pokemon.fromJson(String json) {
+    final decodedJson = jsonDecode(json) as Map<String, dynamic>;
+
+    return Pokemon(
+      name: decodedJson['name'] as String,
+      spriteUrl: decodedJson['spriteUrl'] as String,
+      item: decodedJson['item'] as String,
+      ability: decodedJson['ability'] as String,
+      nature: decodedJson['nature'] as String,
+      isShiny: decodedJson['isShiny'] as bool,
+      moves: (decodedJson['moves'] as List<dynamic>)
+          .map((moveJson) => Move.fromJson(jsonEncode(moveJson)))
+          .toList(),
+      ivDef: decodedJson['ivDef'] as int,
+      ivAtk: decodedJson['ivAtk'] as int,
+      ivSpDef: decodedJson['ivSpDef'] as int,
+      ivSpAtk: decodedJson['ivSpAtk'] as int,
+      ivSpeed: decodedJson['ivSpeed'] as int,
+      ivHealth: decodedJson['ivHealth'] as int,
+      evDef: decodedJson['evDef'] as int,
+      evAtk: decodedJson['evAtk'] as int,
+      evSpDef: decodedJson['evSpDef'] as int,
+      evSpAtk: decodedJson['evSpAtk'] as int,
+      evSpeed: decodedJson['evSpeed'] as int,
+      evHealth: decodedJson['evHealth'] as int,
+    );
   }
 }

@@ -70,9 +70,8 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
       final body = commentsText[random.nextInt(commentsText.length)];
 
       return Comment(
-        createdDate,
-        trainer,
-        body: body,
+        trainer: trainer,
+        body: body, createdDate: createdDate,
       );
     });
   }
@@ -249,8 +248,8 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
                   ),
                   onPressed: () {
                     final newComment = Comment(
-                      DateTime.now(),
-                      Trainer(
+                      createdDate: DateTime.now(),
+                      trainer: Trainer(
                         name: 'New',
                         firstSurname: 'User',
                         secondSurname: 'User',

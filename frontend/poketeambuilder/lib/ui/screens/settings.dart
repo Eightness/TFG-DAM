@@ -6,9 +6,9 @@ import '../../utils/constants.dart';
 import '../widgets/windows_buttons.dart';
 
 class Settings extends StatefulWidget {
-  final Trainer trainer;
+  final Trainer currentTrainer;
 
-  Settings({Key? key, required this.trainer}) : super(key: key);
+  Settings({Key? key, required this.currentTrainer}) : super(key: key);
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -27,14 +27,14 @@ class _SettingsState extends State<Settings> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.trainer.name);
+    nameController = TextEditingController(text: widget.currentTrainer.name);
     surnamesController = TextEditingController(
-        text: '${widget.trainer.firstSurname} ${widget.trainer.secondSurname}');
-    emailController = TextEditingController(text: widget.trainer.email);
-    phoneController = TextEditingController(text: widget.trainer.phone);
-    usernameController = TextEditingController(text: widget.trainer.username);
-    passwordController = TextEditingController(text: widget.trainer.password);
-    isDarkMode = widget.trainer.theme;
+        text: '${widget.currentTrainer.firstSurname} ${widget.currentTrainer.secondSurname}');
+    emailController = TextEditingController(text: widget.currentTrainer.email);
+    phoneController = TextEditingController(text: widget.currentTrainer.phone);
+    usernameController = TextEditingController(text: widget.currentTrainer.username);
+    passwordController = TextEditingController(text: widget.currentTrainer.password);
+    isDarkMode = widget.currentTrainer.theme;
   }
 
   void _toggleTheme(bool value) {

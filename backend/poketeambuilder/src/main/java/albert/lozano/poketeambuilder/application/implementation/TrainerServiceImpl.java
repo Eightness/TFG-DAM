@@ -6,9 +6,8 @@
 package albert.lozano.poketeambuilder.application.implementation;
 
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
-import albert.lozano.poketeambuilder.controller.dto.inputDTO.TrainerInputDTO;
-import albert.lozano.poketeambuilder.controller.dto.mappers.TrainerMapper;
-import albert.lozano.poketeambuilder.controller.dto.outputDTO.TrainerOutputDTO;
+import albert.lozano.poketeambuilder.dto.TrainerDTO;
+import albert.lozano.poketeambuilder.dto.mappers.TrainerMapper;
 import albert.lozano.poketeambuilder.domain.Trainer;
 import albert.lozano.poketeambuilder.repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.util.List;
  * TrainerServiceImpl class. Implements GenericService interface and contains all methods related to Trainer's CRUD.
  */
 @Service
-public class TrainerServiceImpl implements GenericCRUDService<TrainerInputDTO, TrainerOutputDTO, Long> {
+public class TrainerServiceImpl implements GenericCRUDService<TrainerDTO, Long> {
     // Attributes
     @Autowired
     TrainerRepository trainerRepository;
@@ -29,38 +28,38 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerInputDTO, T
 
     // Methods
     @Override
-    public TrainerOutputDTO getEntityById(Long id) {
+    public TrainerDTO getEntityById(Long id) {
         Trainer trainer = trainerRepository.findById(id).orElseThrow();
-        return trainerMapper.domainToOutput(trainer);
+        return trainerMapper.domainToDTO(trainer);
     }
 
     @Override
-    public List<TrainerOutputDTO> getEntityByIds(List<Long> ids) {
+    public List<TrainerDTO> getEntityByIds(List<Long> ids) {
         return null;
     }
 
     @Override
-    public List<TrainerOutputDTO> getAllEntities(int pageNumber, int pageSize) {
+    public List<TrainerDTO> getAllEntities(int pageNumber, int pageSize) {
         List<Trainer> allTrainers = trainerRepository.findAll();
-        return trainerMapper.domainToOutput(allTrainers);
+        return trainerMapper.domainToDTO(allTrainers);
     }
 
     @Override
-    public TrainerOutputDTO addEntity(TrainerInputDTO inputEntity) {
-        Trainer trainer = trainerMapper.inputToDomain(inputEntity);
+    public TrainerDTO addEntity(TrainerDTO inputEntity) {
+        Trainer trainer = trainerMapper.DTOToDomain(inputEntity);
         trainerRepository.save(trainer);
-        return trainerMapper.domainToOutput(trainer);
+        return trainerMapper.domainToDTO(trainer);
     }
 
     @Override
-    public List<TrainerOutputDTO> addEntities(List<TrainerInputDTO> inputEntities) {
+    public List<TrainerDTO> addEntities(List<TrainerDTO> inputEntities) {
         return null;
     }
 
     @Override
-    public TrainerOutputDTO updateEntity(Long id, TrainerInputDTO inputEntity) {
+    public TrainerDTO updateEntity(Long id, TrainerDTO inputEntity) {
         Trainer trainer = trainerRepository.findById(id).orElseThrow();
-        Trainer updatedTrainer = trainerMapper.inputToDomain(inputEntity);
+        Trainer updatedTrainer = trainerMapper.DTOToDomain(inputEntity);
 
         trainer.setUsername(updatedTrainer.getUsername());
         trainer.setPassword(updatedTrainer.getPassword());
@@ -68,21 +67,21 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerInputDTO, T
         trainer.setTheme(updatedTrainer.getTheme());
 
         trainerRepository.save(trainer);
-        return trainerMapper.domainToOutput(trainer);
+        return trainerMapper.domainToDTO(trainer);
     }
 
     @Override
-    public List<TrainerOutputDTO> updateEntities(Long ids, List<TrainerInputDTO> inputEntities) {
+    public List<TrainerDTO> updateEntities(Long ids, List<TrainerDTO> inputEntities) {
         return null;
     }
 
     @Override
-    public TrainerOutputDTO modifyEntity(Long id, TrainerInputDTO inputEntity) {
+    public TrainerDTO modifyEntity(Long id, TrainerDTO inputEntity) {
         return null;
     }
 
     @Override
-    public List<TrainerOutputDTO> modifyEntitiesByIds(List<Long> ids, List<TrainerInputDTO> inputEntities) {
+    public List<TrainerDTO> modifyEntitiesByIds(List<Long> ids, List<TrainerDTO> inputEntities) {
         return null;
     }
 
@@ -108,4 +107,11 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerInputDTO, T
         return trainerRepository.existsByEmail(email);
     }
 
+    public boolean checkCredentials(String username, String password) {
+        return trainerRepository.existsByUsernameAndPassword(username, password);
+    }
+
+    public TrainerDTO getTrainerByUsername(String username) {
+        return trainerMapper.domainToDTO(trainerRepository.findByUsername(username));
+    }
 }

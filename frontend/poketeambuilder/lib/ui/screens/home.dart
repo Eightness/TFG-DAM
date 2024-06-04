@@ -15,8 +15,13 @@ import 'settings.dart';
 class Home extends StatelessWidget {
   final Widget teamContent;
   final Widget communityContent;
+  final Trainer currentTrainer;
 
-  Home({Key? key, required this.teamContent, required this.communityContent})
+  Home(
+      {Key? key,
+      required this.teamContent,
+      required this.communityContent,
+      required this.currentTrainer})
       : super(key: key);
 
   @override
@@ -67,8 +72,8 @@ class Home extends StatelessWidget {
                   icon: const Icon(Icons.person, color: Colors.white, size: 40),
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  'Username',
+                Text(
+                  '${currentTrainer.username}',
                   style: TextStyle(
                     color: Constants.white,
                     fontSize: 20,
@@ -115,48 +120,22 @@ class Home extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (context) => Profile(
-            trainer: Trainer(
-                name: 'Albert',
-                firstSurname: 'Lozano',
-                secondSurname: 'Blasco',
-                email: 'albertlb08@gmail.com',
-                phone: '625760988',
-                password: '12345',
-                username: 'Eightness',
-                createdDate: DateTime.now(),
-                theme: true,
-                bio:
-                    'This is the bio of a trainer. It contains a brief description about the trainer.',
-                teams: []),
+            currentTrainer: currentTrainer,
             isCurrentTrainer: true,
           ),
         ),
       );
     } else if (item.text == 'Settings') {
       Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Settings(
-                  trainer: Trainer(
-                      name: 'Albert',
-                      firstSurname: 'Lozano',
-                      secondSurname: 'Blasco',
-                      email: 'albertlb08@gmail.com',
-                      phone: '625760988',
-                      password: '12345',
-                      username: 'Eightness',
-                      createdDate: DateTime.now(),
-                      theme: true,
-                      bio:
-                          'This is the bio of a trainer. It contains a brief description about the trainer.',
-                      teams: []),
-                )),
-      );
+          context,
+          MaterialPageRoute(
+              builder: (context) => Settings(currentTrainer: currentTrainer)));
     } else if (item.text == 'Log out') {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Welcome(signIn: SignIn(), register: Register())),
+            builder: (context) =>
+                Welcome(signIn: SignIn(), register: Register())),
       );
     }
   }

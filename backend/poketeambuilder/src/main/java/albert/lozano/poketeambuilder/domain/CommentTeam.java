@@ -6,9 +6,7 @@
 package albert.lozano.poketeambuilder.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * CommentTeam class. Serves as a junction table between Comment and Team.
@@ -16,6 +14,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "CommentTeam")
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentTeam {

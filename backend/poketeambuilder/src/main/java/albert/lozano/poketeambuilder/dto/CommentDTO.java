@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package albert.lozano.poketeambuilder.controller.dto.inputDTO;
+package albert.lozano.poketeambuilder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,11 +17,11 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentInputDTO {
+public class CommentDTO {
     // Attributes
     private Date createdDate;
 
     private String body;
 
-    private TrainerInputDTO trainer;
+    private TrainerDTO trainer;
 }

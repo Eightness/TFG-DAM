@@ -6,8 +6,7 @@
 package albert.lozano.poketeambuilder.controller;
 
 import albert.lozano.poketeambuilder.application.implementation.PokemonServiceImpl;
-import albert.lozano.poketeambuilder.controller.dto.inputDTO.PokemonInputDTO;
-import albert.lozano.poketeambuilder.controller.dto.outputDTO.PokemonOutputDTO;
+import albert.lozano.poketeambuilder.dto.PokemonDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,40 +27,40 @@ public class PokemonController {
     // CRUD Methods
     // Create methods
     @PostMapping("/add")
-    public ResponseEntity<PokemonOutputDTO> postPokemon(@RequestBody PokemonInputDTO pokemonInputDTO) {
-        PokemonOutputDTO newPokemon = pokemonService.addEntity(pokemonInputDTO);
+    public ResponseEntity<PokemonDTO> postPokemon(@RequestBody PokemonDTO pokemonDTO) {
+        PokemonDTO newPokemon = pokemonService.addEntity(pokemonDTO);
         return new ResponseEntity<>(newPokemon, HttpStatus.OK);
     }
 
     // Read methods
     @GetMapping("/get")
-    public ResponseEntity<PokemonOutputDTO> getPokemonById(@RequestParam long id) {
-        PokemonOutputDTO pokemon = pokemonService.getEntityById(id);
+    public ResponseEntity<PokemonDTO> getPokemonById(@RequestParam long id) {
+        PokemonDTO pokemon = pokemonService.getEntityById(id);
         return new ResponseEntity<>(pokemon, HttpStatus.OK);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<PokemonOutputDTO>> getAllPokemon() {
-        List<PokemonOutputDTO> allPokemon = pokemonService.getAllEntities(0, 10);
+    public ResponseEntity<List<PokemonDTO>> getAllPokemon() {
+        List<PokemonDTO> allPokemon = pokemonService.getAllEntities(0, 10);
         return new ResponseEntity<>(allPokemon, HttpStatus.OK);
     }
 
     // Update methods
     @PutMapping("/update")
-    public ResponseEntity<PokemonOutputDTO> updatePokemon(@RequestParam long id, @RequestBody PokemonInputDTO pokemonInputDTO) {
-        PokemonOutputDTO updatedPokemon = pokemonService.updateEntity(id, pokemonInputDTO);
+    public ResponseEntity<PokemonDTO> updatePokemon(@RequestParam long id, @RequestBody PokemonDTO pokemonDTO) {
+        PokemonDTO updatedPokemon = pokemonService.updateEntity(id, pokemonDTO);
         return new ResponseEntity<>(updatedPokemon, HttpStatus.OK);
     }
 
     // Delete methods
     @DeleteMapping("/delete")
-    public ResponseEntity<PokemonOutputDTO> deletePokemonById(@RequestParam long id) {
+    public ResponseEntity<PokemonDTO> deletePokemonById(@RequestParam long id) {
         pokemonService.deleteEntityById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-all")
-    public ResponseEntity<PokemonOutputDTO> deleteAllPokemon() {
+    public ResponseEntity<PokemonDTO> deleteAllPokemon() {
         pokemonService.deleteAllEntities();
         return new ResponseEntity<>(HttpStatus.OK);
     }

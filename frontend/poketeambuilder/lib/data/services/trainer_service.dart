@@ -4,11 +4,11 @@ import 'package:http/http.dart' as http;
 import '../models/trainer.dart';
 
 class TrainerService {
-  final String baseUrl = 'http://localhost:8080';
+  final String baseUrl = 'http://localhost:8080/trainer';
 
-  // POST Trainer
+  // Add new trainer
   Future<bool> registerTrainer(Trainer trainer) async {
-    final url = Uri.parse('$baseUrl/trainer/add');
+    final url = Uri.parse('$baseUrl/add');
 
     try {
       final response = await http.post(
@@ -38,10 +38,8 @@ class TrainerService {
   Future<bool> checkUsernameExists(String username) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/trainer/check-exists-username?username=$username'),
+        Uri.parse('$baseUrl/check-exists-username?username=$username'),
       );
-
-      print(username);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final exists = jsonDecode(response.body);
@@ -65,10 +63,8 @@ class TrainerService {
   Future<bool> checkEmailExists(String email) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/trainer/check-exists-email?email=$email'),
+        Uri.parse('$baseUrl/check-exists-email?email=$email'),
       );
-
-      print(email);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final exists = jsonDecode(response.body);
@@ -85,6 +81,71 @@ class TrainerService {
     } catch (e) {
       print('Error checking email existence: $e');
       return false;
+    }
+  }
+
+  // Check trainer credentials
+  Future<bool> checkCredentials(String username, String password) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/check-credentials?username=$username&password=$password'),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final exists = jsonDecode(response.body);
+        print('Credentials ${exists ? 'verified' : 'not verified'}');
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return exists;
+      } else {
+        print('Failed to check credentials');
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error checking credentials: $e');
+      return false;
+    }
+  }
+
+  Future<Trainer?> getTrainerByUsername(String username) async {
+    Trainer testTrainer = new Trainer(
+        name: 'test',
+        firstSurname: 'test',
+        secondSurname: 'test',
+        email: 'test',
+        phone: 'test',
+        password: 'test',
+        username: 'test',
+        createdDate: DateTime.now(),
+        theme: true,
+        bio:
+        'test',
+        teams: []);
+
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/get?username=$username'),
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+
+        final trainer = Trainer.fromJson(response.body);
+
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return trainer;
+      } else {
+        print('Failed to retrieve trainer with username $username'); // More specific message
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return testTrainer;
+      }
+    } catch (e) {
+      print('Error fetching trainer with username $username: $e');
+      return testTrainer;
     }
   }
 

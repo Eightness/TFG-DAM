@@ -6,9 +6,7 @@
 package albert.lozano.poketeambuilder.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * PokemonMove class. Serves as a junction table between Pokémon and Move.
@@ -16,6 +14,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "PokemonMove")
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PokemonMove {

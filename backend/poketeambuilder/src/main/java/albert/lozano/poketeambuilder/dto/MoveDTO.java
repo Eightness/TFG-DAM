@@ -3,19 +3,19 @@
  * @version 1.0
  */
 
-package albert.lozano.poketeambuilder.controller.dto.outputDTO;
+package albert.lozano.poketeambuilder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * MoveOutputDTO class. Contains all Move's attributes to display.
+ * MoveInputDTO class. Contains all Move's attributes obtainable by user's input.
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class MoveOutputDTO {
+@AllArgsConstructor
+public class MoveDTO {
     // Attributes
     private String name;
 }

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:poketeambuilder/ui/screens/tabs/community.dart';
 import 'package:poketeambuilder/ui/screens/tabs/team_builder.dart';
+import '../../../data/models/trainer.dart';
+import '../../../data/services/trainer_service.dart';
 import '../../../utils/constants.dart';
 import '../home.dart';
 
 class SignIn extends StatelessWidget {
+  final TrainerService _trainerService = TrainerService();
+
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  late final Trainer currentTrainer;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,37 +52,13 @@ class SignIn extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              _buildTextField('Username'),
+              _buildTextField('Username', controller: usernameController),
               SizedBox(height: 10),
-              _buildTextField('Password', isPassword: true),
+              _buildTextField('Password', isPassword: true, controller: passwordController),
               SizedBox(height: 40),
               ElevatedButton(
-                onPressed: () {
-                  bool isValid = checkCredentials(context);
-                  if (isValid) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Home(teamContent: TeamBuilder(), communityContent: Community(),)),
-                    );
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Invalid username or password.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK', style: TextStyle(color: Constants.red)),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
+                onPressed: () async {
+                  await _signInTrainer(context);
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Constants.white, backgroundColor: Constants.red, fixedSize: Size(200, 35)
@@ -87,11 +72,42 @@ class SignIn extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String labelText, {bool isPassword = false}) {
+  Future<void> _signInTrainer(BuildContext context) async {
+    bool isValid = await _checkCredentials(context);
+    if (isValid) {
+      currentTrainer = (await _trainerService.getTrainerByUsername(usernameController.text))!;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Home(teamContent: TeamBuilder(), communityContent: Community(), currentTrainer: currentTrainer,)),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Invalid username or password.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK', style: TextStyle(color: Constants.red)),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Widget _buildTextField(String labelText,
+      {bool isPassword = false, TextEditingController? controller}) {
     return Container(
       width: 300,
       child: TextField(
         obscureText: isPassword,
+        controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(color: Constants.darkBrown),
@@ -106,7 +122,10 @@ class SignIn extends StatelessWidget {
     );
   }
 
-  bool checkCredentials(BuildContext context) {
-    return false;
+  Future<bool> _checkCredentials(BuildContext context) {
+    String username = usernameController.text;
+    String password = passwordController.text;
+
+    return _trainerService.checkCredentials(username, password);
   }
 }

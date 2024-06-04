@@ -109,6 +109,7 @@ class TrainerService {
     }
   }
 
+  // Get trainer by username
   Future<Trainer?> getTrainerByUsername(String username) async {
     try {
       final response = await http.get(
@@ -135,9 +136,9 @@ class TrainerService {
     }
   }
 
-  // Update trainer bio
-  Future<Trainer?> updateTrainerBio(Trainer trainer) async {
-    final url = Uri.parse('$baseUrl/update-bio');
+  // Update current trainer
+  Future<Trainer?> updateCurrentTrainer(Trainer trainer) async {
+    final url = Uri.parse('$baseUrl/update-current');
 
     try {
       final response = await http.put(
@@ -147,22 +148,23 @@ class TrainerService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('Trainer bio successfully updated');
+        print('Trainer successfully updated');
         print('Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
-        return Trainer.fromJson(response.body); // Parse updated trainer
+        return Trainer.fromJson(response.body);
       } else {
-        print('Failed to update trainer bio');
+        print('Failed to update trainer');
         print('Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
         return null;
       }
     } catch (e) {
-      print('Error updating trainer bio: $e');
+      print('Error updating trainer: $e');
       return null;
     }
   }
 
+  // Delete current trainer
   Future<void> deleteCurrentTrainer(Trainer currentTrainer) async {
     final url = Uri.parse('$baseUrl/delete-current');
 

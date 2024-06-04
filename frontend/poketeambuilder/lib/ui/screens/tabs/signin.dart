@@ -76,9 +76,10 @@ class SignIn extends StatelessWidget {
     bool isValid = await _checkCredentials(context);
     if (isValid) {
       currentTrainer = (await _trainerService.getTrainerByUsername(usernameController.text))!;
+      Constants.isDarkTheme = currentTrainer.theme;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Home(teamContent: TeamBuilder(), communityContent: Community(), currentTrainer: currentTrainer,)),
+        MaterialPageRoute(builder: (context) => Home(team: TeamBuilder(), community: Community(), currentTrainer: currentTrainer,)),
       );
     } else {
       showDialog(

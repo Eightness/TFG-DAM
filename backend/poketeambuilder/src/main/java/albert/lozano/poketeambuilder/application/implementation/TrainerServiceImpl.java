@@ -71,10 +71,16 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerDTO, Long> 
         return trainerMapper.domainToDTO(trainer);
     }
 
-    public TrainerDTO updateTrainerBio(TrainerDTO trainerDTO) {
+    public TrainerDTO updateCurrentTrainer(TrainerDTO trainerDTO) {
         Trainer trainer = trainerRepository.findByUsername(trainerDTO.getUsername());
         Trainer updatedTrainer = trainerMapper.DTOToDomain(trainerDTO);
 
+        trainer.setName(updatedTrainer.getName());
+        trainer.setFirstSurname(updatedTrainer.getFirstSurname());
+        trainer.setSecondSurname(updatedTrainer.getSecondSurname());
+        trainer.setPhone(updatedTrainer.getPhone());
+        trainer.setPassword(updatedTrainer.getPassword());
+        trainer.setTheme(updatedTrainer.getTheme());
         trainer.setBio(updatedTrainer.getBio());
 
         trainerRepository.save(trainer);

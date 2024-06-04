@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:poketeambuilder/ui/screens/home.dart';
+import 'package:poketeambuilder/ui/screens/profile.dart';
+import 'package:poketeambuilder/ui/screens/tabs/community.dart';
 import 'package:poketeambuilder/ui/screens/tabs/register.dart';
 import 'package:poketeambuilder/ui/screens/tabs/signin.dart';
+import 'package:poketeambuilder/ui/screens/tabs/team_builder.dart';
 import 'package:poketeambuilder/ui/screens/welcome.dart';
 
 import '../../data/models/trainer.dart';
 import '../../data/services/trainer_service.dart';
 import '../../utils/constants.dart';
+import '../widgets/menu_item.dart';
+import '../widgets/menu_items.dart';
 import '../widgets/windows_buttons.dart';
 
 class Settings extends StatefulWidget {
@@ -31,6 +37,7 @@ class _SettingsState extends State<Settings> {
   @override
   void initState() {
     super.initState();
+    _initializeTheme();
     nameController = TextEditingController(text: widget.currentTrainer.name);
     surnamesController = TextEditingController(
         text: '${widget.currentTrainer.firstSurname} ${widget.currentTrainer.secondSurname}');
@@ -38,24 +45,22 @@ class _SettingsState extends State<Settings> {
     phoneController = TextEditingController(text: widget.currentTrainer.phone);
     usernameController = TextEditingController(text: widget.currentTrainer.username);
     passwordController = TextEditingController(text: widget.currentTrainer.password);
-    Constants.updateTheme(widget.currentTrainer.theme);
   }
 
-  void _toggleTheme(bool value) {
+  void _initializeTheme() {
+    setState(() {
+      Constants.updateTheme(widget.currentTrainer.theme);
+    });
+  }
+
+  void _toggleTheme(bool value) async {
     setState(() {
       Constants.updateTheme(value);
     });
-  }
 
-  void _logOut() {
-    setState(() {
-      Constants.updateTheme(true); // Cambiar a tema claro por defecto
-    });
-    // Aquí iría la lógica para cerrar sesión y redirigir al usuario
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Welcome(signIn: SignIn(), register: Register())),
-    );
+    widget.currentTrainer.theme = value;
+    print(widget.currentTrainer.theme);
+    await _trainerService.updateCurrentTrainer(widget.currentTrainer);
   }
 
   void _showDeleteAccountDialog() {
@@ -136,24 +141,38 @@ class _SettingsState extends State<Settings> {
                   width: 300.0,
                 ),
                 centerTitle: true,
+                automaticallyImplyLeading: false,
+                actions: [
+                  PopupMenuButton<MenuItem>(
+                    itemBuilder: (context) => MenuItems.settingsList.map((item) {
+                      return PopupMenuItem<MenuItem>(
+                        value: item,
+                        child: Row(
+                          children: [
+                            Icon(item.icon, color: Colors.black, size: 20),
+                            const SizedBox(width: 12),
+                            Text(item.text),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onSelected: (item) => onMenuItemSelected(context, item),
+                    // Handle menu item selection
+                    icon: const Icon(Icons.person, color: Colors.white, size: 40),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '${widget.currentTrainer.username}',
+                    style: TextStyle(
+                      color: Constants.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                ],
                 backgroundColor: Constants.red,
                 toolbarHeight: 150.0,
                 shadowColor: Constants.black,
-                actions: [
-                  PopupMenuButton<String>(
-                    onSelected: (String result) {
-                      if (result == 'logout') {
-                        _logOut();
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      const PopupMenuItem<String>(
-                        value: 'logout',
-                        child: Text('Log out'),
-                      ),
-                    ],
-                  ),
-                ],
                 bottom: TabBar(
                   labelColor: Constants.white,
                   tabs: [
@@ -213,7 +232,7 @@ class _SettingsState extends State<Settings> {
                               ),
                               SizedBox(height: 10.0),
                               Switch(
-                                value: Constants.isLightTheme,
+                                value: widget.currentTrainer.theme,
                                 onChanged: (value) {
                                   _toggleTheme(value);
                                 },
@@ -251,6 +270,7 @@ class _SettingsState extends State<Settings> {
                                 SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {
+                                    _saveChanges();
                                     _showSaveChangesDialog();
                                   },
                                   child: Text('Save Changes'),
@@ -338,4 +358,55 @@ class _SettingsState extends State<Settings> {
       ),
     );
   }
+
+  void onMenuItemSelected(BuildContext context, MenuItem item) {
+    if (item.text == 'Profile') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Profile(
+            currentTrainer: widget.currentTrainer,
+            isCurrentTrainer: true,
+          ),
+        ),
+      );
+    } else if (item.text == 'Settings') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Settings(currentTrainer: widget.currentTrainer)));
+    } else if (item.text == 'Log out') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Welcome(signIn: SignIn(), register: Register())),
+      );
+    } else if (item.text == 'Home') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Home(team: TeamBuilder(), community: Community(), currentTrainer: widget.currentTrainer)),
+      );
+    }
+  }
+
+  void _saveChanges() async {
+    String name = nameController.text;
+    List<String> surnames = surnamesController.text.split(' ');
+    String phone = phoneController.text;
+    String password = passwordController.text;
+
+    setState(() {
+      widget.currentTrainer.name = name;
+      widget.currentTrainer.firstSurname = surnames.isNotEmpty ? surnames[0] : '';
+      widget.currentTrainer.secondSurname = surnames.length > 1 ? surnames[1] : '';
+      widget.currentTrainer.phone = phone;
+      widget.currentTrainer.password = password;
+    });
+
+    await _trainerService.updateCurrentTrainer(widget.currentTrainer);
+  }
+
 }

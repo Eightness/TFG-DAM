@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static bool isLightTheme = true;
+  static bool isDarkTheme = false;
 
-  static Color get blue => isLightTheme ? Color(0xFF9FBCC1) : Color(0xFF444B4D);
-  static Color get darkBlue => isLightTheme ? Color(0xFF4E6466) : Color(0xFF272D2D);
-  static Color get red => isLightTheme ? Color(0xFFBF4747) : Color(0xFF282424);
-  static Color get darkRed => isLightTheme ? Color(0xFFAD3737) : Color(0xFF171515);
-  static Color get brown => isLightTheme ? Color(0xff615148) : Color(0xFFD8D8D6);
-  static Color get darkBrown => isLightTheme ? Color(0xFF483C3C) : Color(0xFF483C3C);
+  static Color get blue => isDarkTheme ? Color(0xFF444B4D) : Color(0xFF9FBCC1);
+  static Color get darkBlue => isDarkTheme ? Color(0xFF272D2D) : Color(0xFF4E6466);
+  static Color get red => isDarkTheme ? Color(0xFF282424) : Color(0xFFBF4747);
+  static Color get darkRed => isDarkTheme ? Color(0xFF171515) : Color(0xFFAD3737);
+  static Color get brown => isDarkTheme ?Color(0xFFD8D8D6) : Color(0xff615148);
+  static Color get darkBrown => isDarkTheme ?Color(0xFF483C3C) : Color(0xFF483C3C);
   static Color get yellow => Color(0xFFECE474);
   static Color get grey => Color(0xFFD8D8D6);
-  static Color get white => isLightTheme ? Colors.white : Color(0xFFD8D8D6);
-  static Color get black => isLightTheme ? Colors.black : Colors.black;
+  static Color get white => isDarkTheme ? Color(0xFFD8D8D6) : Colors.white;
+  static Color get black => isDarkTheme ? Colors.black : Colors.black;
 
-  static void updateTheme(bool isLight) {
-    isLightTheme = isLight;
+  static void updateTheme(bool isDark) {
+    isDarkTheme = isDark;
   }
 }

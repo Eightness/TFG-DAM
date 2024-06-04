@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:intl/intl.dart';
 import 'package:poketeambuilder/data/services/trainer_service.dart';
+import 'package:poketeambuilder/ui/screens/settings.dart';
+import 'package:poketeambuilder/ui/screens/tabs/community.dart';
+import 'package:poketeambuilder/ui/screens/tabs/register.dart';
+import 'package:poketeambuilder/ui/screens/tabs/signin.dart';
+import 'package:poketeambuilder/ui/screens/tabs/team_builder.dart';
+import 'package:poketeambuilder/ui/screens/welcome.dart';
 
 import '../../utils/constants.dart';
+import '../widgets/menu_item.dart';
+import '../widgets/menu_items.dart';
 import '../widgets/team_showcase_mini.dart';
 import '../widgets/windows_buttons.dart';
 import '../../data/models/trainer.dart';
+import 'home.dart';
 
 class Profile extends StatelessWidget {
   final Trainer currentTrainer;
@@ -46,6 +55,35 @@ class Profile extends StatelessWidget {
                   width: 300.0,
                 ),
                 centerTitle: true,
+                automaticallyImplyLeading: false,
+                actions: [
+                  PopupMenuButton<MenuItem>(
+                    itemBuilder: (context) => MenuItems.profileList.map((item) {
+                      return PopupMenuItem<MenuItem>(
+                        value: item,
+                        child: Row(
+                          children: [
+                            Icon(item.icon, color: Colors.black, size: 20),
+                            const SizedBox(width: 12),
+                            Text(item.text),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onSelected: (item) => onMenuItemSelected(context, item),
+                    // Handle menu item selection
+                    icon: const Icon(Icons.person, color: Colors.white, size: 40),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '${currentTrainer.username}',
+                    style: TextStyle(
+                      color: Constants.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                ],
                 backgroundColor: Constants.red,
                 toolbarHeight: 150.0,
                 shadowColor: Constants.black,
@@ -155,7 +193,7 @@ class Profile extends StatelessWidget {
                                                               TextButton(
                                                                 onPressed: () async {
                                                                   currentTrainer.bio = bioController.text;
-                                                                  await _trainerService.updateTrainerBio(currentTrainer);
+                                                                  await _trainerService.updateCurrentTrainer(currentTrainer);
                                                                   Navigator.of(context).pop();
                                                                 },
                                                                 child: Text('OK', style: TextStyle(color: Constants.red)),
@@ -225,5 +263,38 @@ class Profile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void onMenuItemSelected(BuildContext context, MenuItem item) {
+    if (item.text == 'Profile') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Profile(
+            currentTrainer: currentTrainer,
+            isCurrentTrainer: true,
+          ),
+        ),
+      );
+    } else if (item.text == 'Settings') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Settings(currentTrainer: currentTrainer)));
+    } else if (item.text == 'Log out') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Welcome(signIn: SignIn(), register: Register())),
+      );
+    } else if (item.text == 'Home') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Home(team: TeamBuilder(), community: Community(), currentTrainer: currentTrainer)),
+      );
+    }
   }
 }

@@ -52,9 +52,9 @@ public class TrainerController {
         return new ResponseEntity<>(updatedTrainer, HttpStatus.OK);
     }
 
-    @PutMapping("/update-bio")
-    public ResponseEntity<TrainerDTO> updateTrainerBioByUsername(@RequestBody TrainerDTO trainerDTO) {
-        TrainerDTO updatedTrainer = trainerService.updateTrainerBio(trainerDTO);
+    @PutMapping("/update-current")
+    public ResponseEntity<TrainerDTO> updateCurrentTrainerByUsername(@RequestBody TrainerDTO trainerDTO) {
+        TrainerDTO updatedTrainer = trainerService.updateCurrentTrainer(trainerDTO);
         return new ResponseEntity<>(updatedTrainer, HttpStatus.OK);
     }
 

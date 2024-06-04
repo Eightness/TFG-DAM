@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:intl/intl.dart';
+import 'package:poketeambuilder/data/services/trainer_service.dart';
 
 import '../../utils/constants.dart';
 import '../widgets/team_showcase_mini.dart';
@@ -10,6 +11,9 @@ import '../../data/models/trainer.dart';
 class Profile extends StatelessWidget {
   final Trainer currentTrainer;
   final bool isCurrentTrainer;
+  final TrainerService _trainerService = new TrainerService();
+
+  final TextEditingController bioController = TextEditingController();
 
   Profile({Key? key, required this.currentTrainer, required this.isCurrentTrainer})
       : super(key: key);
@@ -45,7 +49,7 @@ class Profile extends StatelessWidget {
                 backgroundColor: Constants.red,
                 toolbarHeight: 150.0,
                 shadowColor: Constants.black,
-                bottom: const TabBar(
+                bottom: TabBar(
                   labelColor: Constants.white,
                   tabs: [
                     Tab(
@@ -140,6 +144,26 @@ class Profile extends StatelessWidget {
                                                     icon: Icon(Icons.edit,
                                                         color: Constants.blue),
                                                     onPressed: () {
+                                                      // Update bio logic
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return AlertDialog(
+                                                            title: Text('Biography'),
+                                                            content: _buildTextField('Update biography', isPassword: false, controller: bioController),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () async {
+                                                                  currentTrainer.bio = bioController.text;
+                                                                  await _trainerService.updateTrainerBio(currentTrainer);
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                                child: Text('OK', style: TextStyle(color: Constants.red)),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
                                                     },
                                                   ),
                                                 ),
@@ -179,6 +203,27 @@ class Profile extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildTextField(String labelText,
+      {bool isPassword = false, TextEditingController? controller}) {
+    return Container(
+      width: 300,
+      child: TextField(
+        obscureText: isPassword,
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(color: Constants.darkBrown),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Constants.darkBrown),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Constants.red),
+          ),
+        ),
+      ),
     );
   }
 }

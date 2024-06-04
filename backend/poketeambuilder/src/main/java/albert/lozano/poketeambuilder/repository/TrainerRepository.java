@@ -25,4 +25,5 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     boolean existsByEmail(String email);
     boolean existsByUsernameAndPassword(String username, String password);
     Trainer findByUsername(String username);
+    void deleteByUsername(String username);
 }

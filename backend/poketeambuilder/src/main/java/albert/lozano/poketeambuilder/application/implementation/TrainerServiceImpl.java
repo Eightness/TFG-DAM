@@ -10,6 +10,7 @@ import albert.lozano.poketeambuilder.dto.TrainerDTO;
 import albert.lozano.poketeambuilder.dto.mappers.TrainerMapper;
 import albert.lozano.poketeambuilder.domain.Trainer;
 import albert.lozano.poketeambuilder.repository.TrainerRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +71,16 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerDTO, Long> 
         return trainerMapper.domainToDTO(trainer);
     }
 
+    public TrainerDTO updateTrainerBio(TrainerDTO trainerDTO) {
+        Trainer trainer = trainerRepository.findByUsername(trainerDTO.getUsername());
+        Trainer updatedTrainer = trainerMapper.DTOToDomain(trainerDTO);
+
+        trainer.setBio(updatedTrainer.getBio());
+
+        trainerRepository.save(trainer);
+        return trainerMapper.domainToDTO(trainer);
+    }
+
     @Override
     public List<TrainerDTO> updateEntities(Long ids, List<TrainerDTO> inputEntities) {
         return null;
@@ -113,5 +124,10 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerDTO, Long> 
 
     public TrainerDTO getTrainerByUsername(String username) {
         return trainerMapper.domainToDTO(trainerRepository.findByUsername(username));
+    }
+
+    @Transactional
+    public void deleteCurrentTrainer(TrainerDTO trainerDTO) {
+        trainerRepository.deleteByUsername(trainerDTO.getUsername());
     }
 }

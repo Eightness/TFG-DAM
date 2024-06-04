@@ -110,26 +110,12 @@ class TrainerService {
   }
 
   Future<Trainer?> getTrainerByUsername(String username) async {
-    Trainer testTrainer = new Trainer(
-        name: 'test',
-        firstSurname: 'test',
-        secondSurname: 'test',
-        email: 'test',
-        phone: 'test',
-        password: 'test',
-        username: 'test',
-        createdDate: DateTime.now(),
-        theme: true,
-        bio:
-        'test',
-        teams: []);
-
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/get?username=$username'),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.body);
 
         final trainer = Trainer.fromJson(response.body);
@@ -141,11 +127,63 @@ class TrainerService {
         print('Failed to retrieve trainer with username $username'); // More specific message
         print('Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
-        return testTrainer;
+        return null;
       }
     } catch (e) {
       print('Error fetching trainer with username $username: $e');
-      return testTrainer;
+      return null;
+    }
+  }
+
+  // Update trainer bio
+  Future<Trainer?> updateTrainerBio(Trainer trainer) async {
+    final url = Uri.parse('$baseUrl/update-bio');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(trainer.toJson()),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Trainer bio successfully updated');
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return Trainer.fromJson(response.body); // Parse updated trainer
+      } else {
+        print('Failed to update trainer bio');
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Error updating trainer bio: $e');
+      return null;
+    }
+  }
+
+  Future<void> deleteCurrentTrainer(Trainer currentTrainer) async {
+    final url = Uri.parse('$baseUrl/delete-current');
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(currentTrainer.toJson()),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Trainer successfully deleted');
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      } else {
+        print('Failed to delete trainer');
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      print('Error deleting trainer: $e');
     }
   }
 

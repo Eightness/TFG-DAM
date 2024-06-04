@@ -52,12 +52,24 @@ public class TrainerController {
         return new ResponseEntity<>(updatedTrainer, HttpStatus.OK);
     }
 
+    @PutMapping("/update-bio")
+    public ResponseEntity<TrainerDTO> updateTrainerBioByUsername(@RequestBody TrainerDTO trainerDTO) {
+        TrainerDTO updatedTrainer = trainerService.updateTrainerBio(trainerDTO);
+        return new ResponseEntity<>(updatedTrainer, HttpStatus.OK);
+    }
+
     // Delete methods
     @DeleteMapping("/delete")
     public ResponseEntity<TrainerDTO> deleteTrainerById(@RequestParam long id) {
         trainerService.deleteEntityById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @DeleteMapping("/delete-current")
+    public ResponseEntity<TrainerDTO> deleteCurrentTrainer(@RequestBody TrainerDTO trainerDTO) {
+        trainerService.deleteCurrentTrainer(trainerDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @DeleteMapping("/delete-all")
     public ResponseEntity<TrainerDTO> deleteAllTrainers() {

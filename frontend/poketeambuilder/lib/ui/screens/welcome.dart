@@ -41,7 +41,7 @@ class Welcome extends StatelessWidget {
               backgroundColor: Constants.red,
               toolbarHeight: 150.0,
               shadowColor: Constants.black,
-              bottom: const TabBar(
+              bottom: TabBar(
                 labelColor: Constants.white,
                 tabs: [
                   Tab(

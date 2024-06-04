@@ -6,7 +6,7 @@ class AppTheme {
   ThemeData generateTheme() {
     return ThemeData(
       primaryColor: Constants.red,
-      colorScheme: const ColorScheme(
+      colorScheme: ColorScheme(
           brightness: Brightness.light,
 
           primary: Constants.blue,

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:poketeambuilder/ui/screens/tabs/register.dart';
+import 'package:poketeambuilder/ui/screens/tabs/signin.dart';
+import 'package:poketeambuilder/ui/screens/welcome.dart';
 
 import '../../data/models/trainer.dart';
+import '../../data/services/trainer_service.dart';
 import '../../utils/constants.dart';
 import '../widgets/windows_buttons.dart';
 
@@ -15,7 +19,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  bool isDarkMode = false;
+  final TrainerService _trainerService = TrainerService();
 
   late TextEditingController nameController;
   late TextEditingController surnamesController;
@@ -34,13 +38,24 @@ class _SettingsState extends State<Settings> {
     phoneController = TextEditingController(text: widget.currentTrainer.phone);
     usernameController = TextEditingController(text: widget.currentTrainer.username);
     passwordController = TextEditingController(text: widget.currentTrainer.password);
-    isDarkMode = widget.currentTrainer.theme;
+    Constants.updateTheme(widget.currentTrainer.theme);
   }
 
   void _toggleTheme(bool value) {
     setState(() {
-      isDarkMode = value;
+      Constants.updateTheme(value);
     });
+  }
+
+  void _logOut() {
+    setState(() {
+      Constants.updateTheme(true); // Cambiar a tema claro por defecto
+    });
+    // Aquí iría la lógica para cerrar sesión y redirigir al usuario
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Welcome(signIn: SignIn(), register: Register())),
+    );
   }
 
   void _showDeleteAccountDialog() {
@@ -49,25 +64,22 @@ class _SettingsState extends State<Settings> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Delete Account'),
-          content: Text(
-              'Are you sure you want to delete your account? This action cannot be undone.'),
+          content: Text('Are you sure you want to delete your account? This action cannot be undone.'),
           actions: [
             TextButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: Constants.red),
-              ),
+              child: Text('Cancel', style: TextStyle(color: Constants.red)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text(
-                'Delete',
-                style: TextStyle(color: Constants.red),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
+              child: Text('Delete', style: TextStyle(color: Constants.red)),
+              onPressed: () async {
+                await _trainerService.deleteCurrentTrainer(widget.currentTrainer);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Welcome(signIn: SignIn(), register: Register())),
+                );
               },
             ),
           ],
@@ -127,7 +139,22 @@ class _SettingsState extends State<Settings> {
                 backgroundColor: Constants.red,
                 toolbarHeight: 150.0,
                 shadowColor: Constants.black,
-                bottom: const TabBar(
+                actions: [
+                  PopupMenuButton<String>(
+                    onSelected: (String result) {
+                      if (result == 'logout') {
+                        _logOut();
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                      const PopupMenuItem<String>(
+                        value: 'logout',
+                        child: Text('Log out'),
+                      ),
+                    ],
+                  ),
+                ],
+                bottom: TabBar(
                   labelColor: Constants.white,
                   tabs: [
                     Tab(
@@ -186,8 +213,10 @@ class _SettingsState extends State<Settings> {
                               ),
                               SizedBox(height: 10.0),
                               Switch(
-                                value: isDarkMode,
-                                onChanged: _toggleTheme,
+                                value: Constants.isLightTheme,
+                                onChanged: (value) {
+                                  _toggleTheme(value);
+                                },
                               ),
                             ],
                           ),
@@ -210,22 +239,15 @@ class _SettingsState extends State<Settings> {
                               children: [
                                 CircleAvatar(
                                   radius: 70,
-                                  backgroundImage: AssetImage(
-                                      'assets/images/profile_picture.png'),
+                                  backgroundImage: AssetImage('assets/images/profile_picture.png'),
                                 ),
                                 SizedBox(height: 20),
                                 _buildUserInfoField('Name', nameController),
-                                _buildUserInfoField(
-                                    'Surnames', surnamesController),
-                                _buildUserInfoField('Email', emailController,
-                                    isEditable: false),
+                                _buildUserInfoField('Surnames', surnamesController),
+                                _buildUserInfoField('Email', emailController, isEditable: false),
                                 _buildUserInfoField('Phone', phoneController),
-                                _buildUserInfoField(
-                                    'Username', usernameController,
-                                    isEditable: false),
-                                _buildUserInfoField(
-                                    'Password', passwordController,
-                                    isPassword: true),
+                                _buildUserInfoField('Username', usernameController, isEditable: false),
+                                _buildUserInfoField('Password', passwordController, isPassword: true),
                                 SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {
@@ -258,8 +280,8 @@ class _SettingsState extends State<Settings> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.person_off, color: Constants.black),
-                              SizedBox(height: 10.0),
+                              Icon(Icons.person_off, color: Constants.darkBrown, size: 50.0),
+                              SizedBox(height: 20.0),
                               ElevatedButton(
                                 onPressed: _showDeleteAccountDialog,
                                 style: ElevatedButton.styleFrom(
@@ -283,8 +305,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget _buildUserInfoField(String label, TextEditingController controller,
-      {bool isEditable = true, bool isPassword = false}) {
+  Widget _buildUserInfoField(String label, TextEditingController controller, {bool isEditable = true, bool isPassword = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(

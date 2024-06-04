@@ -4,16 +4,16 @@ import 'package:poketeambuilder/data/models/team.dart';
 
 class Trainer {
   final String username;
-  final String password;
-  final String name;
-  final String firstSurname;
-  final String secondSurname;
+  String password;
+  String name;
+  String firstSurname;
+  String secondSurname;
   final String email;
-  final String phone;
+  String phone;
   final DateTime createdDate;
-  final bool theme;
-  final String bio;
-  final List<Team> teams;
+  bool theme;
+  String bio;
+  List<Team> teams;
 
   Trainer({
     required this.name,

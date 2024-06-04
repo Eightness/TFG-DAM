@@ -9,8 +9,6 @@ class Community extends StatefulWidget {
 }
 
 class _CommunityState extends State<Community> {
-  String selectedGeneration = 'Generation 1';
-  bool isPublic = false;
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -148,7 +146,7 @@ class _CommunityState extends State<Community> {
                                         child: ListView.builder(
                                           itemCount: 8,
                                           itemBuilder: (context, index) {
-                                            return TeamShowcaseMini(index: index, isCurrentTrainer: false,);
+                                            return TeamShowcaseMini(index: index, isCurrentTrainer: false, comments: [],);
                                           },
                                         ),
                                       ),

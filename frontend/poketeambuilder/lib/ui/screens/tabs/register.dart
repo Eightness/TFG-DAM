@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:poketeambuilder/ui/screens/tabs/community.dart';
-import 'package:poketeambuilder/ui/screens/tabs/team_builder.dart';
+import 'package:poketeambuilder/data/models/trainer.dart';
+import '../../../data/services/trainer_service.dart';
 import '../../../utils/constants.dart';
-import '../home.dart';
 
 class Register extends StatelessWidget {
+  final TrainerService _trainerService = TrainerService();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController surnamesController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,8 +26,7 @@ class Register extends StatelessWidget {
         child: Container(
           width: 400,
           height: 705,
-          padding: const EdgeInsets.symmetric(
-              vertical: 50.0, horizontal: 50.0),
+          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -43,72 +49,30 @@ class Register extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              _buildTextField('Name'),
+              _buildTextField('Name', controller: nameController),
               SizedBox(height: 10),
-              _buildTextField('Surnames'),
+              _buildTextField('Surnames', controller: surnamesController),
               SizedBox(height: 10),
-              _buildTextField('Email'),
+              _buildTextField('Email', controller: emailController),
               SizedBox(height: 10),
-              _buildTextField('Phone'),
+              _buildTextField('Phone', controller: phoneController),
               SizedBox(height: 10),
-              _buildTextField('Username'),
+              _buildTextField('Username', controller: usernameController),
               SizedBox(height: 10),
-              _buildTextField('Password', isPassword: true),
-              SizedBox(height: 20),
+              _buildTextField('Password',
+                  isPassword: true, controller: passwordController),
+              SizedBox(height: 40),
               ElevatedButton(
-                onPressed: () {
-                  bool isValid = checkDataValidation(context);
-                  if (isValid) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Success'),
-                          content: Text('Registered successfully!'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Home(teamContent: Team(), communityContent: Community(),)),
-                                );
-                              },
-                              child: Text('OK', style: TextStyle(
-                                color: Constants.blue
-                              ),),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Email or username already exists.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK', style: TextStyle(
-                                color: Constants.red
-                              ),),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
+                onPressed: () async {
+                  await _registerTrainer(context);
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Constants.white,
                   backgroundColor: Constants.blue,
+                  fixedSize: Size(200, 35),
                 ),
-                child: Text('Register', style: TextStyle(color: Constants.white)),
+                child:
+                    Text('Register', style: TextStyle(color: Constants.white)),
               ),
             ],
           ),
@@ -117,11 +81,13 @@ class Register extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String labelText, {bool isPassword = false}) {
+  Widget _buildTextField(String labelText,
+      {bool isPassword = false, TextEditingController? controller}) {
     return Container(
       width: 300,
       child: TextField(
         obscureText: isPassword,
+        controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(color: Constants.darkBrown),
@@ -136,7 +102,91 @@ class Register extends StatelessWidget {
     );
   }
 
-  bool checkDataValidation(BuildContext context) {
-    return true;
+  Future<void> _registerTrainer(BuildContext context) async {
+    bool isValid = await _checkDataValidation(context);
+    if (isValid) {
+      String surnames = surnamesController.text;
+      int spaceIndex = surnames.indexOf(' ');
+      String firstSurname =
+          spaceIndex != -1 ? surnames.substring(0, spaceIndex) : surnames;
+      String secondSurname =
+          spaceIndex != -1 ? surnames.substring(spaceIndex + 1) : '';
+
+      Trainer newTrainer = Trainer(
+        name: nameController.text,
+        firstSurname: firstSurname,
+        secondSurname: secondSurname,
+        email: emailController.text,
+        phone: phoneController.text,
+        username: usernameController.text,
+        password: passwordController.text,
+        createdDate: DateTime.now(),
+        theme: false,
+        bio:
+            'This is the bio of a trainer. It contains a brief description about the trainer.',
+        teams: [],
+      );
+
+      bool registered = await _trainerService.registerTrainer(newTrainer);
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(registered ? 'Success' : 'Error'),
+            content: Text(registered
+                ? 'Registered successfully!'
+                : 'Error while registering.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK',
+                    style: TextStyle(
+                        color: registered ? Constants.blue : Constants.red)),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Username or email already exist.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK',
+                      style: TextStyle(
+                          color: Constants.red)),
+                ),
+              ],
+            );
+          }
+            );
+    }
+  }
+
+  Future<bool> _checkDataValidation(BuildContext context) async {
+    String username = usernameController.text;
+    String email = emailController.text;
+
+    bool existsUsername = await _trainerService.checkUsernameExists(username);
+    bool existsEmail = await _trainerService.checkEmailExists(email);
+
+    print (existsUsername);
+    print (existsEmail);
+
+    if (existsUsername || existsEmail) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

@@ -5,7 +5,6 @@
 
 package albert.lozano.poketeambuilder.controller.dto.inputDTO;
 
-import albert.lozano.poketeambuilder.domain.Trainer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +23,5 @@ public class CommentInputDTO {
 
     private String body;
 
-    private Trainer trainer;
+    private TrainerInputDTO trainer;
 }

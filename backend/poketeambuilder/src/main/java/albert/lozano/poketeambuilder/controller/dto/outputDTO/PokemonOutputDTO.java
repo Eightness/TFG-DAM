@@ -5,10 +5,11 @@
 
 package albert.lozano.poketeambuilder.controller.dto.outputDTO;
 
-import albert.lozano.poketeambuilder.domain.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * PokemonOutputDTO class. Contains all Pokémon attributes to display.
@@ -18,22 +19,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PokemonOutputDTO {
     // Attributes
-    private long pokemonId;
-
     private String name;
 
     private String spriteUrl;
 
-    private String nature;
+    private String item;
 
     private String ability;
 
-    private String item;
+    private String nature;
 
     private boolean isShiny;
 
-    private Team team;
+    private List<MoveOutputDTO> moves;
 
+    // Statistics
     private int ivDef;
 
     private int ivAtk;

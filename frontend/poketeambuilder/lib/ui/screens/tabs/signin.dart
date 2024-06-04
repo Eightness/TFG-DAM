@@ -12,7 +12,7 @@ class SignIn extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Constants.blue, Constants.darkBlue], // Cambiado a azul y azul oscuro
+          colors: [Constants.blue, Constants.darkBlue],
         ),
       ),
       child: Center(
@@ -25,7 +25,7 @@ class SignIn extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Constants.white, Constants.grey], // Cambiado a azul y azul oscuro
+              colors: [Constants.white, Constants.grey],
             ),
             borderRadius: BorderRadius.circular(25.0),
           ),
@@ -46,14 +46,14 @@ class SignIn extends StatelessWidget {
               _buildTextField('Username'),
               SizedBox(height: 10),
               _buildTextField('Password', isPassword: true),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
                   bool isValid = checkCredentials(context);
                   if (isValid) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Home(teamContent: Team(), communityContent: Community(),)),
+                      MaterialPageRoute(builder: (context) => Home(teamContent: TeamBuilder(), communityContent: Community(),)),
                     );
                   } else {
                     showDialog(
@@ -76,7 +76,7 @@ class SignIn extends StatelessWidget {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Constants.white, backgroundColor: Constants.red,
+                  foregroundColor: Constants.white, backgroundColor: Constants.red, fixedSize: Size(200, 35)
                 ),
                 child: Text('Sign In'),
               ),
@@ -107,8 +107,6 @@ class SignIn extends StatelessWidget {
   }
 
   bool checkCredentials(BuildContext context) {
-    // Aquí iría la lógica para comprobar si las credenciales son válidas
-    // Por simplicidad, este método siempre devuelve false
     return false;
   }
 }

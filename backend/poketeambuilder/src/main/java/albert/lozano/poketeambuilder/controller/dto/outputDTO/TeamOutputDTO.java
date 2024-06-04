@@ -5,8 +5,6 @@
 
 package albert.lozano.poketeambuilder.controller.dto.outputDTO;
 
-import albert.lozano.poketeambuilder.domain.Pokemon;
-import albert.lozano.poketeambuilder.domain.Trainer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,8 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class TeamOutputDTO {
     // Attributes
-    private long teamId;
-
     private String name;
 
     private Date createdDate;
@@ -34,7 +30,9 @@ public class TeamOutputDTO {
 
     private int generation;
 
-    private List<Pokemon> pokemon;
+    private List<PokemonOutputDTO> pokemon;
 
-    private Trainer trainer;
+    private List<CommentOutputDTO> comments;
+
+    private TrainerOutputDTO trainer;
 }

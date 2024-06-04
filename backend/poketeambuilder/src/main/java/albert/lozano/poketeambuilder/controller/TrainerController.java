@@ -65,4 +65,24 @@ public class TrainerController {
         trainerService.deleteAllEntities();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/check-exists-username")
+    public boolean checkTrainerExistsByUsername(@RequestParam String username) {
+        if (username != null && !username.isEmpty()) {
+            return trainerService.existsByUsername(username);
+        } else {
+            return false;
+        }
+    }
+
+    @GetMapping("/check-exists-email")
+    public boolean checkTrainerExistsByEmail(@RequestParam String email) {
+        if (email != null && !email.isEmpty()) {
+            return trainerService.existsByEmail(email);
+        } else {
+            return false;
+        }
+    }
+
+
 }

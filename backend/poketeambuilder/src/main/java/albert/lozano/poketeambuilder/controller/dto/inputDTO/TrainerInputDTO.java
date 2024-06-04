@@ -5,7 +5,6 @@
 
 package albert.lozano.poketeambuilder.controller.dto.inputDTO;
 
-import albert.lozano.poketeambuilder.domain.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,5 +38,7 @@ public class TrainerInputDTO {
 
     private boolean theme;
 
-    private List<Team> teams;
+    private String bio;
+
+    private List<TeamInputDTO> teams;
 }

@@ -1,15 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Importar el paquete intl para formatear fechas
+import 'package:intl/intl.dart';
+import 'package:poketeambuilder/utils/constants.dart';
+import 'package:poketeambuilder/data/models/comment.dart';
+import 'dart:math';
+import 'package:poketeambuilder/data/models/trainer.dart';
 
-import '../../utils/constants.dart';
+import 'comment_showcase.dart';
 
-class TeamShowcaseMini extends StatelessWidget {
+class TeamShowcaseMini extends StatefulWidget {
   final int index;
   final bool isCurrentTrainer;
+  final List<Comment> comments;
 
-  const TeamShowcaseMini(
-      {Key? key, required this.index, this.isCurrentTrainer = false})
-      : super(key: key);
+  const TeamShowcaseMini({
+    Key? key,
+    required this.index,
+    this.isCurrentTrainer = false,
+    required this.comments,
+  }) : super(key: key);
+
+  @override
+  _TeamShowcaseMiniState createState() => _TeamShowcaseMiniState();
+}
+
+class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
+  List<Comment> comments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    comments = widget.comments;
+  }
+
+  List<Comment> generateRandomComments(int count) {
+    final random = Random();
+    final List<String> commentsText = [
+      "Great team! I love the synergy.",
+      "Interesting choice of Pokémon. How does it fare against Dragon types?",
+      "I think you should consider adding a water type.",
+      "Solid team, but it might struggle against electric types.",
+      "Impressive lineup! Have you tried it in competitive battles?",
+      "Your team composition is really creative!",
+      "Good balance between offense and defense.",
+      "I would swap one of your Pokémon for a tankier one.",
+      "This team looks fun to play with!",
+      "You might need more speed on your team.",
+      "Great strategy! I can see this team winning many battles.",
+      "Consider adding a Pokémon with status moves.",
+      "Your team has a solid core, well done!",
+      "Looks strong! How does it perform against legendary Pokémon?",
+      "Fantastic team! Your choice of abilities is spot on."
+    ];
+
+    return List.generate(count, (index) {
+      final createdDate = DateTime.now().subtract(Duration(days: random.nextInt(100)));
+      final trainer = Trainer(
+          name: 'Albert',
+          firstSurname: 'Lozano',
+          secondSurname: 'Blasco',
+          email: 'albertlb08@gmail.com',
+          phone: '625760988',
+          password: '12345',
+          username: 'Eightness',
+          createdDate: DateTime.now(),
+          theme: true,
+          bio:
+          'This is the bio of a trainer. It contains a brief description about the trainer.',
+          teams: []);
+      final body = commentsText[random.nextInt(commentsText.length)];
+
+      return Comment(
+        createdDate,
+        trainer,
+        body: body,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +103,7 @@ class TeamShowcaseMini extends StatelessWidget {
               left: 10,
               top: 10,
               child: Text(
-                'Team${index + 1} - Username',
+                'Team${widget.index + 1} - Username',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -58,7 +124,7 @@ class TeamShowcaseMini extends StatelessWidget {
                 ],
               ),
             ),
-            if (isCurrentTrainer)
+            if (widget.isCurrentTrainer)
               Positioned(
                 right: 0,
                 top: 0,
@@ -84,8 +150,8 @@ class TeamShowcaseMini extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      primary: Constants.red,
-                      onPrimary: Constants.white,
+                      foregroundColor: Constants.white,
+                      backgroundColor: Constants.red,
                     ),
                     child: Row(
                       children: [
@@ -103,7 +169,9 @@ class TeamShowcaseMini extends StatelessWidget {
                   ),
                   SizedBox(width: 10),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _showCommentsDialog(context);
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Constants.white,
                       backgroundColor: Constants.blue,
@@ -127,6 +195,87 @@ class TeamShowcaseMini extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showCommentsDialog(BuildContext context) {
+    final TextEditingController commentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Constants.grey,
+              title: Text('Comments'),
+              content: Container(
+                width: 600,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: comments.length,
+                        itemBuilder: (context, index) {
+                          return CommentShowcase(comment: comments[index]);
+                        },
+                      ),
+                    ),
+                    TextField(
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        hintText: 'Write a comment...',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Close',
+                    style: TextStyle(color: Constants.red),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(color: Constants.blue),
+                  ),
+                  onPressed: () {
+                    final newComment = Comment(
+                      DateTime.now(),
+                      Trainer(
+                        name: 'New',
+                        firstSurname: 'User',
+                        secondSurname: 'User',
+                        email: 'newuser@example.com',
+                        phone: '0000000000',
+                        password: 'password',
+                        username: 'NewUser',
+                        createdDate: DateTime.now(),
+                        theme: true,
+                        bio: 'This is a new user.',
+                        teams: [],
+                      ),
+                      body: commentController.text,
+                    );
+                    setState(() {
+                      comments.add(newComment);
+                    });
+                    commentController.clear();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

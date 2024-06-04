@@ -99,4 +99,13 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerInputDTO, T
     public void deleteAllEntities() {
         trainerRepository.deleteAll();
     }
+
+    public boolean existsByUsername(String username) {
+        return trainerRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return trainerRepository.existsByEmail(email);
+    }
+
 }

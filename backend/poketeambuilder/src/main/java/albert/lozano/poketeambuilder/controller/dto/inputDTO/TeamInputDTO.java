@@ -5,8 +5,6 @@
 
 package albert.lozano.poketeambuilder.controller.dto.inputDTO;
 
-import albert.lozano.poketeambuilder.domain.Pokemon;
-import albert.lozano.poketeambuilder.domain.Trainer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +28,9 @@ public class TeamInputDTO {
 
     private int generation;
 
-    private List<Pokemon> pokemon;
+    private List<PokemonInputDTO> pokemon;
 
-    private Trainer trainer;
+    private List<CommentInputDTO> comments;
+
+    private TrainerInputDTO trainer;
 }

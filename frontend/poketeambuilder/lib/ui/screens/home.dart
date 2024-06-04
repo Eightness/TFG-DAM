@@ -123,10 +123,11 @@ class Home extends StatelessWidget {
                 phone: '625760988',
                 password: '12345',
                 username: 'Eightness',
-                creationDate: DateTime.now(),
+                createdDate: DateTime.now(),
                 theme: true,
                 bio:
-                    'This is the bio of a trainer. It contains a brief description about the trainer.'),
+                    'This is the bio of a trainer. It contains a brief description about the trainer.',
+                teams: []),
             isCurrentTrainer: true,
           ),
         ),
@@ -144,10 +145,11 @@ class Home extends StatelessWidget {
                       phone: '625760988',
                       password: '12345',
                       username: 'Eightness',
-                      creationDate: DateTime.now(),
+                      createdDate: DateTime.now(),
                       theme: true,
                       bio:
-                          'This is the bio of a trainer. It contains a brief description about the trainer.'),
+                          'This is the bio of a trainer. It contains a brief description about the trainer.',
+                      teams: []),
                 )),
       );
     } else if (item.text == 'Log out') {

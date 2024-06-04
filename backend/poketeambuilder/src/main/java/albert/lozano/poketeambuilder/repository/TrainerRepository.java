@@ -20,4 +20,6 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
      */
 
     // Custom methods
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }

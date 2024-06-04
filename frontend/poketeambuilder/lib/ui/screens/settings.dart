@@ -67,7 +67,6 @@ class _SettingsState extends State<Settings> {
                 style: TextStyle(color: Constants.red),
               ),
               onPressed: () {
-                // Acción para eliminar la cuenta
                 Navigator.of(context).pop();
               },
             ),
@@ -230,7 +229,6 @@ class _SettingsState extends State<Settings> {
                                 SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Acción para guardar los cambios
                                     _showSaveChangesDialog();
                                   },
                                   child: Text('Save Changes'),

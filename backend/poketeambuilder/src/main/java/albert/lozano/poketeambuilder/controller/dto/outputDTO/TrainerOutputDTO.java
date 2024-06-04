@@ -5,7 +5,6 @@
 
 package albert.lozano.poketeambuilder.controller.dto.outputDTO;
 
-import albert.lozano.poketeambuilder.domain.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,8 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class TrainerOutputDTO {
     // Attributes
-    private long trainerId;
-
     private String username;
 
     private String password;
@@ -41,5 +38,7 @@ public class TrainerOutputDTO {
 
     private boolean theme;
 
-    private List<Team> teams;
+    private List<TeamOutputDTO> teams;
+
+    private String bio;
 }

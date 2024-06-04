@@ -20,11 +20,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class CommentOutputDTO {
     // Attributes
-    private long commentId;
-
     private Date createdDate;
 
     private String body;
 
-    private Trainer trainer;
+    private TrainerOutputDTO trainer;
 }

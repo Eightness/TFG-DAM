@@ -104,7 +104,7 @@ class Profile extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            'Member since ${DateFormat('yyyy-MM-dd').format(trainer.creationDate)}',
+                                            'Member since ${DateFormat('yyyy-MM-dd').format(trainer.createdDate)}',
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Constants.darkBrown,
@@ -140,7 +140,6 @@ class Profile extends StatelessWidget {
                                                     icon: Icon(Icons.edit,
                                                         color: Constants.blue),
                                                     onPressed: () {
-                                                      // Acción de editar biografía
                                                     },
                                                   ),
                                                 ),
@@ -156,9 +155,9 @@ class Profile extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: ListView.builder(
-                                              itemCount: 6, // Número de equipos
+                                              itemCount: 6,
                                               itemBuilder: (context, index) {
-                                                return TeamShowcaseMini(index: index, isCurrentTrainer: this.isCurrentTrainer,);
+                                                return TeamShowcaseMini(index: index, isCurrentTrainer: this.isCurrentTrainer, comments: [],);
                                               },
                                             ),
                                           ),

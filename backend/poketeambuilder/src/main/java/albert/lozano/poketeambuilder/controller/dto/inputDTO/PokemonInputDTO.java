@@ -5,10 +5,11 @@
 
 package albert.lozano.poketeambuilder.controller.dto.inputDTO;
 
-import albert.lozano.poketeambuilder.domain.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * PokemonInputDTO class. Contains all Pokémon attributes obtainable by user's input.
@@ -22,16 +23,17 @@ public class PokemonInputDTO {
 
     private String spriteUrl;
 
-    private String nature;
+    private String item;
 
     private String ability;
 
-    private String item;
+    private String nature;
 
     private boolean isShiny;
 
-    private Team team;
+    private List<MoveInputDTO> moves;
 
+    // Statistics
     private int ivDef;
 
     private int ivAtk;

@@ -17,7 +17,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MoveOutputDTO {
     // Attributes
-    private long moveId;
-
     private String name;
 }

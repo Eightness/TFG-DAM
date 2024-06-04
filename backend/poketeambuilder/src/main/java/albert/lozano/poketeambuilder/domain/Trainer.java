@@ -31,7 +31,6 @@ public class Trainer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long trainerId;
 
-    @Size(min = 3, max = 12)
     @NotNull
     @Column
     private String username;
@@ -69,6 +68,9 @@ public class Trainer {
 
     @OneToMany(mappedBy = "trainer")
     private List<Team> teams;
+
+    @Column
+    private String bio;
 
     public boolean getTheme() {
         return this.theme;

@@ -3,12 +3,12 @@ import 'package:poketeambuilder/utils/constants.dart';
 
 import '../../widgets/pokemon_builder.dart';
 
-class Team extends StatefulWidget {
+class TeamBuilder extends StatefulWidget {
   @override
-  _TeamState createState() => _TeamState();
+  _TeamBuilderState createState() => _TeamBuilderState();
 }
 
-class _TeamState extends State<Team> {
+class _TeamBuilderState extends State<TeamBuilder> {
   String selectedGeneration = 'All generations';
   bool isPublic = false;
 

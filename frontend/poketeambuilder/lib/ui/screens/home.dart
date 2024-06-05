@@ -33,7 +33,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    // Inicializar isDarkTheme con el valor de currentTrainer.theme
     isDarkTheme = widget.currentTrainer.theme;
   }
 

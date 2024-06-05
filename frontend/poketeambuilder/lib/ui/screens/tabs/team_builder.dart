@@ -9,8 +9,12 @@ class TeamBuilder extends StatefulWidget {
 }
 
 class _TeamBuilderState extends State<TeamBuilder> {
-  String selectedGeneration = 'All generations';
-  bool isPublic = false;
+  String _selectedGeneration = 'All generations';
+  List<String>? currentGeneration;
+  bool _isPublic = false;
+
+  // Lista de instancias de PokemonBuilder
+  List<PokemonBuilder> _pokemonBuilders = [];
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,11 @@ class _TeamBuilderState extends State<TeamBuilder> {
                     ),
                     itemCount: 6,
                     itemBuilder: (context, index) {
-                      return PokemonBuilder();
+                      // Agregar PokemonBuilder a la lista y crear una instancia
+                      if (_pokemonBuilders.length <= index) {
+                        _pokemonBuilders.add(PokemonBuilder(currentGeneration: ['Venusaur', 'Charizard', 'Blastoise']));
+                      }
+                      return _pokemonBuilders[index];
                     },
                   );
                 },
@@ -67,7 +75,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   DropdownButton<String>(
-                    value: selectedGeneration,
+                    value: _selectedGeneration,
                     items: [
                       DropdownMenuItem<String>(
                         value: 'All generations',
@@ -82,7 +90,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                     ],
                     onChanged: (value) {
                       setState(() {
-                        selectedGeneration = value!;
+                        _selectedGeneration = value!;
                       });
                     },
                     hint: Text('Generation'),
@@ -114,7 +122,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                                 child: Text(
                                   'Close',
                                   style: TextStyle(
-                                    color: Constants.white
+                                      color: Constants.white
                                   ),
                                 ),
                                 onPressed: () {
@@ -133,22 +141,13 @@ class _TeamBuilderState extends State<TeamBuilder> {
                     child: Text('Types'),
                   ),
                   SizedBox(width: 10.0),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Constants.white,
-                      backgroundColor: Constants.red,
-                    ),
-                    child: Text('Random'),
-                  ),
-                  SizedBox(width: 20.0),
                   Row(
                     children: [
                       Checkbox(
-                        value: isPublic,
+                        value: _isPublic,
                         onChanged: (value) {
                           setState(() {
-                            isPublic = value!;
+                            _isPublic = value!;
                           });
                         },
                       ),

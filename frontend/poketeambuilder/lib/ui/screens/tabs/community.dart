@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:poketeambuilder/ui/screens/profile.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 
+import '../../../data/models/trainer.dart';
+import '../../../data/services/trainer_service.dart';
 import '../../widgets/team_showcase_mini.dart';
 
 class Community extends StatefulWidget {
+
   @override
   _CommunityState createState() => _CommunityState();
 }
@@ -195,13 +199,47 @@ class _CommunityState extends State<Community> {
                       ),
                       SizedBox(height: 10.0),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          String username = searchController.text;
+                          Trainer? trainer = await TrainerService().getTrainerByUsername(username);
+                          if (trainer != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Profile(currentTrainer: trainer, isCurrentTrainer: false),
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Trainer Not Found', style: TextStyle(
+                                    color: Constants.red
+                                  ),),
+                                  content: Text('The trainer with username $username was not found.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK', style: TextStyle(
+                                        color: Constants.red
+                                      ),),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Constants.white,
                           backgroundColor: Constants.red,
                         ),
                         child: Text('Search'),
                       ),
+
                     ],
                   ),
                 ),

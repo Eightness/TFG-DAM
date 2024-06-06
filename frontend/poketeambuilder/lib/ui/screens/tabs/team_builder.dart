@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:poketeambuilder/data/models/comment.dart';
 import 'package:poketeambuilder/data/models/pokemon.dart';
 import 'package:poketeambuilder/data/models/team.dart';
 import 'package:poketeambuilder/data/models/trainer.dart';
@@ -20,12 +19,14 @@ class TeamBuilder extends StatefulWidget {
 class _TeamBuilderState extends State<TeamBuilder> {
   String _selectedGeneration = 'All generations';
   List<String>? _currentGeneration;
-  bool _isPublic = false;
+  bool _isPublic = true;
 
   final PokeAPIService _pokeAPIService = PokeAPIService();
   final TeamService _teamService = TeamService();
   late final List<String>? _itemList;
   late final List<String>? _naturesList;
+
+  final TextEditingController _teamNameController = TextEditingController();
 
   List<GlobalKey<PokemonBuilderState>> _pokemonBuilderKeys = List.generate(
     6,
@@ -118,7 +119,44 @@ class _TeamBuilderState extends State<TeamBuilder> {
     }
   }
 
-  Team buildTeam() {
+  Future<void> _showSaveDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Save Team'),
+          content: TextField(
+            controller: _teamNameController,
+            decoration: const InputDecoration(
+              hintText: 'Enter team name',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Save'),
+              onPressed: () {
+                final teamName = _teamNameController.text.trim();
+                if (teamName.isNotEmpty) {
+                  Team newTeam = buildTeam(teamName);
+                  print(newTeam.toJson());
+                  _teamService.addTeam(newTeam);
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Team buildTeam(String name) {
     List<Pokemon> pokemonList = _pokemonBuilderKeys.map((key) {
       final pokemonBuilderState = key.currentState;
       return pokemonBuilderState != null ? pokemonBuilderState.buildPokemon() : null;
@@ -127,9 +165,9 @@ class _TeamBuilderState extends State<TeamBuilder> {
     print('Current trainer name: ${widget.currentTrainer.username}');
 
     return Team(
-      name: 'New Team',
+      name: name,
       createdDate: DateTime.now(),
-      isPublic: _isPublic,
+      public: _isPublic,
       numLikes: 0,
       generation: _selectedGeneration == 'All generations'
           ? 0
@@ -226,9 +264,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                   SizedBox(width: 20.0),
                   ElevatedButton(
                     onPressed: () {
-                      Team newTeam = buildTeam();
-                      print(newTeam.toJson());
-                      _teamService.addTeam(newTeam);
+                      _showSaveDialog();
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Constants.white,

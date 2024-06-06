@@ -5,6 +5,7 @@
 
 package albert.lozano.poketeambuilder.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -35,6 +36,7 @@ public class Team {
     @Temporal(TemporalType.DATE)
     private Date createdDate;
 
+    @JsonProperty("isPublic")
     private boolean isPublic;
 
     private int numLikes;
@@ -49,8 +51,4 @@ public class Team {
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
-
-    public boolean getPublic() {
-        return this.isPublic;
-    }
 }

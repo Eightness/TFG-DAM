@@ -28,6 +28,7 @@ public class TeamController {
     // Create methods
     @PostMapping("/add")
     public ResponseEntity<TeamDTO> postTeam(@RequestBody TeamDTO teamDTO) {
+        System.out.println(teamDTO.isPublic());
         TeamDTO newTeam = teamService.addEntity(teamDTO);
         return new ResponseEntity<>(newTeam, HttpStatus.OK);
     }
@@ -43,6 +44,12 @@ public class TeamController {
     public ResponseEntity<List<TeamDTO>> getAllTeams() {
         List<TeamDTO> allTeams = teamService.getAllEntities(0, 10);
         return new ResponseEntity<>(allTeams, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-public")
+    public ResponseEntity<List<TeamDTO>> getAllPublicTeams() {
+        List<TeamDTO> allPublicTeams = teamService.getAllPublicTeams();
+        return new ResponseEntity<>(allPublicTeams, HttpStatus.OK);
     }
 
     // Update methods

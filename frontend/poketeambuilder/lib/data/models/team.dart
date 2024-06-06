@@ -7,7 +7,7 @@ import 'package:poketeambuilder/data/models/comment.dart';
 class Team {
   final String name;
   final DateTime createdDate;
-  final bool isPublic;
+  final bool public;
   final int numLikes;
   final int generation;
   final List<Pokemon> pokemon;
@@ -15,7 +15,7 @@ class Team {
   final Trainer trainer;
 
   Team({
-        required this.isPublic,
+        required this.public,
         required this.numLikes,
         required this.generation,
         required this.pokemon,
@@ -29,7 +29,7 @@ class Team {
     return {
       'name': name,
       'createdDate': createdDate.toIso8601String(),
-      'isPublic': isPublic,
+      'isPublic': public,
       'numLikes': numLikes,
       'generation': generation,
       'pokemon': pokemon.map((pokemon) => pokemon.toJson()).toList(),
@@ -47,7 +47,7 @@ class Team {
           .toList(),
       name: decodedJson['name'] as String,
       createdDate: DateTime.parse(decodedJson['createdDate'] as String),
-      isPublic: decodedJson['isPublic'] as bool,
+      public: decodedJson['isPublic'] as bool,
       numLikes: decodedJson['numLikes'] as int,
       generation: decodedJson['generation'] as int,
       pokemon: (decodedJson['pokemon'] as List<dynamic>)
@@ -64,7 +64,7 @@ class Team {
   @override
   String toString() {
     final pokemonList = pokemon.map((p) => p.name).join(', ');
-    return 'Team(name: $name, createdDate: $createdDate, isPublic: $isPublic, numLikes: $numLikes, generation: $generation, trainer: ${trainer.username}, pokemon: [$pokemonList])';
+    return 'Team(name: $name, createdDate: $createdDate, isPublic: $public, numLikes: $numLikes, generation: $generation, trainer: ${trainer.username}, pokemon: [$pokemonList])';
   }
 
 }

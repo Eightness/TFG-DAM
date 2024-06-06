@@ -88,7 +88,7 @@ public class TrainerTeamMapper {
 
         teamDTO.setName(team.getName());
         teamDTO.setCreatedDate(team.getCreatedDate());
-        teamDTO.setPublic(team.getPublic());
+        teamDTO.setPublic(team.isPublic());
         teamDTO.setNumLikes(team.getNumLikes());
         teamDTO.setGeneration(team.getGeneration());
 
@@ -96,14 +96,10 @@ public class TrainerTeamMapper {
                 .map(pokemonMapper::domainToDTO)
                 .collect(Collectors.toList()));
 
-        teamDTO.setComments(new ArrayList<>());
+        teamDTO.setComments(new ArrayList<>()); // Adjust if comments mapping is needed
 
         Trainer trainer = trainerRepository.findByUsername(team.getTrainer().getUsername());
-        if (trainer != null) {
-            teamDTO.setTrainer(trainerToTrainerDTO(trainer));
-        } else {
-            throw new RuntimeException("Couldn't find trainer with username: " + teamDTO.getTrainer().getUsername());
-        }
+        teamDTO.setTrainer(trainerToTrainerDTO(trainer));
 
         return teamDTO;
     }
@@ -124,7 +120,8 @@ public class TrainerTeamMapper {
 
         team.setName(teamDTO.getName());
         team.setCreatedDate(teamDTO.getCreatedDate());
-        team.setPublic(teamDTO.getPublic());
+        System.out.println(teamDTO.isPublic());
+        team.setPublic(true);
         team.setNumLikes(teamDTO.getNumLikes());
         team.setGeneration(teamDTO.getGeneration());
 

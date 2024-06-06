@@ -35,8 +35,4 @@ public class TeamDTO {
     private List<CommentDTO> comments;
 
     private TrainerDTO trainer;
-
-    public boolean getPublic() {
-        return this.isPublic;
-    }
 }

@@ -21,7 +21,7 @@ class _CommunityState extends State<Community> {
   TextEditingController searchController = TextEditingController();
 
   TeamService _teamService = new TeamService();
-  late List<Team> _teams;
+  List<Team> _teams = [];
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _CommunityState extends State<Community> {
 
   Future<void> _fetchAllTeams() async  {
     try {
-        List<Team> teams = await _teamService.getAllTeams();
+        List<Team> teams = await _teamService.getAllPublicTeams();
       setState(() {
         _teams = teams;
       });

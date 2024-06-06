@@ -51,6 +51,11 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
         return trainerTeamMapper.teamsToTeamsDTO(allTrainers);
     }
 
+    public List<TeamDTO> getAllPublicTeams() {
+        List<Team> allPublicTeams = teamRepository.findByIsPublicTrue();
+        return trainerTeamMapper.teamsToTeamsDTO(allPublicTeams);
+    }
+
     @Override
     public TeamDTO addEntity(TeamDTO EntityDTO) {
         Team team = trainerTeamMapper.teamDTOToTeam(EntityDTO);
@@ -76,7 +81,7 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
         Team updatedTeam = trainerTeamMapper.teamDTOToTeam(EntityDTO);
 
         team.setName(updatedTeam.getName());
-        team.setPublic(updatedTeam.getPublic());
+        team.setPublic(updatedTeam.isPublic());
         team.setGeneration(updatedTeam.getGeneration());
         team.setPokemon(updatedTeam.getPokemon());
 

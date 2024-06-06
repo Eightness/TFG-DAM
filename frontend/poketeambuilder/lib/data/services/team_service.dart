@@ -110,7 +110,7 @@ class TeamService {
           Team team = Team(
             name: teamJson['name'],
             createdDate: DateTime.parse(teamJson['createdDate']),
-            isPublic: teamJson['public'] as bool,
+            public: teamJson['public'] as bool,
             numLikes: teamJson['numLikes'] as int,
             generation: teamJson['generation'] as int,
             pokemon: pokemonList,
@@ -136,7 +136,7 @@ class TeamService {
   }
 
   // Get teams from trainer's username
-  Future<List<Team>> getAllTeams() async {
+  Future<List<Team>> getAllPublicTeams() async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/get-all'),
@@ -146,23 +146,6 @@ class TeamService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final List<dynamic> jsonResponse = jsonDecode(response.body);
-
-        Trainer firstTrainer = Trainer(
-          username: '',
-          password: '',
-          name: '',
-          firstSurname: '',
-          secondSurname: '',
-          email: '',
-          phone: '',
-          createdDate: DateTime.now(),
-          theme: false,
-          bio: '',
-        );
-
-        if (jsonResponse.isNotEmpty && jsonResponse[0]['trainer'] != null) {
-          firstTrainer = Trainer.fromJson(jsonEncode(jsonResponse[0]['trainer']));
-        }
 
         List<Team> teams = [];
 
@@ -193,15 +176,29 @@ class TeamService {
             pokemonList.add(pokemon);
           }
 
+          // Mapping the Trainer details
+          Trainer trainer = Trainer(
+            name: teamJson['trainer']['name'],
+            firstSurname: teamJson['trainer']['firstSurname'],
+            secondSurname: teamJson['trainer']['secondSurname'],
+            email: teamJson['trainer']['email'],
+            phone: teamJson['trainer']['phone'],
+            username: teamJson['trainer']['username'],
+            password: teamJson['trainer']['password'],
+            createdDate: DateTime.parse(teamJson['trainer']['createdDate']),
+            theme: teamJson['trainer']['theme'],
+            bio: teamJson['trainer']['bio'],
+          );
+
           Team team = Team(
             name: teamJson['name'],
             createdDate: DateTime.parse(teamJson['createdDate']),
-            isPublic: teamJson['public'] as bool,
+            public: teamJson['public'] as bool,
             numLikes: teamJson['numLikes'] as int,
             generation: teamJson['generation'] as int,
             pokemon: pokemonList,
-            comments: [],
-            trainer: firstTrainer,
+            comments: [], // Assuming comments are empty for now
+            trainer: trainer,
           );
 
           teams.add(team);
@@ -220,5 +217,6 @@ class TeamService {
       return [];
     }
   }
+
 
 }

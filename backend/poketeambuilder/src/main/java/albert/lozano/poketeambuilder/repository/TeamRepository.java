@@ -23,4 +23,5 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     // Custom methods
     List<Team> findByTrainerUsername(String username);
+    List<Team> findByIsPublicTrue();
 }

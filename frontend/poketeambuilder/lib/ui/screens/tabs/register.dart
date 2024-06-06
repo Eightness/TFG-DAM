@@ -22,61 +22,91 @@ class Register extends StatelessWidget {
           colors: [Constants.blue, Constants.darkBlue],
         ),
       ),
-      child: Center(
-        child: Container(
-          width: 400,
-          height: 705,
-          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Constants.white, Constants.grey],
+      child: Stack(
+        children: [
+          Center(
+            child: Container(
+              width: 520,
+              height: 540,
+              padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Constants.white, Constants.grey],
+                ),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Constants.blue,
+                    ),
+                    child: Icon(
+                      Icons.person_add,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Your data',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Constants.darkBrown,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildTextField('Username', controller: usernameController),
+                      SizedBox(width: 20),
+                      _buildTextField('Password', isPassword: true, controller: passwordController),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildTextField('Name', controller: nameController),
+                      SizedBox(width: 20),
+                      _buildTextField('Surnames', controller: surnamesController),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildTextField('Email', controller: emailController),
+                      SizedBox(width: 20),
+                      _buildTextField('Phone', controller: phoneController),
+                    ],
+                  ),
+                  SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _registerTrainer(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Constants.white,
+                      backgroundColor: Constants.blue,
+                      fixedSize: Size(200, 35),
+                    ),
+                    child: Text('Register',
+                        style: TextStyle(color: Constants.white)),
+                  ),
+                ],
+              ),
             ),
-            borderRadius: BorderRadius.circular(25.0),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.person_add, size: 75, color: Constants.darkBrown),
-              SizedBox(height: 20),
-              Text(
-                'Your data',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Constants.darkBrown,
-                ),
-              ),
-              SizedBox(height: 20),
-              _buildTextField('Name', controller: nameController),
-              SizedBox(height: 10),
-              _buildTextField('Surnames', controller: surnamesController),
-              SizedBox(height: 10),
-              _buildTextField('Email', controller: emailController),
-              SizedBox(height: 10),
-              _buildTextField('Phone', controller: phoneController),
-              SizedBox(height: 10),
-              _buildTextField('Username', controller: usernameController),
-              SizedBox(height: 10),
-              _buildTextField('Password',
-                  isPassword: true, controller: passwordController),
-              SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () async {
-                  await _registerTrainer(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Constants.white,
-                  backgroundColor: Constants.blue,
-                  fixedSize: Size(200, 35),
-                ),
-                child:
-                    Text('Register', style: TextStyle(color: Constants.white)),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -84,7 +114,7 @@ class Register extends StatelessWidget {
   Widget _buildTextField(String labelText,
       {bool isPassword = false, TextEditingController? controller}) {
     return Container(
-      width: 300,
+      width: 200,
       child: TextField(
         obscureText: isPassword,
         controller: controller,
@@ -95,7 +125,7 @@ class Register extends StatelessWidget {
             borderSide: BorderSide(color: Constants.darkBrown),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Constants.red),
+            borderSide: BorderSide(color: Constants.darkBlue),
           ),
         ),
       ),
@@ -108,9 +138,9 @@ class Register extends StatelessWidget {
       String surnames = surnamesController.text;
       int spaceIndex = surnames.indexOf(' ');
       String firstSurname =
-          spaceIndex != -1 ? surnames.substring(0, spaceIndex) : surnames;
+      spaceIndex != -1 ? surnames.substring(0, spaceIndex) : surnames;
       String secondSurname =
-          spaceIndex != -1 ? surnames.substring(spaceIndex + 1) : '';
+      spaceIndex != -1 ? surnames.substring(spaceIndex + 1) : '';
 
       Trainer newTrainer = Trainer(
         name: nameController.text,
@@ -123,8 +153,7 @@ class Register extends StatelessWidget {
         createdDate: DateTime.now(),
         theme: false,
         bio:
-            'This is the bio of a trainer. It contains a brief description about the trainer.',
-        teams: [],
+        'This is the bio of a trainer. It contains a brief description about the trainer.'
       );
 
       bool registered = await _trainerService.registerTrainer(newTrainer);
@@ -150,6 +179,16 @@ class Register extends StatelessWidget {
           );
         },
       );
+
+      if (registered) {
+        // Clear text fields
+        nameController.clear();
+        surnamesController.clear();
+        emailController.clear();
+        phoneController.clear();
+        usernameController.clear();
+        passwordController.clear();
+      }
     } else {
       showDialog(
           context: context,
@@ -162,14 +201,11 @@ class Register extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK',
-                      style: TextStyle(
-                          color: Constants.red)),
+                  child: Text('OK', style: TextStyle(color: Constants.red)),
                 ),
               ],
             );
-          }
-            );
+          });
     }
   }
 
@@ -180,8 +216,8 @@ class Register extends StatelessWidget {
     bool existsUsername = await _trainerService.checkUsernameExists(username);
     bool existsEmail = await _trainerService.checkEmailExists(email);
 
-    print (existsUsername);
-    print (existsEmail);
+    print(existsUsername);
+    print(existsEmail);
 
     if (existsUsername || existsEmail) {
       return false;

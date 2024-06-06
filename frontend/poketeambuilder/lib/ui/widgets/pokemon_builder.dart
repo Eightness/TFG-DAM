@@ -10,21 +10,20 @@ import '../../utils/constants.dart';
 
 class PokemonBuilder extends StatefulWidget {
   final List<String>? currentGeneration;
-  bool random = false;
+  final List<String>? items;
+  final List<String>? natures;
+  final GlobalKey<PokemonBuilderState> key;
 
   PokemonBuilder({
-      required this.currentGeneration,
+    required this.currentGeneration, required this.key, this.items, this.natures,
   });
 
-  void setRandom(bool value) {
-      random = value;
-  }
-
   @override
-  _PokemonBuilderState createState() => _PokemonBuilderState();
+  PokemonBuilderState createState() => PokemonBuilderState();
+
 }
 
-class _PokemonBuilderState extends State<PokemonBuilder> {
+class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveClientMixin {
   PokeAPIService _pokeAPIService = new PokeAPIService();
 
   String? _selectedPokemon;
@@ -49,16 +48,14 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
 
   List<int?> _selectedIVs = List.filled(6, null);
 
-  late bool _random;
-
   @override
   void initState() {
     super.initState();
-    _fetchItems();
-    _fetchNatures();
+    fetchItems();
+    fetchNatures();
   }
 
-  Future<void> _fetchItems() async {
+  Future<void> fetchItems() async {
     try {
       List<String> itemList = await _pokeAPIService.fetchItems();
       setState(() {
@@ -69,7 +66,7 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
     }
   }
 
-  Future<void> _fetchNatures() async {
+  Future<void> fetchNatures() async {
     try {
       List<String> naturesList = await _pokeAPIService.fetchNatures();
       setState(() {
@@ -78,6 +75,24 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
     } catch (e) {
       print('Error fetching natures: $e');
     }
+  }
+
+  void resetValues() {
+    setState(() {
+      _selectedPokemon = null;
+      _pokemonSpriteUrl = null;
+      _isShiny = false;
+      _selectedMoves = List.filled(4, null);
+      _movesList = [];
+      _selectedAbility = null;
+      _abilitiesList = [];
+      _selectedItem = null;
+      _itemList = [];
+      _selectedNature = null;
+      _naturesList = [];
+      _selectedEVs = List.filled(6, null);
+      _selectedIVs = List.filled(6, null);
+    });
   }
 
   void resetMoves() {
@@ -108,7 +123,7 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
         children: [
           // First Column
           SizedBox(
-            width: 125.0,
+            width: 130.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -132,13 +147,13 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
                   },
                   hint: const Text('Pokémon'),
                 ),
-                const SizedBox(height: 15.0),
+                const SizedBox(height: 45.0),
                 Image.network(
                   _pokemonSpriteUrl != null ? _pokemonSpriteUrl! : 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/f720bb6e-b303-4877-bffb-d61df0ab183f/d3b98cf-4fc5c76b-2a99-47fc-98b6-d7d4ee8d9d9f.png',
                   height: 90.0,
                   width: 90.0,
                 ),
-                const SizedBox(height: 15.0),
+                const SizedBox(height: 20.0),
                 Row(
                   children: [
                     Checkbox(
@@ -156,11 +171,10 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
                         });
                       },
                     ),
-
                     Text('Shiny'),
                   ],
                 ),
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 5.0),
                 DropdownButton<String>(
                   value: _selectedNature,
                   items: _buildDropdownItems(_naturesList),
@@ -171,18 +185,10 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
                   },
                   hint: const Text('Nature'),
                 ),
-                ElevatedButton(
-                  onPressed: generateRandomPokemon,
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Constants.white,
-                    backgroundColor: Constants.red,
-                  ),
-                  child: Text('Random'),
-                ),
               ],
             ),
           ),
-          SizedBox(width: 15.0),
+          SizedBox(width: 10.0),
           // Second Column
           SizedBox(
             width: 165.0,
@@ -223,7 +229,7 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
               ],
             ),
           ),
-          SizedBox(width: 25.0),
+          SizedBox(width: 10.0),
           // Third Column
           Column(
             children: List.generate(6, (index) {
@@ -275,9 +281,15 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
   }
 
   Widget _buildStatInput(String label, int maxValue, int index) {
+    final controller = TextEditingController();
+    controller.text = label == 'EV'
+        ? (_selectedEVs[index]?.toString() ?? '')
+        : (_selectedIVs[index]?.toString() ?? '');
+
     return SizedBox(
       width: 60.0,
       child: TextFormField(
+        controller: controller,
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'^[0-9]{1,3}$')),
@@ -365,8 +377,8 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
         _movesList = movesList!;
         _isShiny = false;
         _selectedMoves = List.generate(4, (_) => movesList![random.nextInt(movesList.length)]);
-        _selectedIVs = List.generate(6, (_) => random.nextInt(32) + 1);
-        _selectedEVs = List.generate(6, (_) => random.nextInt(253) + 1);
+        _selectedIVs = List.generate(6, (_) => random.nextInt(32));
+        _selectedEVs = List.generate(6, (_) => random.nextInt(253));
       });
     } catch (e) {
       print('Error generating random Pokemon: $e');
@@ -374,7 +386,8 @@ class _PokemonBuilderState extends State<PokemonBuilder> {
     }
   }
 
-
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _StatInputFormatter extends TextInputFormatter {

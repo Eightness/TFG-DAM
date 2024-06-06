@@ -56,4 +56,15 @@ class Team {
       trainer: Trainer.fromJson(decodedJson['trainer'] as String),
     );
   }
+
+  List<Pokemon> getPokemonList() {
+    return pokemon;
+  }
+
+  @override
+  String toString() {
+    final pokemonList = pokemon.map((p) => p.name).join(', ');
+    return 'Team(name: $name, createdDate: $createdDate, isPublic: $isPublic, numLikes: $numLikes, generation: $generation, trainer: ${trainer.username}, pokemon: [$pokemonList])';
+  }
+
 }

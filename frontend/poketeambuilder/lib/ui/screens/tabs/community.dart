@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:poketeambuilder/data/services/team_service.dart';
 import 'package:poketeambuilder/ui/screens/profile.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 
+import '../../../data/models/team.dart';
 import '../../../data/models/trainer.dart';
 import '../../../data/services/trainer_service.dart';
 import '../../widgets/team_showcase_mini.dart';
 
 class Community extends StatefulWidget {
+  final Trainer currentTrainer;
+
+  const Community({super.key, required this.currentTrainer});
 
   @override
   _CommunityState createState() => _CommunityState();
@@ -14,6 +19,26 @@ class Community extends StatefulWidget {
 
 class _CommunityState extends State<Community> {
   TextEditingController searchController = TextEditingController();
+
+  TeamService _teamService = new TeamService();
+  late List<Team> _teams;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAllTeams();
+  }
+
+  Future<void> _fetchAllTeams() async  {
+    try {
+        List<Team> teams = await _teamService.getAllTeams();
+      setState(() {
+        _teams = teams;
+      });
+    } catch (e) {
+      print('Error fetching natures: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +51,7 @@ class _CommunityState extends State<Community> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 50.0, horizontal: 50.0),
+        padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 1200),
@@ -148,9 +172,12 @@ class _CommunityState extends State<Community> {
                                     children: [
                                       Expanded(
                                         child: ListView.builder(
-                                          itemCount: 8,
+                                          itemCount: _teams.length,
                                           itemBuilder: (context, index) {
-                                            return TeamShowcaseMini(index: index, isCurrentTrainer: false, comments: [],);
+                                            return TeamShowcaseMini(
+                                              isCurrentTrainer: false,
+                                              currentTeam: _teams[index],
+                                            );
                                           },
                                         ),
                                       ),
@@ -197,35 +224,57 @@ class _CommunityState extends State<Community> {
                           border: OutlineInputBorder(),
                         ),
                       ),
-                      SizedBox(height: 10.0),
+                      SizedBox(height: 25.0),
                       ElevatedButton(
                         onPressed: () async {
                           String username = searchController.text;
-                          Trainer? trainer = await TrainerService().getTrainerByUsername(username);
+                          Trainer? trainer = await TrainerService()
+                              .getTrainerByUsername(username);
                           if (trainer != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Profile(currentTrainer: trainer, isCurrentTrainer: false),
-                              ),
-                            );
+                            if (trainer.username.toLowerCase() ==
+                                widget.currentTrainer.username.toLowerCase()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Profile(
+                                    currentTrainer: widget.currentTrainer,
+                                    editable: true,
+                                    trainerToSee: trainer,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Profile(
+                                    currentTrainer: widget.currentTrainer,
+                                    editable: false,
+                                    trainerToSee: trainer,
+                                  ),
+                                ),
+                              );
+                            }
                           } else {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Trainer Not Found', style: TextStyle(
-                                    color: Constants.red
-                                  ),),
-                                  content: Text('The trainer with username $username was not found.'),
+                                  title: Text(
+                                    'Trainer Not Found',
+                                    style: TextStyle(color: Constants.red),
+                                  ),
+                                  content: Text(
+                                      'The trainer with username $username was not found.'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text('OK', style: TextStyle(
-                                        color: Constants.red
-                                      ),),
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(color: Constants.red),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -239,7 +288,6 @@ class _CommunityState extends State<Community> {
                         ),
                         child: Text('Search'),
                       ),
-
                     ],
                   ),
                 ),

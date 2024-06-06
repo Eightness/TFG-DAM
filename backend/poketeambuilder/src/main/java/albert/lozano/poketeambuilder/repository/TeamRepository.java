@@ -8,6 +8,8 @@ package albert.lozano.poketeambuilder.repository;
 import albert.lozano.poketeambuilder.domain.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * TeamRepository interface. Extends from JpaRepository and contains all methods related to User's persistence.
  */
@@ -20,4 +22,5 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
      */
 
     // Custom methods
+    List<Team> findByTrainerUsername(String username);
 }

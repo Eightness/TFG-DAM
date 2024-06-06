@@ -57,6 +57,9 @@ public class ApplicationConfig {
 
     // Mappers
     @Bean
+    public TrainerTeamMapper trainerTeamMapper() { return new TrainerTeamMapper(); }
+
+    @Bean
     public CommentMapper commentMapper() {
         return new CommentMapper();
     }
@@ -70,15 +73,4 @@ public class ApplicationConfig {
     public PokemonMapper pokemonMapper() {
         return new PokemonMapper();
     }
-
-    @Bean
-    public TeamMapper teamMapper() {
-        return new TeamMapper();
-    }
-
-    @Bean
-    public TrainerMapper trainerMapper() {
-        return new TrainerMapper();
-    }
-
 }

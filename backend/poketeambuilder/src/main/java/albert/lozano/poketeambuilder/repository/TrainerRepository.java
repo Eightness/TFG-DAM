@@ -5,7 +5,6 @@
 
 package albert.lozano.poketeambuilder.repository;
 
-import albert.lozano.poketeambuilder.dto.TrainerDTO;
 import albert.lozano.poketeambuilder.domain.Trainer;
 import org.springframework.data.jpa.repository.JpaRepository;
 

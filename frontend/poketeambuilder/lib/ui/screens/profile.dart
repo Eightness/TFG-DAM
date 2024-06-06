@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:intl/intl.dart';
+import 'package:poketeambuilder/data/services/team_service.dart';
 import 'package:poketeambuilder/data/services/trainer_service.dart';
 import 'package:poketeambuilder/ui/screens/settings.dart';
 import 'package:poketeambuilder/ui/screens/tabs/community.dart';
@@ -9,6 +10,7 @@ import 'package:poketeambuilder/ui/screens/tabs/signin.dart';
 import 'package:poketeambuilder/ui/screens/tabs/team_builder.dart';
 import 'package:poketeambuilder/ui/screens/welcome.dart';
 
+import '../../data/models/team.dart';
 import '../../utils/constants.dart';
 import '../widgets/menu_item.dart';
 import '../widgets/menu_items.dart';
@@ -17,15 +19,49 @@ import '../widgets/windows_buttons.dart';
 import '../../data/models/trainer.dart';
 import 'home.dart';
 
-class Profile extends StatelessWidget {
-  final Trainer currentTrainer;
-  final bool isCurrentTrainer;
-  final TrainerService _trainerService = new TrainerService();
+class Profile extends StatefulWidget {
+  Trainer currentTrainer;
+  final Trainer trainerToSee;
+  final bool editable;
 
+  final TrainerService _trainerService = new TrainerService();
+  final TeamService _teamService = new TeamService();
+
+  Profile(
+      {Key? key,
+      required this.currentTrainer,
+      required this.editable,
+      required this.trainerToSee})
+      : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   final TextEditingController bioController = TextEditingController();
 
-  Profile({Key? key, required this.currentTrainer, required this.isCurrentTrainer})
-      : super(key: key);
+  List<Team> _trainerTeams = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTrainerTeams();
+  }
+
+  void _loadTrainerTeams() async {
+    try {
+      List<Team>? trainerTeams = await widget._teamService.getTeamsByTrainerUsername(widget.currentTrainer.username);
+
+      if (trainerTeams != null) {
+        setState(() {
+          _trainerTeams = trainerTeams;
+        });
+      }
+    } catch (e) {
+      print("Error loading trainer data: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +108,12 @@ class Profile extends StatelessWidget {
                     }).toList(),
                     onSelected: (item) => onMenuItemSelected(context, item),
                     // Handle menu item selection
-                    icon: const Icon(Icons.person, color: Colors.white, size: 40),
+                    icon:
+                        const Icon(Icons.person, color: Colors.white, size: 40),
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    '${currentTrainer.username}',
+                    '${widget.currentTrainer.username}',
                     style: TextStyle(
                       color: Constants.white,
                       fontSize: 20,
@@ -132,21 +169,21 @@ class Profile extends StatelessWidget {
                                           ],
                                         ),
                                         borderRadius:
-                                        BorderRadius.circular(25.0),
+                                            BorderRadius.circular(25.0),
                                       ),
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            currentTrainer.username,
+                                            widget.trainerToSee.username,
                                             style: TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
-                                            'Member since ${DateFormat('yyyy-MM-dd').format(currentTrainer.createdDate)}',
+                                            'Member since ${DateFormat('yyyy-MM-dd').format(widget.trainerToSee.createdDate)}',
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Constants.darkBrown,
@@ -157,7 +194,7 @@ class Profile extends StatelessWidget {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   CircleAvatar(
                                                     radius: 70,
@@ -167,14 +204,14 @@ class Profile extends StatelessWidget {
                                                   SizedBox(width: 20),
                                                   Expanded(
                                                     child: Text(
-                                                      currentTrainer.bio,
+                                                      widget.trainerToSee.bio,
                                                       style: TextStyle(
                                                           fontSize: 18),
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                              if (isCurrentTrainer)
+                                              if (widget.editable)
                                                 Positioned(
                                                   right: 0,
                                                   top: 0,
@@ -187,16 +224,38 @@ class Profile extends StatelessWidget {
                                                         context: context,
                                                         builder: (context) {
                                                           return AlertDialog(
-                                                            title: Text('Biography'),
-                                                            content: _buildTextField('Update biography', isPassword: false, controller: bioController),
+                                                            title: Text(
+                                                                'Biography'),
+                                                            content: _buildTextField(
+                                                                'Update biography',
+                                                                isPassword:
+                                                                    false,
+                                                                controller:
+                                                                    bioController),
                                                             actions: [
                                                               TextButton(
-                                                                onPressed: () async {
-                                                                  currentTrainer.bio = bioController.text;
-                                                                  await _trainerService.updateCurrentTrainer(currentTrainer);
-                                                                  Navigator.of(context).pop();
+                                                                onPressed:
+                                                                    () async {
+                                                                  widget.currentTrainer
+                                                                          .bio =
+                                                                      bioController
+                                                                          .text;
+                                                                  await widget
+                                                                      ._trainerService
+                                                                      .updateCurrentTrainer(
+                                                                          widget
+                                                                              .currentTrainer);
+                                                                  setState(
+                                                                      () {}); // Update UI
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
                                                                 },
-                                                                child: Text('OK', style: TextStyle(color: Constants.red)),
+                                                                child: Text(
+                                                                    'OK',
+                                                                    style: TextStyle(
+                                                                        color: Constants
+                                                                            .red)),
                                                               ),
                                                             ],
                                                           );
@@ -217,9 +276,12 @@ class Profile extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: ListView.builder(
-                                              itemCount: 6,
+                                              itemCount: _trainerTeams.length,
                                               itemBuilder: (context, index) {
-                                                return TeamShowcaseMini(index: index, isCurrentTrainer: this.isCurrentTrainer, comments: [],);
+                                                return TeamShowcaseMini(
+                                                  isCurrentTrainer: widget.editable,
+                                                  currentTeam: _trainerTeams[index],
+                                                );
                                               },
                                             ),
                                           ),
@@ -266,21 +328,12 @@ class Profile extends StatelessWidget {
   }
 
   void onMenuItemSelected(BuildContext context, MenuItem item) {
-    if (item.text == 'Profile') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Profile(
-            currentTrainer: currentTrainer,
-            isCurrentTrainer: true,
-          ),
-        ),
-      );
-    } else if (item.text == 'Settings') {
+    if (item.text == 'Settings') {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Settings(currentTrainer: currentTrainer)));
+              builder: (context) =>
+                  Settings(currentTrainer: widget.currentTrainer)));
     } else if (item.text == 'Log out') {
       Navigator.push(
         context,
@@ -292,8 +345,12 @@ class Profile extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                Home(team: TeamBuilder(), community: Community(), currentTrainer: currentTrainer)),
+            builder: (context) => Home(
+                team: TeamBuilder(currentTrainer: widget.currentTrainer,),
+                community: Community(
+                  currentTrainer: widget.currentTrainer,
+                ),
+                currentTrainer: widget.currentTrainer)),
       );
     }
   }

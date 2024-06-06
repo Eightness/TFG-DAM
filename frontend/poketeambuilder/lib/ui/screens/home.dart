@@ -134,7 +134,7 @@ class _HomeState extends State<Home> {
         MaterialPageRoute(
           builder: (context) => Profile(
             currentTrainer: widget.currentTrainer,
-            isCurrentTrainer: true,
+            editable: true, trainerToSee: widget.currentTrainer,
           ),
         ),
       );

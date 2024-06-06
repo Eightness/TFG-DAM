@@ -8,9 +8,8 @@ import 'package:poketeambuilder/ui/screens/welcome.dart';
 void main() {
   runApp(const MyApp());
   doWhenWindowReady(() {
-    var initialSize = const Size(1920, 1080);
-    appWindow.size = initialSize;
-    appWindow.minSize = const Size(1280, 1000);
+    appWindow.maximize();
+    appWindow.minSize = const Size(1200, 800);
   });
 }
 

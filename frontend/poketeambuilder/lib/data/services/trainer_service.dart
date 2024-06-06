@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/trainer.dart';
 
 class TrainerService {
-  final String baseUrl = 'http://localhost:8080/trainer';
+  final String baseUrl = 'http://localhost:9090/trainer';
 
   // Add new trainer
   Future<bool> registerTrainer(Trainer trainer) async {
@@ -17,7 +17,7 @@ class TrainerService {
         body: jsonEncode(trainer.toJson()),
       );
 
-      if (response.statusCode == 201 || response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         print('Trainer successfully registered');
         print('Status code: ${response.statusCode}');
         print('Response body: ${response.body}');

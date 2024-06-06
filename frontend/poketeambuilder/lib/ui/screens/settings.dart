@@ -257,15 +257,13 @@ class _SettingsState extends State<Settings> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 CircleAvatar(
-                                  radius: 70,
+                                  radius: 50,
                                   backgroundImage: AssetImage('assets/images/profile_picture.png'),
                                 ),
                                 SizedBox(height: 20),
                                 _buildUserInfoField('Name', nameController),
                                 _buildUserInfoField('Surnames', surnamesController),
-                                _buildUserInfoField('Email', emailController, isEditable: false),
                                 _buildUserInfoField('Phone', phoneController),
-                                _buildUserInfoField('Username', usernameController, isEditable: false),
                                 _buildUserInfoField('Password', passwordController, isPassword: true),
                                 SizedBox(height: 20),
                                 ElevatedButton(
@@ -366,7 +364,7 @@ class _SettingsState extends State<Settings> {
         MaterialPageRoute(
           builder: (context) => Profile(
             currentTrainer: widget.currentTrainer,
-            isCurrentTrainer: true,
+            editable: true, trainerToSee: widget.currentTrainer,
           ),
         ),
       );
@@ -387,7 +385,7 @@ class _SettingsState extends State<Settings> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                Home(team: TeamBuilder(), community: Community(), currentTrainer: widget.currentTrainer)),
+                Home(team: TeamBuilder(currentTrainer: widget.currentTrainer,), community: Community(currentTrainer: widget.currentTrainer,), currentTrainer: widget.currentTrainer)),
       );
     }
   }

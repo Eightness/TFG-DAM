@@ -5,6 +5,7 @@
 
 package albert.lozano.poketeambuilder.dto.mappers;
 
+import albert.lozano.poketeambuilder.domain.Team;
 import albert.lozano.poketeambuilder.dto.PokemonDTO;
 import albert.lozano.poketeambuilder.domain.Pokemon;
 
@@ -37,6 +38,32 @@ public class PokemonMapper implements GenericDTOMapper<PokemonDTO, Pokemon> {
         pokemon.setEvSpAtk(pokemonDTO.getEvSpAtk());
         pokemon.setEvSpeed(pokemonDTO.getEvSpeed());
         pokemon.setEvHealth(pokemonDTO.getEvHealth());
+
+        return pokemon;
+    }
+
+    public Pokemon DTOToDomain(PokemonDTO pokemonDTO, Team team) {
+        Pokemon pokemon = new Pokemon();
+
+        pokemon.setName(pokemonDTO.getName());
+        pokemon.setSpriteUrl(pokemonDTO.getSpriteUrl());
+        pokemon.setItem(pokemonDTO.getItem());
+        pokemon.setAbility(pokemonDTO.getAbility());
+        pokemon.setNature(pokemonDTO.getNature());
+        pokemon.setShiny(pokemonDTO.isShiny());
+        pokemon.setIvDef(pokemonDTO.getIvDef());
+        pokemon.setIvAtk(pokemonDTO.getIvAtk());
+        pokemon.setIvSpDef(pokemonDTO.getIvSpDef());
+        pokemon.setIvSpAtk(pokemonDTO.getIvSpAtk());
+        pokemon.setIvSpeed(pokemonDTO.getIvSpeed());
+        pokemon.setIvHealth(pokemonDTO.getIvHealth());
+        pokemon.setEvDef(pokemonDTO.getEvDef());
+        pokemon.setEvAtk(pokemonDTO.getEvAtk());
+        pokemon.setEvSpDef(pokemonDTO.getEvSpDef());
+        pokemon.setEvSpAtk(pokemonDTO.getEvSpAtk());
+        pokemon.setEvSpeed(pokemonDTO.getEvSpeed());
+        pokemon.setEvHealth(pokemonDTO.getEvHealth());
+        pokemon.setTeam(team);
 
         return pokemon;
     }

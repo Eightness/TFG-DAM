@@ -40,8 +40,6 @@ public class TrainerDTO {
 
     private String bio;
 
-    private List<TeamDTO> teams;
-
     public boolean getTheme() {
         return this.theme;
     }

@@ -1,86 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 import 'package:poketeambuilder/data/models/comment.dart';
-import 'dart:math';
-import 'package:poketeambuilder/data/models/trainer.dart';
 
+import '../../data/models/team.dart';
 import 'comment_showcase.dart';
 
 class TeamShowcaseMini extends StatefulWidget {
-  final int index;
   final bool isCurrentTrainer;
-  final List<Comment> comments;
+  final Team currentTeam;
 
   const TeamShowcaseMini({
     Key? key,
-    required this.index,
     this.isCurrentTrainer = false,
-    required this.comments,
+    required this.currentTeam,
   }) : super(key: key);
 
   @override
   _TeamShowcaseMiniState createState() => _TeamShowcaseMiniState();
 }
 
-class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
-  List<Comment> comments = [];
+class _TeamShowcaseMiniState extends State<TeamShowcaseMini> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
     super.initState();
-    comments = widget.comments;
-  }
-
-  List<Comment> generateRandomComments(int count) {
-    final random = Random();
-    final List<String> commentsText = [
-      "Great team! I love the synergy.",
-      "Interesting choice of Pokémon. How does it fare against Dragon types?",
-      "I think you should consider adding a water type.",
-      "Solid team, but it might struggle against electric types.",
-      "Impressive lineup! Have you tried it in competitive battles?",
-      "Your team composition is really creative!",
-      "Good balance between offense and defense.",
-      "I would swap one of your Pokémon for a tankier one.",
-      "This team looks fun to play with!",
-      "You might need more speed on your team.",
-      "Great strategy! I can see this team winning many battles.",
-      "Consider adding a Pokémon with status moves.",
-      "Your team has a solid core, well done!",
-      "Looks strong! How does it perform against legendary Pokémon?",
-      "Fantastic team! Your choice of abilities is spot on."
-    ];
-
-    return List.generate(count, (index) {
-      final createdDate = DateTime.now().subtract(Duration(days: random.nextInt(100)));
-      final trainer = Trainer(
-          name: 'Albert',
-          firstSurname: 'Lozano',
-          secondSurname: 'Blasco',
-          email: 'albertlb08@gmail.com',
-          phone: '625760988',
-          password: '12345',
-          username: 'Eightness',
-          createdDate: DateTime.now(),
-          theme: true,
-          bio:
-          'This is the bio of a trainer. It contains a brief description about the trainer.',
-          teams: []);
-      final body = commentsText[random.nextInt(commentsText.length)];
-
-      return Comment(
-        trainer: trainer,
-        body: body, createdDate: createdDate,
-      );
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentDate = DateTime.now();
-    final formattedDate = DateFormat('dd/MM/yyyy').format(currentDate);
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Container(
@@ -102,7 +49,7 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
               left: 10,
               top: 10,
               child: Text(
-                'Team${widget.index + 1} - Username',
+                '${widget.currentTeam.name} - ${widget.currentTeam.trainer.username}',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -113,16 +60,16 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
               padding: const EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Icon(Icons.catching_pokemon, size: 50, color: Constants.red),
-                  Icon(Icons.catching_pokemon, size: 50, color: Constants.red),
-                  Icon(Icons.catching_pokemon, size: 50, color: Constants.red),
-                  Icon(Icons.catching_pokemon, size: 50, color: Constants.red),
-                  Icon(Icons.catching_pokemon, size: 50, color: Constants.red),
-                  Icon(Icons.catching_pokemon, size: 50, color: Constants.red),
-                ],
+                children: List.generate(widget.currentTeam.pokemon.length, (index) {
+                  return Image.network(
+                    widget.currentTeam.pokemon[index].spriteUrl,
+                    height: 90.0,
+                    width: 90.0,
+                  );
+                }),
               ),
             ),
+
             if (widget.isCurrentTrainer)
               Positioned(
                 right: 0,
@@ -135,7 +82,9 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
                     ),
                     IconButton(
                       icon: Icon(Icons.delete, color: Constants.red),
-                      onPressed: () {},
+                      onPressed: () {
+
+                      },
                     ),
                   ],
                 ),
@@ -157,7 +106,7 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
                         Icon(Icons.favorite, color: Constants.white),
                         SizedBox(width: 5),
                         Text(
-                          '25',
+                          '${widget.currentTeam.numLikes}',
                           style: TextStyle(
                             fontSize: 14,
                             color: Constants.white,
@@ -184,7 +133,7 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
               right: 10,
               bottom: 0,
               child: Text(
-                'Created: $formattedDate',
+                'Created: ${widget.currentTeam.createdDate}',
                 style: TextStyle(
                   fontSize: 14,
                   color: Constants.darkBrown,
@@ -210,15 +159,16 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
               title: Text('Comments'),
               content: Container(
                 width: 600,
+                height: 1000,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: comments.length,
+                        itemCount: widget.currentTeam.comments.length,
                         itemBuilder: (context, index) {
-                          return CommentShowcase(comment: comments[index]);
+                          return CommentShowcase(comment: widget.currentTeam.comments[index]);
                         },
                       ),
                     ),
@@ -244,28 +194,16 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
                 TextButton(
                   child: Text(
                     'Submit',
-                    style: TextStyle(color: Constants.blue),
+                    style: TextStyle(color: Constants.red),
                   ),
                   onPressed: () {
                     final newComment = Comment(
                       createdDate: DateTime.now(),
-                      trainer: Trainer(
-                        name: 'New',
-                        firstSurname: 'User',
-                        secondSurname: 'User',
-                        email: 'newuser@example.com',
-                        phone: '0000000000',
-                        password: 'password',
-                        username: 'NewUser',
-                        createdDate: DateTime.now(),
-                        theme: true,
-                        bio: 'This is a new user.',
-                        teams: [],
-                      ),
+                      trainer: widget.currentTeam.trainer,
                       body: commentController.text,
                     );
                     setState(() {
-                      comments.add(newComment);
+                      widget.currentTeam.comments.add(newComment);
                     });
                     commentController.clear();
                   },
@@ -277,4 +215,8 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
+
 }

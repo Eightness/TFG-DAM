@@ -24,50 +24,65 @@ class SignIn extends StatelessWidget {
           colors: [Constants.blue, Constants.darkBlue],
         ),
       ),
-      child: Center(
-        child: Container(
-          width: 400,
-          height: 500,
-          padding: const EdgeInsets.symmetric(
-              vertical: 50.0, horizontal: 50.0),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Constants.white, Constants.grey],
+      child: Stack(
+        children: [
+          Center(
+            child: Container(
+              width: 300,
+              height: 460,
+              padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Constants.white, Constants.grey],
+                ),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Constants.red,
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Your credentials',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Constants.darkBrown,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  _buildTextField('Username', controller: usernameController),
+                  SizedBox(height: 10),
+                  _buildTextField('Password', isPassword: true, controller: passwordController),
+                  SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _signInTrainer(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        foregroundColor: Constants.white, backgroundColor: Constants.red, fixedSize: Size(200, 35)
+                    ),
+                    child: Text('Sign In'),
+                  ),
+                ],
+              ),
             ),
-            borderRadius: BorderRadius.circular(25.0),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.person, size: 100, color: Constants.darkBrown),
-              SizedBox(height: 20),
-              Text(
-                'Your credentials',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Constants.darkBrown,
-                ),
-              ),
-              SizedBox(height: 20),
-              _buildTextField('Username', controller: usernameController),
-              SizedBox(height: 10),
-              _buildTextField('Password', isPassword: true, controller: passwordController),
-              SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () async {
-                  await _signInTrainer(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Constants.white, backgroundColor: Constants.red, fixedSize: Size(200, 35)
-                ),
-                child: Text('Sign In'),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -79,7 +94,7 @@ class SignIn extends StatelessWidget {
       Constants.isDarkTheme = currentTrainer.theme;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Home(team: TeamBuilder(), community: Community(), currentTrainer: currentTrainer,)),
+        MaterialPageRoute(builder: (context) => Home(team: TeamBuilder(currentTrainer: currentTrainer,), community: Community(currentTrainer: currentTrainer,), currentTrainer: currentTrainer,)),
       );
     } else {
       showDialog(
@@ -116,7 +131,7 @@ class SignIn extends StatelessWidget {
             borderSide: BorderSide(color: Constants.darkBrown),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Constants.red),
+            borderSide: BorderSide(color: Constants.darkRed),
           ),
         ),
       ),

@@ -1,20 +1,144 @@
 import 'package:flutter/material.dart';
+import 'package:poketeambuilder/data/models/comment.dart';
+import 'package:poketeambuilder/data/models/pokemon.dart';
+import 'package:poketeambuilder/data/models/team.dart';
+import 'package:poketeambuilder/data/models/trainer.dart';
+import 'package:poketeambuilder/data/services/team_service.dart';
 import 'package:poketeambuilder/utils/constants.dart';
-
+import 'package:poketeambuilder/data/services/pokeapi_service.dart';
 import '../../widgets/pokemon_builder.dart';
 
 class TeamBuilder extends StatefulWidget {
+  final Trainer currentTrainer;
+
+  const TeamBuilder({Key? key, required this.currentTrainer}) : super(key: key);
+
   @override
   _TeamBuilderState createState() => _TeamBuilderState();
 }
 
 class _TeamBuilderState extends State<TeamBuilder> {
   String _selectedGeneration = 'All generations';
-  List<String>? currentGeneration;
+  List<String>? _currentGeneration;
   bool _isPublic = false;
 
-  // Lista de instancias de PokemonBuilder
+  final PokeAPIService _pokeAPIService = PokeAPIService();
+  final TeamService _teamService = TeamService();
+  late final List<String>? _itemList;
+  late final List<String>? _naturesList;
+
+  List<GlobalKey<PokemonBuilderState>> _pokemonBuilderKeys = List.generate(
+    6,
+        (_) => GlobalKey<PokemonBuilderState>(),
+  );
+
   List<PokemonBuilder> _pokemonBuilders = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAllPokemonNames();
+    _fetchItems();
+    _fetchNatures();
+    _pokemonBuilders = List.generate(
+      6,
+          (index) => PokemonBuilder(
+        currentGeneration: _currentGeneration,
+        key: _pokemonBuilderKeys[index],
+      ),
+    );
+  }
+
+  Future<void> _fetchAllPokemonNames() async {
+    try {
+      List<String> allPokemonNames = await _pokeAPIService.fetchAllPokemonNames();
+      setState(() {
+        _currentGeneration = allPokemonNames;
+      });
+      _updatePokemonBuilders();
+    } catch (e) {
+      print('Error fetching all Pokémon names: $e');
+    }
+  }
+
+  Future<void> _updateCurrentGeneration(String generation) async {
+    _resetPokemonBuilders();
+
+    if (generation == 'All generations') {
+      await _fetchAllPokemonNames();
+    } else {
+      int generationNumber = int.parse(generation.split(' ').last);
+      List<String> pokemonNames = await _pokeAPIService.fetchPokemonNamesByGeneration(generationNumber);
+      setState(() {
+        _currentGeneration = pokemonNames;
+      });
+      _updatePokemonBuilders();
+    }
+  }
+
+  void _resetPokemonBuilders() {
+    for (var i = 0; i < _pokemonBuilders.length; i++) {
+      _pokemonBuilderKeys[i].currentState?.resetValues();
+    }
+  }
+
+  void _updatePokemonBuilders() async {
+    for (var i = 0; i < _pokemonBuilders.length; i++) {
+      final pokemonBuilderState = _pokemonBuilderKeys[i].currentState;
+      _pokemonBuilders[i] = PokemonBuilder(
+        currentGeneration: _currentGeneration,
+        key: _pokemonBuilderKeys[i],
+      );
+      if (pokemonBuilderState != null) {
+        pokemonBuilderState.fetchItems();
+        pokemonBuilderState.fetchNatures();
+      }
+    }
+  }
+
+  Future<void> _fetchItems() async {
+    try {
+      List<String> itemList = await _pokeAPIService.fetchItems();
+      setState(() {
+        _itemList = itemList;
+      });
+    } catch (e) {
+      print('Error fetching items: $e');
+    }
+  }
+
+  Future<void> _fetchNatures() async {
+    try {
+      List<String> naturesList = await _pokeAPIService.fetchNatures();
+      setState(() {
+        _naturesList = naturesList;
+      });
+    } catch (e) {
+      print('Error fetching natures: $e');
+    }
+  }
+
+  Team buildTeam() {
+    List<Pokemon> pokemonList = _pokemonBuilderKeys.map((key) {
+      final pokemonBuilderState = key.currentState;
+      return pokemonBuilderState != null ? pokemonBuilderState.buildPokemon() : null;
+    }).whereType<Pokemon>().toList();
+
+    print('Current trainer name: ${widget.currentTrainer.username}');
+
+    return Team(
+      name: 'New Team',
+      createdDate: DateTime.now(),
+      isPublic: _isPublic,
+      numLikes: 0,
+      generation: _selectedGeneration == 'All generations'
+          ? 0
+          : int.parse(_selectedGeneration.split(' ').last),
+      pokemon: pokemonList,
+      comments: [],
+      trainer: widget.currentTrainer,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +151,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 300.0),
+        padding: const EdgeInsets.fromLTRB(300.0, 50.0, 300.0, 50.0),
         child: Column(
           children: [
             Expanded(
@@ -37,10 +161,9 @@ class _TeamBuilderState extends State<TeamBuilder> {
                   if (constraints.maxWidth < 1920) {
                     crossAxisCount = 2;
                   }
-                  if (constraints.maxWidth < 1280) {
+                  if (constraints.maxWidth < 1232) {
                     crossAxisCount = 1;
                   }
-
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: crossAxisCount,
@@ -50,9 +173,13 @@ class _TeamBuilderState extends State<TeamBuilder> {
                     ),
                     itemCount: 6,
                     itemBuilder: (context, index) {
-                      // Agregar PokemonBuilder a la lista y crear una instancia
                       if (_pokemonBuilders.length <= index) {
-                        _pokemonBuilders.add(PokemonBuilder(currentGeneration: ['Venusaur', 'Charizard', 'Blastoise']));
+                        _pokemonBuilders.add(
+                          PokemonBuilder(
+                            currentGeneration: _currentGeneration ?? ['Venusaur', 'Charizard', 'Blastoise'],
+                            key: _pokemonBuilderKeys[index],
+                          ),
+                        );
                       }
                       return _pokemonBuilders[index];
                     },
@@ -92,19 +219,37 @@ class _TeamBuilderState extends State<TeamBuilder> {
                       setState(() {
                         _selectedGeneration = value!;
                       });
+                      _updateCurrentGeneration(value!);
                     },
                     hint: Text('Generation'),
                   ),
                   SizedBox(width: 20.0),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Team newTeam = buildTeam();
+                      print(newTeam.toJson());
+                      _teamService.addTeam(newTeam);
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Constants.white,
                       backgroundColor: Constants.red,
                     ),
                     child: Text('Save'),
                   ),
-                  SizedBox(width: 10.0),
+                  SizedBox(width: 20.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      for (GlobalKey<PokemonBuilderState> key in _pokemonBuilderKeys) {
+                        key.currentState?.generateRandomPokemon();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Constants.white,
+                      backgroundColor: Constants.red,
+                    ),
+                    child: Text('Random'),
+                  ),
+                  SizedBox(width: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       showDialog(
@@ -121,9 +266,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                               TextButton(
                                 child: Text(
                                   'Close',
-                                  style: TextStyle(
-                                      color: Constants.white
-                                  ),
+                                  style: TextStyle(color: Constants.white),
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).pop();
@@ -140,7 +283,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                     ),
                     child: Text('Types'),
                   ),
-                  SizedBox(width: 10.0),
+                  SizedBox(width: 20.0),
                   Row(
                     children: [
                       Checkbox(

@@ -13,7 +13,6 @@ class Trainer {
   final DateTime createdDate;
   bool theme;
   String bio;
-  List<Team> teams;
 
   Trainer({
     required this.name,
@@ -26,7 +25,6 @@ class Trainer {
     required this.createdDate,
     required this.theme,
     required this.bio,
-    required this.teams,
   });
 
   Map<String, dynamic> toJson() {
@@ -41,7 +39,6 @@ class Trainer {
       'createdDate': createdDate.toIso8601String(),
       'theme': theme,
       'bio': bio,
-      'teams': teams.map((team) => team.toJson()).toList(),
     };
   }
 
@@ -59,9 +56,6 @@ class Trainer {
       createdDate: DateTime.parse(decodedJson['createdDate'] as String),
       theme: decodedJson['theme'] as bool,
       bio: decodedJson['bio'] as String,
-      teams: (decodedJson['teams'] as List<dynamic>)
-          .map((teamJson) => Team.fromJson(jsonEncode(teamJson)))
-          .toList(),
     );
   }
 

@@ -6,6 +6,7 @@
 package albert.lozano.poketeambuilder.application.implementation;
 
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
+import albert.lozano.poketeambuilder.domain.Team;
 import albert.lozano.poketeambuilder.dto.PokemonDTO;
 import albert.lozano.poketeambuilder.dto.mappers.PokemonMapper;
 import albert.lozano.poketeambuilder.domain.Pokemon;
@@ -47,6 +48,12 @@ public class PokemonServiceImpl implements GenericCRUDService<PokemonDTO, Long> 
     @Override
     public PokemonDTO addEntity(PokemonDTO entityDTO) {
         Pokemon pokemon = pokemonMapper.DTOToDomain(entityDTO);
+        pokemonRepository.save(pokemon);
+        return pokemonMapper.domainToDTO(pokemon);
+    }
+
+    public PokemonDTO addEntity(PokemonDTO entityDTO, Team team) {
+        Pokemon pokemon = pokemonMapper.DTOToDomain(entityDTO, team);
         pokemonRepository.save(pokemon);
         return pokemonMapper.domainToDTO(pokemon);
     }

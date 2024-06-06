@@ -98,4 +98,8 @@ class Pokemon {
       evHealth: decodedJson['evHealth'] as int,
     );
   }
+
+  String getSpriteUrl() {
+    return spriteUrl;
+  }
 }

@@ -110,6 +110,52 @@ class PokeAPIService {
     }
   }
 
+  Future<List<String>> fetchPokemonNamesByGeneration(int generation) async {
+    try {
+      final response = await http.get(Uri.parse('$_baseUrl/generation/$generation'));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        List<dynamic> pokemonSpeciesList = data['pokemon_species'];
+        List<String> pokemonNames = pokemonSpeciesList
+            .map((species) => formatName(species['name']))
+            .toList();
+        return pokemonNames;
+      } else {
+        throw Exception('Failed to load Pokémon names for generation: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching Pokémon names: $e');
+      throw Exception('Failed to load Pokémon names: $e');
+    }
+  }
+
+  // Get all Pokémon names
+  Future<List<String>> fetchAllPokemonNames() async {
+    try {
+      List<String> allPokemonNames = [];
+
+      for (int generation = 1; generation <= 9; generation++) {
+        final response = await http.get(Uri.parse('$_baseUrl/generation/$generation/'));
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          List<dynamic> species = data['pokemon_species'];
+          List<String> generationPokemonNames = species.map((pokemon) => formatName(pokemon['name'])).toList();
+          allPokemonNames.addAll(generationPokemonNames);
+        } else {
+          throw Exception('Failed to load Pokémon names for generation $generation: ${response.statusCode}');
+        }
+      }
+
+      allPokemonNames = allPokemonNames.toSet().toList();
+
+      return allPokemonNames;
+    } catch (e) {
+      print('Error fetching Pokémon names: $e');
+      throw Exception('Failed to load Pokémon names: $e');
+    }
+  }
+
   // Custom data format
   String formatName(String name) {
     return name.split('-').map((word) {

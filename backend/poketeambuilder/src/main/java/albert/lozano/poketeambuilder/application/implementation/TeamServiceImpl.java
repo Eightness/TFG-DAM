@@ -12,7 +12,9 @@ import albert.lozano.poketeambuilder.dto.TeamDTO;
 import albert.lozano.poketeambuilder.domain.Team;
 import albert.lozano.poketeambuilder.dto.mappers.PokemonMapper;
 import albert.lozano.poketeambuilder.dto.mappers.TrainerTeamMapper;
+import albert.lozano.poketeambuilder.repository.PokemonRepository;
 import albert.lozano.poketeambuilder.repository.TeamRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,8 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
     PokemonServiceImpl pokemonService;
     @Autowired
     PokemonMapper pokemonMapper;
+    @Autowired
+    PokemonRepository pokemonRepository;
 
     // Methods
     @Override
@@ -121,5 +125,14 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
 
     public List<TeamDTO> getTeamsByTrainerUsername(String username) {
         return trainerTeamMapper.teamsToTeamsDTO(teamRepository.findByTrainerUsername(username));
+    }
+
+    @Transactional
+    public void deleteTeamByNameAndTrainerUsername(String teamName, String trainerUsername) {
+        Team team = teamRepository.findByNameAndTrainerUsername(teamName, trainerUsername);
+        if (team != null) {
+            pokemonRepository.deleteByTeam(team);
+            teamRepository.delete(team);
+        }
     }
 }

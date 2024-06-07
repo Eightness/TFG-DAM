@@ -6,6 +6,7 @@
 package albert.lozano.poketeambuilder.repository;
 
 import albert.lozano.poketeambuilder.domain.Pokemon;
+import albert.lozano.poketeambuilder.domain.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -20,4 +21,5 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
      */
 
     // Custom methods
+    void deleteByTeam(Team team);
 }

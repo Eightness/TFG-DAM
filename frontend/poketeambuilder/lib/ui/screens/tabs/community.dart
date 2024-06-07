@@ -176,7 +176,7 @@ class _CommunityState extends State<Community> {
                                           itemBuilder: (context, index) {
                                             return TeamShowcaseMini(
                                               isCurrentTrainer: false,
-                                              currentTeam: _teams[index],
+                                              currentTeam: _teams[index], onTeamDeleted: () {  }
                                             );
                                           },
                                         ),

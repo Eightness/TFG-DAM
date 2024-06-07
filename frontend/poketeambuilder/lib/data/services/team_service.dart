@@ -75,7 +75,8 @@ class TeamService {
         );
 
         if (jsonResponse.isNotEmpty && jsonResponse[0]['trainer'] != null) {
-          firstTrainer = Trainer.fromJson(jsonEncode(jsonResponse[0]['trainer']));
+          firstTrainer =
+              Trainer.fromJson(jsonEncode(jsonResponse[0]['trainer']));
         }
 
         List<Team> teams = [];
@@ -150,54 +151,70 @@ class TeamService {
         List<Team> teams = [];
 
         for (var teamJson in jsonResponse) {
+          if (teamJson == null) {
+            print('Warning: teamJson is null');
+            continue;
+          }
+
           List<Pokemon> pokemonList = [];
-          for (var pokemonJson in teamJson['pokemon']) {
-            Pokemon pokemon = Pokemon(
-              name: pokemonJson['name'],
-              spriteUrl: pokemonJson['spriteUrl'],
-              item: pokemonJson['item'],
-              ability: pokemonJson['ability'],
-              nature: pokemonJson['nature'],
-              moves: [],
-              ivDef: pokemonJson['ivDef'],
-              ivAtk: pokemonJson['ivAtk'],
-              ivSpDef: pokemonJson['ivSpDef'],
-              ivSpAtk: pokemonJson['ivSpAtk'],
-              ivSpeed: pokemonJson['ivSpeed'],
-              ivHealth: pokemonJson['ivHealth'],
-              evDef: pokemonJson['evDef'],
-              evAtk: pokemonJson['evAtk'],
-              evSpDef: pokemonJson['evSpDef'],
-              evSpAtk: pokemonJson['evSpAtk'],
-              evSpeed: pokemonJson['evSpeed'],
-              evHealth: pokemonJson['evHealth'],
-              isShiny: pokemonJson['shiny'],
-            );
-            pokemonList.add(pokemon);
+          if (teamJson['pokemon'] != null) {
+            for (var pokemonJson in teamJson['pokemon']) {
+              if (pokemonJson == null) {
+                print('Warning: pokemonJson is null');
+                continue;
+              }
+              Pokemon pokemon = Pokemon(
+                name: pokemonJson['name'] ?? 'Unknown',
+                spriteUrl: pokemonJson['spriteUrl'] ?? '',
+                item: pokemonJson['item'] ?? '',
+                ability: pokemonJson['ability'] ?? '',
+                nature: pokemonJson['nature'] ?? '',
+                moves: [],
+                ivDef: pokemonJson['ivDef'] ?? 0,
+                ivAtk: pokemonJson['ivAtk'] ?? 0,
+                ivSpDef: pokemonJson['ivSpDef'] ?? 0,
+                ivSpAtk: pokemonJson['ivSpAtk'] ?? 0,
+                ivSpeed: pokemonJson['ivSpeed'] ?? 0,
+                ivHealth: pokemonJson['ivHealth'] ?? 0,
+                evDef: pokemonJson['evDef'] ?? 0,
+                evAtk: pokemonJson['evAtk'] ?? 0,
+                evSpDef: pokemonJson['evSpDef'] ?? 0,
+                evSpAtk: pokemonJson['evSpAtk'] ?? 0,
+                evSpeed: pokemonJson['evSpeed'] ?? 0,
+                evHealth: pokemonJson['evHealth'] ?? 0,
+                isShiny: pokemonJson['shiny'] ?? false,
+              );
+              pokemonList.add(pokemon);
+            }
           }
 
           // Mapping the Trainer details
           Trainer trainer = Trainer(
-            name: teamJson['trainer']['name'],
-            firstSurname: teamJson['trainer']['firstSurname'],
-            secondSurname: teamJson['trainer']['secondSurname'],
-            email: teamJson['trainer']['email'],
-            phone: teamJson['trainer']['phone'],
-            username: teamJson['trainer']['username'],
-            password: teamJson['trainer']['password'],
-            createdDate: DateTime.parse(teamJson['trainer']['createdDate']),
-            theme: teamJson['trainer']['theme'],
-            bio: teamJson['trainer']['bio'],
+            name: teamJson['trainer']?['name'] ?? '',
+            firstSurname: teamJson['trainer']?['firstSurname'] ?? '',
+            secondSurname: teamJson['trainer']?['secondSurname'] ?? '',
+            email: teamJson['trainer']?['email'] ?? '',
+            phone: teamJson['trainer']?['phone'] ?? '',
+            username: teamJson['trainer']?['username'] ?? '',
+            password: teamJson['trainer']?['password'] ?? '',
+            createdDate: teamJson['trainer']?['createdDate'] != null
+                ? DateTime.parse(teamJson['trainer']['createdDate'])
+                : DateTime.now(),
+            theme: teamJson['trainer']?['theme'] ?? false,
+            bio: teamJson['trainer']?['bio'] ?? '',
           );
 
           Team team = Team(
-            name: teamJson['name'],
-            createdDate: DateTime.parse(teamJson['createdDate']),
-            public: teamJson['public'] as bool,
-            numLikes: teamJson['numLikes'] as int,
-            generation: teamJson['generation'] as int,
+            name: teamJson['name'] ?? 'Unknown',
+            createdDate: teamJson['createdDate'] != null
+                ? DateTime.parse(teamJson['createdDate'])
+                : DateTime.now(),
+            public: teamJson['public'] ?? false,
+            numLikes: teamJson['numLikes'] ?? 0,
+            generation: teamJson['generation'] ?? 0,
             pokemon: pokemonList,
-            comments: [], // Assuming comments are empty for now
+            comments: [],
+            // Assuming comments are empty for now
             trainer: trainer,
           );
 
@@ -218,5 +235,32 @@ class TeamService {
     }
   }
 
+  Future<void> deleteTeam(String teamName, String trainerUsername) async {
+    final url = Uri.parse('$baseUrl/delete/$teamName/$trainerUsername');
+    final response = await http.delete(url);
 
+    if (response.statusCode == 200) {
+      print('Team deleted successfully');
+    } else {
+      throw Exception('Failed to delete team');
+    }
+  }
+
+  Future<bool> teamExists(String trainerUsername, String teamName) async {
+    try {
+      final response = await http.get(
+          Uri.parse('$baseUrl/check/$teamName/$trainerUsername'));
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return responseData['exists'] ?? false;
+      } else {
+        throw Exception(
+            'Failed to check team existence: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error checking team existence: $e');
+      return false;
+    }
+  }
 }

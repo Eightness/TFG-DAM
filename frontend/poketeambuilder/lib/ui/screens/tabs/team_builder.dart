@@ -20,20 +20,17 @@ class _TeamBuilderState extends State<TeamBuilder> {
   String _selectedGeneration = 'All generations';
   List<String>? _currentGeneration;
   bool _isPublic = true;
-
   final PokeAPIService _pokeAPIService = PokeAPIService();
   final TeamService _teamService = TeamService();
   late final List<String>? _itemList;
   late final List<String>? _naturesList;
-
   final TextEditingController _teamNameController = TextEditingController();
-
   List<GlobalKey<PokemonBuilderState>> _pokemonBuilderKeys = List.generate(
     6,
         (_) => GlobalKey<PokemonBuilderState>(),
   );
-
   List<PokemonBuilder> _pokemonBuilders = [];
+  List<Team> _trainerTeams = [];
 
   @override
   void initState() {
@@ -48,6 +45,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
         key: _pokemonBuilderKeys[index],
       ),
     );
+    loadTrainerTeams();
   }
 
   Future<void> _fetchAllPokemonNames() async {
@@ -97,6 +95,32 @@ class _TeamBuilderState extends State<TeamBuilder> {
     }
   }
 
+  Future<void> loadTrainerTeams() async {
+    try {
+      List<Team>? trainerTeams = await _teamService.getTeamsByTrainerUsername(widget.currentTrainer.username);
+
+      if (trainerTeams != null) {
+        setState(() {
+          _trainerTeams = trainerTeams;
+        });
+      }
+    } catch (e) {
+      print("Error loading trainer data: $e");
+    }
+  }
+
+  bool checkTrainerTeamsNames(String teamName) {
+    bool teamNameExists = false;
+
+    for (Team team in _trainerTeams) {
+      if (team.name == teamName) {
+        teamNameExists = true;
+      }
+    }
+
+    return teamNameExists;
+  }
+
   Future<void> _fetchItems() async {
     try {
       List<String> itemList = await _pokeAPIService.fetchItems();
@@ -120,6 +144,8 @@ class _TeamBuilderState extends State<TeamBuilder> {
   }
 
   Future<void> _showSaveDialog() async {
+    await loadTrainerTeams(); // Cargar los equipos del entrenador
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -140,13 +166,34 @@ class _TeamBuilderState extends State<TeamBuilder> {
             ),
             TextButton(
               child: const Text('Save'),
-              onPressed: () {
+              onPressed: () async {
                 final teamName = _teamNameController.text.trim();
                 if (teamName.isNotEmpty) {
-                  Team newTeam = buildTeam(teamName);
-                  print(newTeam.toJson());
-                  _teamService.addTeam(newTeam);
-                  Navigator.of(context).pop();
+                  bool teamExists = checkTrainerTeamsNames(teamName);
+                  if (teamExists) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Team Already Exists'),
+                          content: Text('A team with the name "$teamName" already exists for this trainer.'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    Team newTeam = buildTeam(teamName);
+                    print(newTeam.toJson());
+                    _teamService.addTeam(newTeam);
+                    Navigator.of(context).pop();
+                  }
                 }
               },
             ),
@@ -155,6 +202,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       },
     );
   }
+
 
   Team buildTeam(String name) {
     List<Pokemon> pokemonList = _pokemonBuilderKeys.map((key) {

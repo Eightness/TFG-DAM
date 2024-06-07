@@ -35,10 +35,10 @@ class Profile extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
+  ProfileState createState() => ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class ProfileState extends State<Profile> {
   final TextEditingController bioController = TextEditingController();
 
   List<Team> _trainerTeams = [];
@@ -46,12 +46,12 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    _loadTrainerTeams();
+    loadTrainerTeams();
   }
 
-  void _loadTrainerTeams() async {
+  Future<void> loadTrainerTeams() async {
     try {
-      List<Team>? trainerTeams = await widget._teamService.getTeamsByTrainerUsername(widget.currentTrainer.username);
+      List<Team>? trainerTeams = await widget._teamService.getTeamsByTrainerUsername(widget.trainerToSee.username);
 
       if (trainerTeams != null) {
         setState(() {
@@ -281,6 +281,9 @@ class _ProfileState extends State<Profile> {
                                                 return TeamShowcaseMini(
                                                   isCurrentTrainer: widget.editable,
                                                   currentTeam: _trainerTeams[index],
+                                                  onTeamDeleted: () {
+                                                    loadTrainerTeams();
+                                                  }
                                                 );
                                               },
                                             ),

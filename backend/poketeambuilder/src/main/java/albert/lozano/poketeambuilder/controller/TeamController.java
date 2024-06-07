@@ -77,4 +77,10 @@ public class TeamController {
         List<TeamDTO> teams = teamService.getTeamsByTrainerUsername(username);
         return ResponseEntity.ok(teams);
     }
+
+    @DeleteMapping("/delete/{teamName}/{trainerUsername}")
+    public ResponseEntity<TeamDTO> deleteTeamByNameAndTrainerUsername(@PathVariable String teamName, @PathVariable String trainerUsername) {
+        teamService.deleteTeamByNameAndTrainerUsername(teamName, trainerUsername);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

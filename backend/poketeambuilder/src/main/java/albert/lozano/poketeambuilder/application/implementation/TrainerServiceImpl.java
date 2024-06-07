@@ -6,9 +6,13 @@
 package albert.lozano.poketeambuilder.application.implementation;
 
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
+import albert.lozano.poketeambuilder.domain.Pokemon;
+import albert.lozano.poketeambuilder.domain.Team;
 import albert.lozano.poketeambuilder.dto.TrainerDTO;
 import albert.lozano.poketeambuilder.domain.Trainer;
 import albert.lozano.poketeambuilder.dto.mappers.TrainerTeamMapper;
+import albert.lozano.poketeambuilder.repository.PokemonRepository;
+import albert.lozano.poketeambuilder.repository.TeamRepository;
 import albert.lozano.poketeambuilder.repository.TrainerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,10 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerDTO, Long> 
     TrainerRepository trainerRepository;
     @Autowired
     TrainerTeamMapper trainerTeamMapper;
+    @Autowired
+    TeamRepository teamRepository;
+    @Autowired
+    PokemonRepository pokemonRepository;
 
     // Methods
     @Override
@@ -134,6 +142,20 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerDTO, Long> 
 
     @Transactional
     public void deleteCurrentTrainer(TrainerDTO trainerDTO) {
+        Trainer trainer = trainerRepository.findByUsername(trainerDTO.getUsername());
+        List<Team> teamsFromTrainer = trainer.getTeams();
+        List<Pokemon> currentTeamPokemon;
+
+        for (Team team : teamsFromTrainer) {
+            currentTeamPokemon = team.getPokemon();
+            for (Pokemon pokemon : currentTeamPokemon) {
+                pokemonRepository.delete(pokemon);
+            }
+            currentTeamPokemon.clear();
+        }
+
+        teamRepository.deleteByTrainer(trainer);
+
         trainerRepository.deleteByUsername(trainerDTO.getUsername());
     }
 }

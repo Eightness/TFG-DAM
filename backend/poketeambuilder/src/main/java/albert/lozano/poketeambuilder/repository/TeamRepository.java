@@ -6,6 +6,7 @@
 package albert.lozano.poketeambuilder.repository;
 
 import albert.lozano.poketeambuilder.domain.Team;
+import albert.lozano.poketeambuilder.domain.Trainer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -26,4 +27,5 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     Team findByNameAndTrainerUsername(String teamName, String trainerUsername);
     List<Team> findByIsPublicTrue();
     void deleteByNameAndTrainerUsername(String teamName, String trainerUsername);
+    void deleteByTrainer(Trainer trainer);
 }

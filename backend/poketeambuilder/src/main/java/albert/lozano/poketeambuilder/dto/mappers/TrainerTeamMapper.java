@@ -9,9 +9,7 @@ import albert.lozano.poketeambuilder.repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TrainerTeamMapper {
@@ -108,8 +106,7 @@ public class TrainerTeamMapper {
 
         team.setName(teamDTO.getName());
         team.setCreatedDate(teamDTO.getCreatedDate());
-        System.out.println(teamDTO.isPublic());
-        team.setPublic(true);
+        team.setPublic(teamDTO.isPublic());
         team.setNumLikes(teamDTO.getNumLikes());
         team.setGeneration(teamDTO.getGeneration());
 

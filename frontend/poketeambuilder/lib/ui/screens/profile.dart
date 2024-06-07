@@ -51,11 +51,17 @@ class ProfileState extends State<Profile> {
 
   Future<void> loadTrainerTeams() async {
     try {
-      List<Team>? trainerTeams = await widget._teamService.getTeamsByTrainerUsername(widget.trainerToSee.username);
+      List<Team>? trainerTeams;
+
+      if (widget.editable == true) {
+        trainerTeams = await widget._teamService.getTeamsByTrainerUsername(widget.trainerToSee.username);
+      } else {
+        trainerTeams = await widget._teamService.getPublicTeamsByTrainerUsername(widget.trainerToSee.username);
+      }
 
       if (trainerTeams != null) {
         setState(() {
-          _trainerTeams = trainerTeams;
+          _trainerTeams = trainerTeams!;
         });
       }
     } catch (e) {

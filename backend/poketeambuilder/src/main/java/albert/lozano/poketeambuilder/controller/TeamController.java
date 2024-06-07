@@ -28,7 +28,6 @@ public class TeamController {
     // Create methods
     @PostMapping("/add")
     public ResponseEntity<TeamDTO> postTeam(@RequestBody TeamDTO teamDTO) {
-        System.out.println(teamDTO.isPublic());
         TeamDTO newTeam = teamService.addEntity(teamDTO);
         return new ResponseEntity<>(newTeam, HttpStatus.OK);
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:poketeambuilder/data/models/trainer.dart';
 import '../../../data/services/trainer_service.dart';
 import '../../../utils/constants.dart';
@@ -86,7 +87,7 @@ class Register extends StatelessWidget {
                     children: [
                       _buildTextField('Email', controller: emailController),
                       SizedBox(width: 20),
-                      _buildTextField('Phone', controller: phoneController),
+                      _buildTextField('Phone', controller: phoneController, onlyDigits: true),
                     ],
                   ),
                   SizedBox(height: 40),
@@ -112,7 +113,7 @@ class Register extends StatelessWidget {
   }
 
   Widget _buildTextField(String labelText,
-      {bool isPassword = false, TextEditingController? controller}) {
+      {bool isPassword = false, bool onlyDigits = false, TextEditingController? controller}) {
     return Container(
       width: 200,
       child: TextField(
@@ -128,6 +129,7 @@ class Register extends StatelessWidget {
             borderSide: BorderSide(color: Constants.darkBlue),
           ),
         ),
+        inputFormatters: onlyDigits ? [FilteringTextInputFormatter.digitsOnly] : [],
       ),
     );
   }

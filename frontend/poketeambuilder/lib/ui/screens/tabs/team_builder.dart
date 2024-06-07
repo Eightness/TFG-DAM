@@ -211,9 +211,39 @@ class _TeamBuilderState extends State<TeamBuilder> {
                     );
                   } else {
                     Team newTeam = buildTeam(teamName);
-                    print(newTeam.toJson());
-                    _teamService.addTeam(newTeam);
-                    Navigator.of(context).pop();
+                    List<Pokemon> pokemonFromTeam = newTeam.getPokemonList();
+
+                    int numPokemon = 0;
+
+                    for (Pokemon pokemon in pokemonFromTeam) {
+                      if (pokemon.name != '') {
+                        numPokemon++;
+                      }
+                    }
+
+                    if (numPokemon > 0) {
+                      _teamService.addTeam(newTeam);
+                      _resetPokemonBuilders();
+                      Navigator.of(context).pop();
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Empty Team'),
+                            content: Text('You cannot save an empty team. Please add at least one Pokémon.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK', style: TextStyle(color: Constants.red)),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   }
                 }
               },

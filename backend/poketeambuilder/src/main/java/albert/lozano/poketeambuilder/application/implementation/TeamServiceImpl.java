@@ -51,8 +51,8 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
 
     @Override
     public List<TeamDTO> getAllEntities(int pageNumber, int pageSize) {
-        List<Team> allTrainers = teamRepository.findAll();
-        return trainerTeamMapper.teamsToTeamsDTO(allTrainers);
+        List<Team> allTeams = teamRepository.findAll();
+        return trainerTeamMapper.teamsToTeamsDTO(allTeams);
     }
 
     public List<TeamDTO> getAllPublicTeams() {
@@ -134,5 +134,25 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
             pokemonRepository.deleteByTeam(team);
             teamRepository.delete(team);
         }
+    }
+
+    public TeamDTO likeTeam(TeamDTO teamDTO) {
+        Team team = teamRepository.findByNameAndTrainerUsername(teamDTO.getName(), teamDTO.getTrainer().getUsername());
+
+        team.setNumLikes(team.getNumLikes() + 1);
+
+        teamRepository.save(team);
+
+        return trainerTeamMapper.teamToTeamDTO(team);
+    }
+
+    public TeamDTO dislikeTeam(TeamDTO teamDTO) {
+        Team team = teamRepository.findByNameAndTrainerUsername(teamDTO.getName(), teamDTO.getTrainer().getUsername());
+
+        team.setNumLikes(team.getNumLikes() - 1);
+
+        teamRepository.save(team);
+
+        return trainerTeamMapper.teamToTeamDTO(team);
     }
 }

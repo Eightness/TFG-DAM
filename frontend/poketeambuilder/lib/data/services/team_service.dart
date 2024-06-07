@@ -111,7 +111,7 @@ class TeamService {
           Team team = Team(
             name: teamJson['name'],
             createdDate: DateTime.parse(teamJson['createdDate']),
-            public: teamJson['public'] as bool,
+            isPublic: teamJson['isPublic'] as bool,
             numLikes: teamJson['numLikes'] as int,
             generation: teamJson['generation'] as int,
             pokemon: pokemonList,
@@ -209,7 +209,7 @@ class TeamService {
             createdDate: teamJson['createdDate'] != null
                 ? DateTime.parse(teamJson['createdDate'])
                 : DateTime.now(),
-            public: teamJson['public'] ?? false,
+            isPublic: teamJson['public'] ?? false,
             numLikes: teamJson['numLikes'] ?? 0,
             generation: teamJson['generation'] ?? 0,
             pokemon: pokemonList,
@@ -263,4 +263,43 @@ class TeamService {
       return false;
     }
   }
+
+  Future<Team> likeTeam(Team team) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/like'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(team.toJson()),
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        return Team.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to like team: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error liking team: $e');
+      rethrow; // Re-throwing the exception to handle it in the UI layer if necessary
+    }
+  }
+
+  Future<Team> dislikeTeam(Team team) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/dislike'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(team.toJson()),
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        return Team.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to dislike team: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error disliking team: $e');
+      rethrow; // Re-throwing the exception to handle it in the UI layer if necessary
+    }
+  }
+
 }

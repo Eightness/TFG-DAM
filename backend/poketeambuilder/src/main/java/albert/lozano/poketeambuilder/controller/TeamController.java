@@ -83,4 +83,16 @@ public class TeamController {
         teamService.deleteTeamByNameAndTrainerUsername(teamName, trainerUsername);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/like")
+    public ResponseEntity<TeamDTO> likeTeam(@RequestBody TeamDTO teamDTO) {
+        TeamDTO likedTeam = teamService.likeTeam(teamDTO);
+        return new ResponseEntity<>(likedTeam, HttpStatus.OK);
+    }
+
+    @PostMapping("/dislike")
+    public ResponseEntity<TeamDTO> dislikeTeam(@RequestBody TeamDTO teamDTO) {
+        TeamDTO likedTeam = teamService.dislikeTeam(teamDTO);
+        return new ResponseEntity<>(likedTeam, HttpStatus.OK);
+    }
 }

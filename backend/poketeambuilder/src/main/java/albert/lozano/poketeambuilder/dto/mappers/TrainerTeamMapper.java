@@ -15,8 +15,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TrainerTeamMapper {
-    private Set<Object> mappedObjects = new HashSet<>();
-
     @Autowired
     PokemonMapper pokemonMapper;
 
@@ -27,11 +25,6 @@ public class TrainerTeamMapper {
     TeamRepository teamRepository;
 
     public TrainerDTO trainerToTrainerDTO(Trainer trainer) {
-        if (trainer == null || mappedObjects.contains(trainer)) {
-            return null;
-        }
-        mappedObjects.add(trainer);
-
         TrainerDTO trainerDTO = new TrainerDTO();
 
         trainerDTO.setUsername(trainer.getUsername());
@@ -79,11 +72,6 @@ public class TrainerTeamMapper {
     // -----------------------------------------------------------------------------------------------------------------
 
     public TeamDTO teamToTeamDTO(Team team) {
-        if (team == null || mappedObjects.contains(team)) {
-            return null;
-        }
-        mappedObjects.add(team);
-
         TeamDTO teamDTO = new TeamDTO();
 
         teamDTO.setName(team.getName());

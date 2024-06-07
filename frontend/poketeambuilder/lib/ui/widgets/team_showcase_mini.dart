@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:poketeambuilder/data/models/trainer.dart';
+import 'package:intl/intl.dart';
 import 'package:poketeambuilder/data/services/team_service.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 import 'package:poketeambuilder/data/models/comment.dart';
@@ -10,12 +10,12 @@ import 'comment_showcase.dart';
 class TeamShowcaseMini extends StatefulWidget {
   final bool isCurrentTrainer;
   final Team currentTeam;
-  final Function() onTeamDeleted;
+  final Function() onActionPerformed;
 
   const TeamShowcaseMini({
     Key? key,
     this.isCurrentTrainer = false,
-    required this.currentTeam, required this.onTeamDeleted
+    required this.currentTeam, required this.onActionPerformed
   }) : super(key: key);
 
   @override
@@ -24,10 +24,13 @@ class TeamShowcaseMini extends StatefulWidget {
 
 class _TeamShowcaseMiniState extends State<TeamShowcaseMini> with AutomaticKeepAliveClientMixin {
   final TeamService _teamService = new TeamService();
+  bool _isPressed = false;
+  int _likeCount = 0;
 
   @override
   void initState() {
     super.initState();
+    _likeCount = widget.currentTeam.numLikes;
   }
 
   @override
@@ -37,7 +40,11 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> with AutomaticKeepA
       child: Container(
         padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Constants.grey, Constants.white],
+          ),
           borderRadius: BorderRadius.circular(15.0),
           boxShadow: [
             BoxShadow(
@@ -73,7 +80,6 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> with AutomaticKeepA
                 }),
               ),
             ),
-
             if (widget.isCurrentTrainer)
               Positioned(
                 right: 0,
@@ -106,7 +112,7 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> with AutomaticKeepA
                                   onPressed: () async {
                                     Navigator.of(context).pop();
                                     await _teamService.deleteTeam(widget.currentTeam.name, widget.currentTeam.trainer.username);
-                                    widget.onTeamDeleted();
+                                    widget.onActionPerformed();
                                   },
                                   child: Text('Delete', style: TextStyle(color: Constants.red),),
                                 ),
@@ -126,17 +132,32 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> with AutomaticKeepA
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      setState(() {
+                        _isPressed = !_isPressed;
+                        if (_isPressed) {
+                          _likeCount++;
+                        } else {
+                          _likeCount--;
+                        }
+                      });
+                      if (_isPressed) {
+                        await _teamService.likeTeam(widget.currentTeam);
+                      } else {
+                        await _teamService.dislikeTeam(widget.currentTeam);
+                      }
+                      widget.onActionPerformed();
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Constants.white,
-                      backgroundColor: Constants.red,
+                      backgroundColor: _isPressed ? Constants.red : Constants.blue,
                     ),
                     child: Row(
                       children: [
                         Icon(Icons.favorite, color: Constants.white),
                         SizedBox(width: 5),
                         Text(
-                          '${widget.currentTeam.numLikes}',
+                          '$_likeCount',
                           style: TextStyle(
                             fontSize: 14,
                             color: Constants.white,
@@ -163,7 +184,7 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> with AutomaticKeepA
               right: 10,
               bottom: 0,
               child: Text(
-                'Created: ${widget.currentTeam.createdDate}',
+                'Created: ${DateFormat('yyyy-MM-dd').format(widget.currentTeam.createdDate)}',
                 style: TextStyle(
                   fontSize: 14,
                   color: Constants.darkBrown,
@@ -188,8 +209,8 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini> with AutomaticKeepA
               backgroundColor: Constants.grey,
               title: Text('Comments'),
               content: Container(
-                width: 600,
-                height: 1000,
+                width: 400,
+                height: 500,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

@@ -281,7 +281,7 @@ class ProfileState extends State<Profile> {
                                                 return TeamShowcaseMini(
                                                   isCurrentTrainer: widget.editable,
                                                   currentTeam: _trainerTeams[index],
-                                                  onTeamDeleted: () {
+                                                  onActionPerformed: () {
                                                     loadTrainerTeams();
                                                   }
                                                 );

@@ -3,6 +3,7 @@ import 'package:poketeambuilder/data/models/pokemon.dart';
 import 'package:poketeambuilder/data/models/team.dart';
 import 'package:poketeambuilder/data/models/trainer.dart';
 import 'package:poketeambuilder/data/services/team_service.dart';
+import 'package:poketeambuilder/data/services/trainer_service.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 import 'package:poketeambuilder/data/services/pokeapi_service.dart';
 import '../../widgets/pokemon_builder.dart';
@@ -10,7 +11,7 @@ import '../../widgets/pokemon_builder.dart';
 class TeamBuilder extends StatefulWidget {
   final Trainer currentTrainer;
 
-  const TeamBuilder({Key? key, required this.currentTrainer}) : super(key: key);
+  TeamBuilder({Key? key, required this.currentTrainer}) : super(key: key);
 
   @override
   _TeamBuilderState createState() => _TeamBuilderState();
@@ -22,6 +23,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
   bool _isPublic = true;
   final PokeAPIService _pokeAPIService = PokeAPIService();
   final TeamService _teamService = TeamService();
+  final TrainerService _trainerService = TrainerService();
   late final List<String>? _itemList;
   late final List<String>? _naturesList;
   final TextEditingController _teamNameController = TextEditingController();
@@ -31,21 +33,40 @@ class _TeamBuilderState extends State<TeamBuilder> {
   );
   List<PokemonBuilder> _pokemonBuilders = [];
   List<Team> _trainerTeams = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchAllPokemonNames();
-    _fetchItems();
-    _fetchNatures();
-    _pokemonBuilders = List.generate(
-      6,
-          (index) => PokemonBuilder(
-        currentGeneration: _currentGeneration,
-        key: _pokemonBuilderKeys[index],
-      ),
-    );
-    loadTrainerTeams();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      _fetchAllPokemonNames();
+      _fetchItems();
+      _fetchNatures();
+      _pokemonBuilders = List.generate(
+        6,
+            (index) => PokemonBuilder(
+          currentGeneration: _currentGeneration,
+          key: _pokemonBuilderKeys[index],
+        ),
+      );
+      loadTrainerTeams();
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching data: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _fetchAllPokemonNames() async {
@@ -144,7 +165,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
   }
 
   Future<void> _showSaveDialog() async {
-    await loadTrainerTeams(); // Cargar los equipos del entrenador
+    await loadTrainerTeams();
 
     return showDialog<void>(
       context: context,
@@ -159,13 +180,13 @@ class _TeamBuilderState extends State<TeamBuilder> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Constants.red),),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Save'),
+              child: Text('Save', style: TextStyle(color: Constants.red),),
               onPressed: () async {
                 final teamName = _teamNameController.text.trim();
                 if (teamName.isNotEmpty) {
@@ -182,7 +203,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('OK'),
+                              child: Text('OK', style: TextStyle(color: Constants.red),),
                             ),
                           ],
                         );
@@ -215,7 +236,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     return Team(
       name: name,
       createdDate: DateTime.now(),
-      public: _isPublic,
+      isPublic: _isPublic,
       numLikes: 0,
       generation: _selectedGeneration == 'All generations'
           ? 0
@@ -236,7 +257,13 @@ class _TeamBuilderState extends State<TeamBuilder> {
           colors: [Constants.blue, Constants.darkBlue],
         ),
       ),
-      child: Padding(
+      child: _isLoading
+          ? Center(
+        child: CircularProgressIndicator(
+          color: Constants.red,
+        ),
+      )
+          : Padding(
         padding: const EdgeInsets.fromLTRB(300.0, 50.0, 300.0, 50.0),
         child: Column(
           children: [

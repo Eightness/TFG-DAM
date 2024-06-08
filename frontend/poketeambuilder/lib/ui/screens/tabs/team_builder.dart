@@ -379,7 +379,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                   ),
                   SizedBox(width: 20.0),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       for (GlobalKey<PokemonBuilderState> key in _pokemonBuilderKeys) {
                         key.currentState?.generateRandomPokemon();
                       }

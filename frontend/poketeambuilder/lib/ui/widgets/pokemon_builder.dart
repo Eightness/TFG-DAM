@@ -15,15 +15,18 @@ class PokemonBuilder extends StatefulWidget {
   final GlobalKey<PokemonBuilderState> key;
 
   PokemonBuilder({
-    required this.currentGeneration, required this.key, this.items, this.natures,
+    required this.currentGeneration,
+    required this.key,
+    this.items,
+    this.natures,
   });
 
   @override
   PokemonBuilderState createState() => PokemonBuilderState();
-
 }
 
-class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveClientMixin {
+class PokemonBuilderState extends State<PokemonBuilder>
+    with AutomaticKeepAliveClientMixin {
   PokeAPIService _pokeAPIService = new PokeAPIService();
 
   String? _selectedPokemon;
@@ -112,13 +115,19 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Constants.white, Constants.grey],
-        ),
-        borderRadius: BorderRadius.circular(25.0),
-      ),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Constants.white, Constants.grey.withOpacity(0.3)],
+          ),
+          borderRadius: BorderRadius.circular(25.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10.0,
+              offset: Offset(0, 5),
+            ),
+          ]),
       child: Row(
         children: [
           // First Column
@@ -136,9 +145,12 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
                     });
                     resetMoves();
                     resetAbilities();
-                    final spriteUrl = await _pokeAPIService.fetchPokemonSprite(_selectedPokemon!, _isShiny);
-                    final movesList = await _pokeAPIService.fetchPokemonMoves(_selectedPokemon!);
-                    final abilitiesList = await _pokeAPIService.fetchPokemonAbilities(_selectedPokemon!);
+                    final spriteUrl = await _pokeAPIService.fetchPokemonSprite(
+                        _selectedPokemon!, _isShiny);
+                    final movesList = await _pokeAPIService
+                        .fetchPokemonMoves(_selectedPokemon!);
+                    final abilitiesList = await _pokeAPIService
+                        .fetchPokemonAbilities(_selectedPokemon!);
                     setState(() {
                       _pokemonSpriteUrl = spriteUrl;
                       _movesList = movesList;
@@ -149,7 +161,9 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
                 ),
                 const SizedBox(height: 45.0),
                 Image.network(
-                  _pokemonSpriteUrl != null ? _pokemonSpriteUrl! : 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/f720bb6e-b303-4877-bffb-d61df0ab183f/d3b98cf-4fc5c76b-2a99-47fc-98b6-d7d4ee8d9d9f.png',
+                  _pokemonSpriteUrl != null
+                      ? _pokemonSpriteUrl!
+                      : 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/f720bb6e-b303-4877-bffb-d61df0ab183f/d3b98cf-4fc5c76b-2a99-47fc-98b6-d7d4ee8d9d9f.png',
                   height: 90.0,
                   width: 90.0,
                 ),
@@ -162,14 +176,16 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
                       onChanged: _selectedPokemon == null
                           ? null
                           : (value) async {
-                        setState(() {
-                          _isShiny = value ?? false;
-                        });
-                        final spriteUrl = await _pokeAPIService.fetchPokemonSprite(_selectedPokemon!, _isShiny);
-                        setState(() {
-                          _pokemonSpriteUrl = spriteUrl;
-                        });
-                      },
+                              setState(() {
+                                _isShiny = value ?? false;
+                              });
+                              final spriteUrl =
+                                  await _pokeAPIService.fetchPokemonSprite(
+                                      _selectedPokemon!, _isShiny);
+                              setState(() {
+                                _pokemonSpriteUrl = spriteUrl;
+                              });
+                            },
                     ),
                     Text('Shiny'),
                   ],
@@ -261,9 +277,11 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
                   children: [
                     SizedBox(width: 60.0, child: Text(statLabel)),
                     const SizedBox(width: 8.0),
-                    SizedBox(width: 60.0, child: _buildStatInput('EV', 252, index)),
+                    SizedBox(
+                        width: 60.0, child: _buildStatInput('EV', 252, index)),
                     const SizedBox(width: 8.0),
-                    SizedBox(width: 60.0, child: _buildStatInput('IV', 31, index)),
+                    SizedBox(
+                        width: 60.0, child: _buildStatInput('IV', 31, index)),
                   ],
                 ),
               );
@@ -276,8 +294,9 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
 
   List<DropdownMenuItem<String>> _buildDropdownItems(List<String>? options) {
     return options?.map((option) {
-      return DropdownMenuItem(value: option, child: Text(option));
-    }).toList() ?? [];
+          return DropdownMenuItem(value: option, child: Text(option));
+        }).toList() ??
+        [];
   }
 
   Widget _buildStatInput(String label, int maxValue, int index) {
@@ -312,7 +331,7 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
           labelText: label,
           isDense: true,
           contentPadding:
-          const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+              const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         ),
       ),
     );
@@ -320,13 +339,16 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
 
   Pokemon buildPokemon() {
     return Pokemon(
-      name: _selectedPokemon ?? 'Unknown',
+      name: _selectedPokemon ?? 'Empty slot',
       spriteUrl: _pokemonSpriteUrl ?? '',
       item: _selectedItem ?? 'None',
       ability: _selectedAbility ?? 'None',
       nature: _selectedNature ?? 'None',
       isShiny: _isShiny,
-      moves: _selectedMoves.where((move) => move != null).map((move) => Move(name: move!)).toList(),
+      moves: _selectedMoves
+          .where((move) => move != null)
+          .map((move) => Move(name: move!))
+          .toList(),
       ivDef: _selectedIVs[0] ?? 0,
       ivAtk: _selectedIVs[1] ?? 0,
       ivSpDef: _selectedIVs[2] ?? 0,
@@ -344,12 +366,16 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
 
   Future<void> generateRandomPokemon() async {
     final random = Random();
-    final randomPokemonName = widget.currentGeneration?[random.nextInt(widget.currentGeneration!.length)];
+    final randomPokemonName = widget
+        .currentGeneration?[random.nextInt(widget.currentGeneration!.length)];
 
     try {
-      final spriteUrlFuture = _pokeAPIService.fetchPokemonSprite(randomPokemonName!, _isShiny);
-      final movesListFuture = _pokeAPIService.fetchPokemonMoves(randomPokemonName);
-      final abilitiesListFuture = _pokeAPIService.fetchPokemonAbilities(randomPokemonName);
+      final spriteUrlFuture =
+          _pokeAPIService.fetchPokemonSprite(randomPokemonName!, _isShiny);
+      final movesListFuture =
+          _pokeAPIService.fetchPokemonMoves(randomPokemonName);
+      final abilitiesListFuture =
+          _pokeAPIService.fetchPokemonAbilities(randomPokemonName);
       final naturesListFuture = _pokeAPIService.fetchNatures();
       final itemsListFuture = _pokeAPIService.fetchItems();
 
@@ -376,7 +402,8 @@ class PokemonBuilderState extends State<PokemonBuilder> with AutomaticKeepAliveC
         _selectedNature = naturesList?[random.nextInt(naturesList.length)];
         _movesList = movesList!;
         _isShiny = false;
-        _selectedMoves = List.generate(4, (_) => movesList![random.nextInt(movesList.length)]);
+        _selectedMoves = List.generate(
+            4, (_) => movesList![random.nextInt(movesList.length)]);
         _selectedIVs = List.generate(6, (_) => random.nextInt(32));
         _selectedEVs = List.generate(6, (_) => random.nextInt(253));
       });
@@ -397,9 +424,9 @@ class _StatInputFormatter extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue,
-      ) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     if (newValue.text.isEmpty) return newValue;
     final intValue = int.tryParse(newValue.text);
     if (intValue == null || intValue > maxValue) {

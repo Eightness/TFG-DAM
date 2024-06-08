@@ -5,27 +5,29 @@ import 'package:poketeambuilder/utils/constants.dart';
 import 'package:poketeambuilder/data/models/comment.dart';
 
 import '../../data/models/team.dart';
+import '../../data/models/trainer.dart';
+import '../screens/team_screen.dart';
 import 'comment_showcase.dart';
 
-class TeamShowcaseMini extends StatefulWidget {
+class TeamDisplayMini extends StatefulWidget {
+  final Trainer currentTrainer;
   final bool isCurrentTrainer;
   final Team currentTeam;
   final Function() onActionPerformed;
 
-  const TeamShowcaseMini({
+  const TeamDisplayMini({
     Key? key,
     this.isCurrentTrainer = false,
     required this.currentTeam,
-    required this.onActionPerformed,
+    required this.onActionPerformed, required this.currentTrainer,
   }) : super(key: key);
 
   @override
-  _TeamShowcaseMiniState createState() => _TeamShowcaseMiniState();
+  _TeamDisplayMiniState createState() => _TeamDisplayMiniState();
 }
 
-class _TeamShowcaseMiniState extends State<TeamShowcaseMini>
-    with AutomaticKeepAliveClientMixin {
-  final TeamService _teamService = new TeamService();
+class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAliveClientMixin {
+  final TeamService _teamService = TeamService();
   bool _isPressed = false;
   int _likeCount = 0;
 
@@ -37,122 +39,116 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Container(
-        padding: const EdgeInsets.all(15.0),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              widget.currentTeam.isPublic ? Constants.red : Constants.blue,
-              Constants.white
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TeamScreen(currentTrainer: widget.currentTrainer, selectedTeam: widget.currentTeam,),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(15.0),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [widget.currentTeam.isPublic ? Constants.red.withOpacity(0.75) : Constants.blue.withOpacity(0.75), Constants.white],
+              stops: [0.27, 0.0],
+            ),
+            borderRadius: BorderRadius.circular(15.0),
+            border: Border.all(
+              color: widget.currentTeam.isPublic ? Constants.red : Constants.blue,
+              width: 4.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10.0,
+                offset: Offset(0, 5),
+              ),
             ],
-            stops: [0.27, 0.0],
           ),
-          borderRadius: BorderRadius.circular(15.0),
-          border: Border.all(
-            color: widget.currentTeam.isPublic ? Constants.red : Constants.blue,
-            width: 4.0,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10.0,
-              offset: Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              left: 10,
-              top: 5,
-              child: Text(
-                '${widget.currentTeam.name} - ${widget.currentTeam.trainer.username} ${widget.currentTeam.isPublic ? "" : "(Private)"}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Constants.white,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 75.0, 10.0, 50.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(widget.currentTeam.pokemon.length, (index) {
-                  return Image.network(
-                    widget.currentTeam.pokemon[index].spriteUrl != ''
-                        ? widget.currentTeam.pokemon[index].spriteUrl
-                        : 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/f720bb6e-b303-4877-bffb-d61df0ab183f/d3b98cf-4fc5c76b-2a99-47fc-98b6-d7d4ee8d9d9f.png',
-                    height: 90.0,
-                    width: 90.0,
-                  );
-                }),
-              ),
-            ),
-            if (widget.isCurrentTrainer)
+          child: Stack(
+            children: [
               Positioned(
-                right: 10,
-                top: 0,
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, color: Constants.white),
-                      onPressed: () {
-                        // Implement edit functionality here
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Constants.white),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Confirm Delete'),
-                              content:
-                              Text('Are you sure you want to delete this team?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(color: Constants.red),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                    await _teamService.deleteTeam(
-                                        widget.currentTeam.name,
-                                        widget.currentTeam.trainer.username);
-                                    widget.onActionPerformed();
-                                  },
-                                  child: Text(
-                                    'Delete',
-                                    style: TextStyle(color: Constants.red),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
+                left: 10,
+                top: 5,
+                child: Text(
+                  '${widget.currentTeam.name} - ${widget.currentTeam.trainer.username} ${widget.currentTeam.isPublic ? "" : "(Private)"}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Constants.white,
+                  ),
                 ),
               ),
-            if (widget.currentTeam.isPublic)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 60.0, 10.0, 50.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(widget.currentTeam.pokemon.length, (index) {
+                    return Image.network(
+                      widget.currentTeam.pokemon[index].spriteUrl != '' ? widget.currentTeam.pokemon[index].spriteUrl : 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/f720bb6e-b303-4877-bffb-d61df0ab183f/d3b98cf-4fc5c76b-2a99-47fc-98b6-d7d4ee8d9d9f.png',
+                      height: 90.0,
+                      width: 90.0,
+                    );
+                  }),
+                ),
+              ),
+              if (widget.isCurrentTrainer)
+                Positioned(
+                  right: 10,
+                  top: 0,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit, color: Constants.white),
+                        onPressed: () {
+
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Constants.white),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Confirm Delete'),
+                                content: Text('Are you sure you want to delete this team?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel', style: TextStyle(color: Constants.red),),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await _teamService.deleteTeam(widget.currentTeam.name, widget.currentTeam.trainer.username);
+                                      widget.onActionPerformed();
+                                    },
+                                    child: Text('Delete', style: TextStyle(color: Constants.red),),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               Positioned(
                 left: 10,
                 bottom: 0,
-                child: Row(
+                child: widget.currentTeam.isPublic
+                    ? Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
@@ -174,8 +170,7 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini>
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Constants.white,
-                        backgroundColor:
-                        _isPressed ? Constants.red : Constants.blue,
+                        backgroundColor: _isPressed ? Constants.red : Constants.blue,
                       ),
                       child: Row(
                         children: [
@@ -203,20 +198,22 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini>
                       child: Text('Comments'),
                     ),
                   ],
+                )
+                    : Container(), // Mostrar un contenedor vacío si el equipo no es público
+              ),
+              Positioned(
+                right: 10,
+                bottom: 0,
+                child: Text(
+                  'Created: ${DateFormat('yyyy-MM-dd').format(widget.currentTeam.createdDate)}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Constants.darkBrown,
+                  ),
                 ),
               ),
-            Positioned(
-              right: 10,
-              bottom: 0,
-              child: Text(
-                'Created: ${DateFormat('yyyy-MM-dd').format(widget.currentTeam.createdDate)}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Constants.darkBrown,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -244,8 +241,7 @@ class _TeamShowcaseMiniState extends State<TeamShowcaseMini>
                         shrinkWrap: true,
                         itemCount: widget.currentTeam.comments.length,
                         itemBuilder: (context, index) {
-                          return CommentShowcase(
-                              comment: widget.currentTeam.comments[index]);
+                          return CommentShowcase(comment: widget.currentTeam.comments[index]);
                         },
                       ),
                     ),

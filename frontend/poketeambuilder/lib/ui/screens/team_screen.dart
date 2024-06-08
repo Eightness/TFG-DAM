@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:poketeambuilder/data/models/team.dart';
 import 'package:poketeambuilder/data/models/trainer.dart';
+import 'package:poketeambuilder/ui/screens/home.dart';
+import 'package:poketeambuilder/ui/screens/tabs/community.dart';
 import 'package:poketeambuilder/ui/screens/tabs/register.dart';
 import 'package:poketeambuilder/ui/screens/tabs/signin.dart';
+import 'package:poketeambuilder/ui/screens/tabs/team_builder.dart';
+import 'package:poketeambuilder/ui/screens/tabs/team_display.dart';
 import 'package:poketeambuilder/ui/screens/welcome.dart';
 import 'package:poketeambuilder/ui/widgets/menu_item.dart';
 import 'package:poketeambuilder/ui/widgets/menu_items.dart';
@@ -11,23 +16,21 @@ import '../widgets/windows_buttons.dart';
 import 'profile.dart';
 import 'settings.dart';
 
-class Home extends StatefulWidget {
-  final Widget team;
-  final Widget community;
+class TeamScreen extends StatefulWidget {
   final Trainer currentTrainer;
+  final Team selectedTeam;
 
-  Home({
+  TeamScreen({
     Key? key,
-    required this.team,
-    required this.community,
     required this.currentTrainer,
+    required this.selectedTeam,
   }) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  _TeamScreenState createState() => _TeamScreenState();
 }
 
-class _HomeState extends State<Home> {
+class _TeamScreenState extends State<TeamScreen> {
   late bool isDarkTheme;
 
   @override
@@ -55,10 +58,10 @@ class _HomeState extends State<Home> {
         ),
         Expanded(
           child: DefaultTabController(
-            length: 2,
+            length: 1,
             child: Scaffold(
               appBar: AppBar(
-                automaticallyImplyLeading: false,
+                automaticallyImplyLeading: true,
                 title: Image.asset(
                   'assets/images/app_logo.png',
                   height: 125.0,
@@ -67,7 +70,7 @@ class _HomeState extends State<Home> {
                 centerTitle: true,
                 actions: [
                   PopupMenuButton<MenuItem>(
-                    itemBuilder: (context) => MenuItems.homeList.map((item) {
+                    itemBuilder: (context) => MenuItems.teamList.map((item) {
                       return PopupMenuItem<MenuItem>(
                         value: item,
                         child: Row(
@@ -101,13 +104,8 @@ class _HomeState extends State<Home> {
                   tabs: [
                     Tab(
                       height: 75,
-                      text: ' T E A M  B U I L D E R',
+                      text: ' T E A M  (${widget.selectedTeam.name} - ${widget.selectedTeam.trainer.username})',
                       icon: Icon(Icons.catching_pokemon_outlined),
-                    ),
-                    Tab(
-                      height: 75,
-                      text: ' C O M M U N I T Y ',
-                      icon: Icon(Icons.person_pin_circle_sharp),
                     ),
                   ],
                 ),
@@ -115,8 +113,7 @@ class _HomeState extends State<Home> {
               body: Center(
                 child: TabBarView(
                   children: [
-                    widget.team,
-                    widget.community,
+                    TeamDisplay(currentTrainer: widget.currentTrainer, team: widget.selectedTeam)
                   ],
                 ),
               ),
@@ -150,6 +147,15 @@ class _HomeState extends State<Home> {
             builder: (context) =>
                 Welcome(signIn: SignIn(), register: Register())),
       );
+    } else if (item.text == 'Home') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Home(currentTrainer: widget.currentTrainer,
+                    team: TeamBuilder(currentTrainer: widget.currentTrainer,),
+                    community: Community(
+                      currentTrainer: widget.currentTrainer,),)));
     }
   }
 }

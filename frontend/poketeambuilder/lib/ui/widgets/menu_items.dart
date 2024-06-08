@@ -20,6 +20,13 @@ class MenuItems {
     itemLogOut,
   ];
 
+  static const List<MenuItem> teamList = [
+    itemHome,
+    itemProfile,
+    itemSettings,
+    itemLogOut,
+  ];
+
   static const itemHome = MenuItem(
     text: 'Home',
     icon: Icons.home,

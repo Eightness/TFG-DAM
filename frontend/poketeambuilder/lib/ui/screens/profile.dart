@@ -14,7 +14,7 @@ import '../../data/models/team.dart';
 import '../../utils/constants.dart';
 import '../widgets/menu_item.dart';
 import '../widgets/menu_items.dart';
-import '../widgets/team_showcase_mini.dart';
+import '../widgets/team_display_mini.dart';
 import '../widgets/windows_buttons.dart';
 import '../../data/models/trainer.dart';
 import 'home.dart';
@@ -284,7 +284,8 @@ class ProfileState extends State<Profile> {
                                             child: ListView.builder(
                                               itemCount: _trainerTeams.length,
                                               itemBuilder: (context, index) {
-                                                return TeamShowcaseMini(
+                                                return TeamDisplayMini(
+                                                  currentTrainer: widget.currentTrainer,
                                                   isCurrentTrainer: widget.editable,
                                                   currentTeam: _trainerTeams[index],
                                                   onActionPerformed: () {

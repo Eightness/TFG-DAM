@@ -6,7 +6,7 @@ import 'package:poketeambuilder/utils/constants.dart';
 import '../../../data/models/team.dart';
 import '../../../data/models/trainer.dart';
 import '../../../data/services/trainer_service.dart';
-import '../../widgets/team_showcase_mini.dart';
+import '../../widgets/team_display_mini.dart';
 
 class Community extends StatefulWidget {
   final Trainer currentTrainer;
@@ -174,9 +174,9 @@ class _CommunityState extends State<Community> {
                                         child: ListView.builder(
                                           itemCount: _teams.length,
                                           itemBuilder: (context, index) {
-                                            return TeamShowcaseMini(
+                                            return TeamDisplayMini(
                                               isCurrentTrainer: false,
-                                              currentTeam: _teams[index], onActionPerformed: () {  }
+                                              currentTeam: _teams[index], onActionPerformed: () {  }, currentTrainer: widget.currentTrainer,
                                             );
                                           },
                                         ),

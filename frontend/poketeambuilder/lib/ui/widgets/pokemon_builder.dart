@@ -12,6 +12,8 @@ class PokemonBuilder extends StatefulWidget {
   final List<String>? currentGeneration;
   final List<String>? items;
   final List<String>? natures;
+  final Pokemon? initialPokemon;
+  final bool editing;
   final GlobalKey<PokemonBuilderState> key;
 
   PokemonBuilder({
@@ -19,6 +21,8 @@ class PokemonBuilder extends StatefulWidget {
     required this.key,
     this.items,
     this.natures,
+    this.initialPokemon,
+    this.editing = false,
   });
 
   @override
@@ -30,25 +34,17 @@ class PokemonBuilderState extends State<PokemonBuilder>
   PokeAPIService _pokeAPIService = new PokeAPIService();
 
   String? _selectedPokemon;
-
   String? _pokemonSpriteUrl;
-
   bool _isShiny = false;
-
   List<String?> _selectedMoves = List.filled(4, null);
   List<String> _movesList = [];
-
   String? _selectedAbility;
   List<String> _abilitiesList = [];
-
   String? _selectedItem;
   List<String> _itemList = [];
-
   String? _selectedNature;
   List<String> _naturesList = [];
-
   List<int?> _selectedEVs = List.filled(6, null);
-
   List<int?> _selectedIVs = List.filled(6, null);
 
   @override
@@ -56,6 +52,37 @@ class PokemonBuilderState extends State<PokemonBuilder>
     super.initState();
     fetchItems();
     fetchNatures();
+    if (widget.editing && widget.initialPokemon != null) {
+      initializeWithPokemon(widget.initialPokemon!);
+    }
+  }
+
+  void initializeWithPokemon(Pokemon pokemon) {
+    setState(() {
+      _selectedPokemon = pokemon.name;
+      _pokemonSpriteUrl = pokemon.spriteUrl;
+      _isShiny = pokemon.isShiny;
+      _selectedAbility = pokemon.ability;
+      _selectedItem = pokemon.item;
+      _selectedNature = pokemon.nature;
+      _selectedMoves = pokemon.moves.map((move) => move.name).toList();
+      _selectedEVs = [
+        pokemon.evAtk,
+        pokemon.evDef,
+        pokemon.evSpAtk,
+        pokemon.evSpDef,
+        pokemon.evSpeed,
+        pokemon.evHealth,
+      ];
+      _selectedIVs = [
+        pokemon.ivAtk,
+        pokemon.ivDef,
+        pokemon.ivSpAtk,
+        pokemon.ivSpDef,
+        pokemon.ivSpeed,
+        pokemon.ivHealth,
+      ];
+    });
   }
 
   Future<void> fetchItems() async {
@@ -115,19 +142,20 @@ class PokemonBuilderState extends State<PokemonBuilder>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Constants.white, Constants.grey.withOpacity(0.3)],
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Constants.white, Constants.grey.withOpacity(0.3)],
+        ),
+        borderRadius: BorderRadius.circular(25.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10.0,
+            offset: Offset(0, 5),
           ),
-          borderRadius: BorderRadius.circular(25.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10.0,
-              offset: Offset(0, 5),
-            ),
-          ]),
+        ],
+      ),
       child: Row(
         children: [
           // First Column
@@ -146,9 +174,12 @@ class PokemonBuilderState extends State<PokemonBuilder>
                     resetMoves();
                     resetAbilities();
                     final spriteUrl = await _pokeAPIService.fetchPokemonSprite(
-                        _selectedPokemon!, _isShiny);
-                    final movesList = await _pokeAPIService
-                        .fetchPokemonMoves(_selectedPokemon!);
+                      _selectedPokemon!,
+                      _isShiny,
+                    );
+                    final movesList = await _pokeAPIService.fetchPokemonMoves(
+                      _selectedPokemon!,
+                    );
                     final abilitiesList = await _pokeAPIService
                         .fetchPokemonAbilities(_selectedPokemon!);
                     setState(() {

@@ -82,7 +82,7 @@ public class PokemonMapper implements GenericDTOMapper<PokemonDTO, Pokemon> {
         pokemonDTO.setItem(pokemon.getItem());
         pokemonDTO.setAbility(pokemon.getAbility());
         pokemonDTO.setNature(pokemon.getNature());
-        pokemonDTO.setShiny(pokemon.getShiny());
+        pokemonDTO.setShiny(pokemon.isShiny());
         pokemonDTO.setIvDef(pokemon.getIvDef());
         pokemonDTO.setIvAtk(pokemon.getIvAtk());
         pokemonDTO.setIvSpDef(pokemon.getIvSpDef());

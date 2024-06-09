@@ -58,6 +58,11 @@ public class PokemonServiceImpl implements GenericCRUDService<PokemonDTO, Long> 
         return pokemonMapper.domainToDTO(pokemon);
     }
 
+    public PokemonDTO addEntity(Pokemon entity, Team team) {
+        pokemonRepository.save(entity);
+        return pokemonMapper.domainToDTO(entity);
+    }
+
     @Override
     public List<PokemonDTO> addEntities(List<PokemonDTO> entitiesDTO) {
         return null;
@@ -73,7 +78,7 @@ public class PokemonServiceImpl implements GenericCRUDService<PokemonDTO, Long> 
         pokemon.setNature(updatedPokemon.getNature());
         pokemon.setAbility(updatedPokemon.getAbility());
         pokemon.setItem(updatedPokemon.getItem());
-        pokemon.setShiny(updatedPokemon.getShiny());
+        pokemon.setShiny(updatedPokemon.isShiny());
         // Statistics
         // Evs
         pokemon.setEvAtk(updatedPokemon.getEvAtk());

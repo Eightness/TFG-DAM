@@ -5,6 +5,7 @@
 
 package albert.lozano.poketeambuilder.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,8 +18,6 @@ import java.util.List;
 @Entity
 @Table(name = "Pokemon")
 @Data
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pokemon {
@@ -39,9 +38,9 @@ public class Pokemon {
 
     private String item;
 
-    private boolean isShiny;
+    @JsonProperty("isShiny")
+    private boolean shiny;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
@@ -70,9 +69,4 @@ public class Pokemon {
     private int evSpeed;
 
     private int evHealth;
-
-    // Methods
-    public boolean getShiny() {
-        return this.isShiny;
-    }
 }

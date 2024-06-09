@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:poketeambuilder/data/services/team_service.dart';
+import 'package:poketeambuilder/ui/screens/team_editor_screen.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 import 'package:poketeambuilder/data/models/comment.dart';
 
 import '../../data/models/team.dart';
 import '../../data/models/trainer.dart';
-import '../screens/team_screen.dart';
-import 'comment_showcase.dart';
+import '../screens/team_display_screen.dart';
+import 'comment_display.dart';
 
 class TeamDisplayMini extends StatefulWidget {
   final Trainer currentTrainer;
@@ -46,7 +47,7 @@ class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAli
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TeamScreen(currentTrainer: widget.currentTrainer, selectedTeam: widget.currentTeam,),
+              builder: (context) => TeamDisplayScreen(currentTrainer: widget.currentTrainer, selectedTeam: widget.currentTeam,),
             ),
           );
         },
@@ -108,7 +109,15 @@ class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAli
                       IconButton(
                         icon: Icon(Icons.edit, color: Constants.white),
                         onPressed: () {
-
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TeamEditorScreen(
+                                currentTrainer: widget.currentTrainer,
+                                selectedTeam: widget.currentTeam,
+                              ),
+                            ),
+                          );
                         },
                       ),
                       IconButton(
@@ -241,7 +250,7 @@ class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAli
                         shrinkWrap: true,
                         itemCount: widget.currentTeam.comments.length,
                         itemBuilder: (context, index) {
-                          return CommentShowcase(comment: widget.currentTeam.comments[index]);
+                          return CommentDisplay(comment: widget.currentTeam.comments[index]);
                         },
                       ),
                     ),

@@ -5,6 +5,7 @@
 
 package albert.lozano.poketeambuilder.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,8 @@ public class PokemonDTO {
 
     private String nature;
 
-    private boolean isShiny;
+    @JsonProperty("isShiny")
+    private boolean shiny;
 
     private List<MoveDTO> moves;
 

@@ -103,7 +103,7 @@ class TeamService {
               evSpAtk: pokemonJson['evSpAtk'],
               evSpeed: pokemonJson['evSpeed'],
               evHealth: pokemonJson['evHealth'],
-              isShiny: pokemonJson['shiny'],
+              isShiny: pokemonJson['isShiny'] as bool,
             );
             pokemonList.add(pokemon);
           }
@@ -189,7 +189,7 @@ class TeamService {
               evSpAtk: pokemonJson['evSpAtk'],
               evSpeed: pokemonJson['evSpeed'],
               evHealth: pokemonJson['evHealth'],
-              isShiny: pokemonJson['shiny'],
+              isShiny: pokemonJson['isShiny'],
             );
             pokemonList.add(pokemon);
           }
@@ -270,7 +270,7 @@ class TeamService {
                 evSpAtk: pokemonJson['evSpAtk'] ?? 0,
                 evSpeed: pokemonJson['evSpeed'] ?? 0,
                 evHealth: pokemonJson['evHealth'] ?? 0,
-                isShiny: pokemonJson['shiny'] ?? false,
+                isShiny: pokemonJson['isShiny'] ?? false,
               );
               pokemonList.add(pokemon);
             }
@@ -392,5 +392,13 @@ class TeamService {
       rethrow; // Re-throwing the exception to handle it in the UI layer if necessary
     }
   }
+
+  getMostVotedTeams() {}
+
+  getCommentedTeams() {}
+
+  getTeamsByGeneration() {}
+
+  getNewestTeams() {}
 
 }

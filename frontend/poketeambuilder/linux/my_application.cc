@@ -5,11 +5,12 @@
 #include <gdk/gdkx.h>
 #endif
 
+#include <gtk/gtk.h> // Asegúrate de tener esta línea para usar funciones GTK
 #include "flutter/generated_plugin_registrant.h"
 
 struct _MyApplication {
-  GtkApplication parent_instance;
-  char** dart_entrypoint_arguments;
+    GtkApplication parent_instance;
+    char** dart_entrypoint_arguments;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
@@ -17,34 +18,18 @@ G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 // Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
-  GtkWindow* window =
-      GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
+  GtkWindow* window = GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
 
-  // Use a header bar when running in GNOME as this is the common style used
-  // by applications and is the setup most users will be using (e.g. Ubuntu
-  // desktop).
-  // If running on X and not using GNOME then just use a traditional title bar
-  // in case the window manager does more exotic layout, e.g. tiling.
-  // If running on Wayland assume the header bar will work (may need changing
-  // if future cases occur).
-  gboolean use_header_bar = TRUE;
-#ifdef GDK_WINDOWING_X11
-  GdkScreen* screen = gtk_window_get_screen(window);
-  if (GDK_IS_X11_SCREEN(screen)) {
-    const gchar* wm_name = gdk_x11_screen_get_window_manager_name(screen);
-    if (g_strcmp0(wm_name, "GNOME Shell") != 0) {
-      use_header_bar = FALSE;
-    }
-  }
-#endif
-  if (use_header_bar) {
-    GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
-    gtk_widget_show(GTK_WIDGET(header_bar));
-    gtk_header_bar_set_title(header_bar, "poketeambuilder");
-    gtk_header_bar_set_show_close_button(header_bar, TRUE);
-    gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
+  // Remove window decorations (title bar, borders, etc.)
+  gtk_window_set_decorated(window, FALSE);
+
+  // Set application icon
+  GdkPixbuf* icon = gdk_pixbuf_new_from_file("assets/icons/app_icon.png", NULL);
+  if (icon != NULL) {
+    gtk_window_set_icon(window, icon);
+    g_object_unref(icon);
   } else {
-    gtk_window_set_title(window, "poketeambuilder");
+    g_warning("Failed to load icon.");
   }
 
   gtk_window_set_default_size(window, 1280, 720);
@@ -70,9 +55,9 @@ static gboolean my_application_local_command_line(GApplication* application, gch
 
   g_autoptr(GError) error = nullptr;
   if (!g_application_register(application, nullptr, &error)) {
-     g_warning("Failed to register: %s", error->message);
-     *exit_status = 1;
-     return TRUE;
+    g_warning("Failed to register: %s", error->message);
+    *exit_status = 1;
+    return TRUE;
   }
 
   g_application_activate(application);

@@ -37,7 +37,7 @@ class _TeamDisplayState extends State<TeamDisplay> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(300.0, 50.0, 300.0, 50.0),
+        padding: const EdgeInsets.fromLTRB(300.0, 100.0, 300.0, 50.0),
         child: Column(
           children: [
             Expanded(
@@ -47,7 +47,7 @@ class _TeamDisplayState extends State<TeamDisplay> {
                   if (constraints.maxWidth < 1920) {
                     crossAxisCount = 2;
                   }
-                  if (constraints.maxWidth < 1232) {
+                  if (constraints.maxWidth < 1300) {
                     crossAxisCount = 1;
                   }
                   return GridView.builder(

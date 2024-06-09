@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poketeambuilder/data/services/team_service.dart';
-import 'package:poketeambuilder/ui/screens/profile.dart';
+import 'package:poketeambuilder/ui/screens/profile_screen.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 
 import '../../../data/models/team.dart';
@@ -17,11 +17,15 @@ class Community extends StatefulWidget {
   _CommunityState createState() => _CommunityState();
 }
 
+enum FilterType { mostVoted, commented, newest, oldest }
+
 class _CommunityState extends State<Community> {
   TextEditingController searchController = TextEditingController();
 
-  TeamService _teamService = new TeamService();
+  TeamService _teamService = TeamService();
   List<Team> _teams = [];
+  List<Team> _filteredTeams = [];
+  FilterType? _selectedFilter;
 
   @override
   void initState() {
@@ -29,15 +33,43 @@ class _CommunityState extends State<Community> {
     _fetchAllTeams();
   }
 
-  Future<void> _fetchAllTeams() async  {
+  Future<void> _fetchAllTeams() async {
     try {
-        List<Team> teams = await _teamService.getAllPublicTeams();
+      List<Team> teams = await _teamService.getAllPublicTeams();
       setState(() {
         _teams = teams;
+        _applyFilter();
       });
     } catch (e) {
       print('Error fetching natures: $e');
     }
+  }
+
+  void _applyFilter() {
+    setState(() {
+      switch (_selectedFilter) {
+        case FilterType.mostVoted:
+          _filteredTeams = List.from(_teams)..sort((a, b) => b.numLikes.compareTo(a.numLikes));
+          break;
+        case FilterType.commented:
+          _filteredTeams = _teams.where((team) => team.comments.isNotEmpty).toList();
+          break;
+        case FilterType.newest:
+          _filteredTeams = List.from(_teams)..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+          break;
+        case FilterType.oldest:
+        default:
+          _filteredTeams = List.from(_teams);
+          break;
+      }
+    });
+  }
+
+  void _onFilterSelected(FilterType filter) {
+    setState(() {
+      _selectedFilter = filter;
+      _applyFilter();
+    });
   }
 
   @override
@@ -83,50 +115,13 @@ class _CommunityState extends State<Community> {
                         ),
                       ),
                       SizedBox(height: 10.0),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Constants.white,
-                          backgroundColor: Constants.red,
-                        ),
-                        child: Text('Most voted'),
-                      ),
+                      _buildFilterButton('Most voted', FilterType.mostVoted),
                       SizedBox(height: 10.0),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Constants.white,
-                          backgroundColor: Constants.red,
-                        ),
-                        child: Text('Commented'),
-                      ),
+                      _buildFilterButton('Commented', FilterType.commented),
                       SizedBox(height: 10.0),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Constants.white,
-                          backgroundColor: Constants.red,
-                        ),
-                        child: Text('Generation'),
-                      ),
+                      _buildFilterButton('Newest', FilterType.newest),
                       SizedBox(height: 10.0),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Constants.white,
-                          backgroundColor: Constants.red,
-                        ),
-                        child: Text('Newest'),
-                      ),
-                      SizedBox(height: 10.0),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Constants.white,
-                          backgroundColor: Constants.red,
-                        ),
-                        child: Text('Oldest'),
-                      ),
+                      _buildFilterButton('Oldest', FilterType.oldest),
                     ],
                   ),
                 ),
@@ -172,11 +167,13 @@ class _CommunityState extends State<Community> {
                                     children: [
                                       Expanded(
                                         child: ListView.builder(
-                                          itemCount: _teams.length,
+                                          itemCount: _filteredTeams.length,
                                           itemBuilder: (context, index) {
                                             return TeamDisplayMini(
                                               isCurrentTrainer: false,
-                                              currentTeam: _teams[index], onActionPerformed: () {  }, currentTrainer: widget.currentTrainer,
+                                              currentTeam: _filteredTeams[index],
+                                              onActionPerformed: () {},
+                                              currentTrainer: widget.currentTrainer,
                                             );
                                           },
                                         ),
@@ -236,7 +233,7 @@ class _CommunityState extends State<Community> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Profile(
+                                  builder: (context) => ProfileScreen(
                                     currentTrainer: widget.currentTrainer,
                                     editable: true,
                                     trainerToSee: trainer,
@@ -247,7 +244,7 @@ class _CommunityState extends State<Community> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Profile(
+                                  builder: (context) => ProfileScreen(
                                     currentTrainer: widget.currentTrainer,
                                     editable: false,
                                     trainerToSee: trainer,
@@ -296,6 +293,19 @@ class _CommunityState extends State<Community> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFilterButton(String text, FilterType filter) {
+    return ElevatedButton(
+      onPressed: () {
+        _onFilterSelected(filter);
+      },
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Constants.white,
+        backgroundColor: _selectedFilter == filter ? Constants.darkRed : Constants.red,
+      ),
+      child: Text(text),
     );
   }
 }

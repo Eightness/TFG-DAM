@@ -216,7 +216,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                     int numPokemon = 0;
 
                     for (Pokemon pokemon in pokemonFromTeam) {
-                      if (pokemon.name != '') {
+                      if (pokemon.name != 'Empty slot') {
                         numPokemon++;
                       }
                     }

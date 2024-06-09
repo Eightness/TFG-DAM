@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:poketeambuilder/config/theme/app_theme.dart';
 import 'package:poketeambuilder/ui/screens/tabs/register.dart';
 import 'package:poketeambuilder/ui/screens/tabs/signin.dart';
-import 'package:poketeambuilder/ui/screens/welcome.dart';
+import 'package:poketeambuilder/ui/screens/welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         title: 'PokeTeam Builder',
         theme: AppTheme().generateTheme(),
         debugShowCheckedModeBanner: false,
-        home: Welcome(
+        home: WelcomeScreen(
           signIn: SignIn(),
           register: Register(),
         ));

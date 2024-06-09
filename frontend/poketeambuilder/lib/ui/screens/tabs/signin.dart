@@ -4,7 +4,7 @@ import 'package:poketeambuilder/ui/screens/tabs/team_builder.dart';
 import '../../../data/models/trainer.dart';
 import '../../../data/services/trainer_service.dart';
 import '../../../utils/constants.dart';
-import '../home.dart';
+import '../home_screen.dart';
 
 class SignIn extends StatelessWidget {
   final TrainerService _trainerService = TrainerService();
@@ -94,7 +94,7 @@ class SignIn extends StatelessWidget {
       Constants.isDarkTheme = currentTrainer.theme;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Home(team: TeamBuilder(currentTrainer: currentTrainer,), community: Community(currentTrainer: currentTrainer,), currentTrainer: currentTrainer,)),
+        MaterialPageRoute(builder: (context) => HomeScreen(team: TeamBuilder(currentTrainer: currentTrainer,), community: Community(currentTrainer: currentTrainer,), currentTrainer: currentTrainer,)),
       );
     } else {
       showDialog(

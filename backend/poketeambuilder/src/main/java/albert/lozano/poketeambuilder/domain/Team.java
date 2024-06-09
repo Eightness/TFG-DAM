@@ -19,8 +19,6 @@ import java.util.List;
 @Entity
 @Table(name = "Team")
 @Data
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Team {
@@ -43,8 +41,7 @@ public class Team {
 
     private int generation;
 
-    @NotNull
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Pokemon> pokemon;
 
     @NotNull

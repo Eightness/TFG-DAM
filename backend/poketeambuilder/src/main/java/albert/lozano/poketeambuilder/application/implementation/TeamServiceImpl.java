@@ -6,11 +6,9 @@
 package albert.lozano.poketeambuilder.application.implementation;
 
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
-import albert.lozano.poketeambuilder.domain.Pokemon;
 import albert.lozano.poketeambuilder.dto.PokemonDTO;
 import albert.lozano.poketeambuilder.dto.TeamDTO;
 import albert.lozano.poketeambuilder.domain.Team;
-import albert.lozano.poketeambuilder.dto.mappers.PokemonMapper;
 import albert.lozano.poketeambuilder.dto.mappers.TrainerTeamMapper;
 import albert.lozano.poketeambuilder.repository.PokemonRepository;
 import albert.lozano.poketeambuilder.repository.TeamRepository;
@@ -32,8 +30,6 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
     TrainerTeamMapper trainerTeamMapper;
     @Autowired
     PokemonServiceImpl pokemonService;
-    @Autowired
-    PokemonMapper pokemonMapper;
     @Autowired
     PokemonRepository pokemonRepository;
 

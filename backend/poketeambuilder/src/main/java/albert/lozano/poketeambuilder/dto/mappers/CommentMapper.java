@@ -1,7 +1,6 @@
 package albert.lozano.poketeambuilder.dto.mappers;
 
 import albert.lozano.poketeambuilder.domain.Comment;
-import albert.lozano.poketeambuilder.domain.CommentTeam;
 import albert.lozano.poketeambuilder.domain.Trainer;
 import albert.lozano.poketeambuilder.dto.CommentDTO;
 import albert.lozano.poketeambuilder.repository.TrainerRepository;

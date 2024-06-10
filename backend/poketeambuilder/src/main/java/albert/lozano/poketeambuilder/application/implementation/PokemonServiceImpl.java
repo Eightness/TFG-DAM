@@ -58,11 +58,6 @@ public class PokemonServiceImpl implements GenericCRUDService<PokemonDTO, Long> 
         return pokemonMapper.domainToDTO(pokemon);
     }
 
-    public PokemonDTO addEntity(Pokemon entity, Team team) {
-        pokemonRepository.save(entity);
-        return pokemonMapper.domainToDTO(entity);
-    }
-
     @Override
     public List<PokemonDTO> addEntities(List<PokemonDTO> entitiesDTO) {
         return null;

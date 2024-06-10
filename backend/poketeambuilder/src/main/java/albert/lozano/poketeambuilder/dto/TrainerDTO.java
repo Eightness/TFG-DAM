@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * TrainerInputDTO class. Contains all Trainer's attributes obtainable by user's input.

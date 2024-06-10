@@ -8,7 +8,6 @@ package albert.lozano.poketeambuilder.application.implementation;
 import albert.lozano.poketeambuilder.application.services.GenericCRUDService;
 import albert.lozano.poketeambuilder.domain.Team;
 import albert.lozano.poketeambuilder.dto.CommentDTO;
-import albert.lozano.poketeambuilder.dto.TeamDTO;
 import albert.lozano.poketeambuilder.dto.mappers.CommentMapper;
 import albert.lozano.poketeambuilder.domain.Comment;
 import albert.lozano.poketeambuilder.dto.mappers.TrainerTeamMapper;
@@ -139,9 +138,7 @@ public class CommentServiceImpl implements GenericCRUDService<CommentDTO, Long> 
 
     public List<CommentDTO> getCommentsByTeam(String teamName, String trainerUsername) {
         Team team = teamRepository.findByNameAndTrainerUsername(teamName, trainerUsername);
-        List<Comment> comments = commentTeamRepository.findByTeam(team).stream()
-                .map(CommentTeam::getComment)
-                .toList();
+        List<Comment> comments = commentTeamRepository.findByTeam(team).stream().map(CommentTeam::getComment).toList();
 
         return comments.stream().map(commentMapper::domainToDTO).collect(Collectors.toList());
     }

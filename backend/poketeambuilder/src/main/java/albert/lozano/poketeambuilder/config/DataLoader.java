@@ -1,6 +1,5 @@
 package albert.lozano.poketeambuilder.config;
 
-import albert.lozano.poketeambuilder.application.implementation.PokemonServiceImpl;
 import albert.lozano.poketeambuilder.domain.*;
 import albert.lozano.poketeambuilder.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -19,12 +17,6 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private TeamRepository teamRepository;
-
-    @Autowired
-    private PokemonRepository pokemonRepository;
-
-    @Autowired
-    private PokemonServiceImpl pokemonService;
 
     @Override
     public void run(String... args) throws Exception {

@@ -7,7 +7,6 @@ package albert.lozano.poketeambuilder.controller;
 
 import albert.lozano.poketeambuilder.application.implementation.CommentServiceImpl;
 import albert.lozano.poketeambuilder.dto.CommentDTO;
-import albert.lozano.poketeambuilder.dto.TeamDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

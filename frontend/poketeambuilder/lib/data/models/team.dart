@@ -25,6 +25,15 @@ class Team {
         required this.comments,
       });
 
+  Team.withName(this.name)
+      : createdDate = DateTime.now(),
+        isPublic = false,
+        numLikes = 0,
+        generation = 0,
+        pokemon = [],
+        comments = [],
+        trainer = Trainer.withUsername('');
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,

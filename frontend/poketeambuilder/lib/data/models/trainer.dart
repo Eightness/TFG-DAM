@@ -27,6 +27,17 @@ class Trainer {
     required this.bio,
   });
 
+  Trainer.withUsername(this.username)
+      : password = '',
+        name = '',
+        firstSurname = '',
+        secondSurname = '',
+        email = '',
+        phone = '',
+        createdDate = DateTime.now(),
+        theme = false,
+        bio = '';
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,

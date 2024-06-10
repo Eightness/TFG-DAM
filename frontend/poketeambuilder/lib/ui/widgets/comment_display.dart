@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:poketeambuilder/utils/constants.dart';
 import 'package:poketeambuilder/data/models/comment.dart';
 
@@ -9,6 +10,8 @@ class CommentDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+
     return Container(
       width: 300,
       height: 100,
@@ -37,7 +40,7 @@ class CommentDisplay extends StatelessWidget {
           ),
           SizedBox(height: 5.0),
           Text(
-            comment.createdDate.toString(),
+            dateFormat.format(comment.createdDate),
             style: TextStyle(
               color: Colors.black54,
               fontSize: 12.0,

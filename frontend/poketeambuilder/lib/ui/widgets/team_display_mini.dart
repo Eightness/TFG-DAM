@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:poketeambuilder/data/services/comment_service.dart';
 import 'package:poketeambuilder/data/services/team_service.dart';
 import 'package:poketeambuilder/ui/screens/team_editor_screen.dart';
 import 'package:poketeambuilder/utils/constants.dart';
@@ -31,6 +32,8 @@ class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAli
   final TeamService _teamService = TeamService();
   bool _isPressed = false;
   int _likeCount = 0;
+
+  final CommentService _commentService = new CommentService();
 
   @override
   void initState() {
@@ -228,8 +231,10 @@ class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAli
     );
   }
 
-  void _showCommentsDialog(BuildContext context) {
+  void _showCommentsDialog(BuildContext context) async {
     final TextEditingController commentController = TextEditingController();
+
+    List<Comment> comments = await _commentService.getCommentsByTeam(widget.currentTeam);
 
     showDialog(
       context: context,
@@ -248,9 +253,9 @@ class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAli
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: widget.currentTeam.comments.length,
+                        itemCount: comments.length,
                         itemBuilder: (context, index) {
-                          return CommentDisplay(comment: widget.currentTeam.comments[index]);
+                          return CommentDisplay(comment: comments[index]);
                         },
                       ),
                     ),
@@ -278,16 +283,30 @@ class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAli
                     'Submit',
                     style: TextStyle(color: Constants.red),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     final newComment = Comment(
                       createdDate: DateTime.now(),
-                      trainer: widget.currentTeam.trainer,
+                      trainer: widget.currentTrainer,
                       body: commentController.text,
+                      team: widget.currentTeam,
                     );
-                    setState(() {
-                      widget.currentTeam.comments.add(newComment);
-                    });
+
+                    // Call the service to add the comment to the backend
+                    try {
+                      await _commentService.addComment(newComment);
+                      // Actualizar la lista de comentarios después de agregar uno nuevo
+                      comments = await _commentService.getCommentsByTeam(widget.currentTeam);
+                      setState(() {});
+                    } catch (e) {
+                      // Handle any errors
+                      print('Error adding comment: $e');
+                    }
+
+                    // Clear the comment text field
                     commentController.clear();
+
+                    // Close the dialog
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -297,6 +316,8 @@ class _TeamDisplayMiniState extends State<TeamDisplayMini> with AutomaticKeepAli
       },
     );
   }
+
+
 
   @override
   bool get wantKeepAlive => true;

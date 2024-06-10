@@ -7,6 +7,7 @@ package albert.lozano.poketeambuilder.controller;
 
 import albert.lozano.poketeambuilder.application.implementation.CommentServiceImpl;
 import albert.lozano.poketeambuilder.dto.CommentDTO;
+import albert.lozano.poketeambuilder.dto.TeamDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CommentController {
     // Create methods
     @PostMapping("/add")
     public ResponseEntity<CommentDTO> postComment(@RequestBody CommentDTO commentDTO) {
-        CommentDTO newComment = commentService.addEntity(commentDTO);
+        CommentDTO newComment = commentService.addComment(commentDTO);
         return new ResponseEntity<>(newComment, HttpStatus.OK);
     }
 
@@ -45,6 +46,12 @@ public class CommentController {
         return new ResponseEntity<>(allComments, HttpStatus.OK);
     }
 
+    @GetMapping("/get-by-team")
+    public ResponseEntity<List<CommentDTO>> getCommentsByTeam(@RequestParam("teamName") String teamName, @RequestParam("trainerUsername") String trainerUsername) {
+        List<CommentDTO> commentsByTeam = commentService.getCommentsByTeam(teamName, trainerUsername);
+        return new ResponseEntity<>(commentsByTeam, HttpStatus.OK);
+    }
+
     // Update methods
     @PutMapping("/update")
     public ResponseEntity<CommentDTO> updateComment(@RequestParam long id, @RequestBody CommentDTO commentDTO) {
@@ -54,8 +61,8 @@ public class CommentController {
 
     // Delete methods
     @DeleteMapping("/delete")
-    public ResponseEntity<CommentDTO> deleteCommentById(@RequestParam long id) {
-        commentService.deleteEntityById(id);
+    public ResponseEntity<CommentDTO> deleteCommentById(@RequestBody CommentDTO commentDTO) {
+        commentService.deleteComment(commentDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -64,4 +71,6 @@ public class CommentController {
         commentService.deleteAllEntities();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 }

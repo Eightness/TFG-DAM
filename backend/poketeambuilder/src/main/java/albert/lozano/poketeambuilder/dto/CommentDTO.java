@@ -24,4 +24,6 @@ public class CommentDTO {
     private String body;
 
     private TrainerDTO trainer;
+
+    private TeamDTO team;
 }

@@ -31,12 +31,12 @@ public class DataLoader implements CommandLineRunner {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
         // Create Trainers
-        Trainer albert = new Trainer(1L, "Eightness", "1234", "Albert", "Lozano", "Blasco", "albertlb08@gmail.com", "625760988", dateFormat.parse("2024-03-11 17:33:07.251000"), false, new ArrayList<>(), "Hi! I'm committed to mentoring new trainers and unlocking the hidden strengths of their Pokemon teams.");
-        Trainer sergi = new Trainer(2L, "SergiMarrahy", "1234", "Sergi", "Marrahy", "Arenas", "sergimarenas@gmail.com", "654987321", dateFormat.parse("2024-04-16 21:34:32.346000"), true, new ArrayList<>(), "I'm obviously the very best of all trainers in the world.");
-        Trainer duncan = new Trainer(3L, "DuncanRua", "1234", "Duncan", "Rua", "Valiente", "duncanrv@gmail.com", "654987321", dateFormat.parse("2024-05-16 11:34:08.697000"), false, new ArrayList<>(), "Always looking for skilled trainers to collaborate with and share knowledge to become the very best.");
-        Trainer nacho = new Trainer(4L, "Nancho", "1234", "Nacho", "Pérez", "", "nancho@gmail.com", "654987321", dateFormat.parse("2024-06-08 13:35:00.552000"), true, new ArrayList<>(), "Viva Masia!");
-        Trainer asdf = new Trainer(5L, "asdf", "asdf", "asdf", "asdf", "asdf", "asdf", "1234", dateFormat.parse("2024-06-09 13:35:00.552000"), false, new ArrayList<>(), "This is the bio of a trainer. It contains a brief description about the trainer.");
-        Trainer test = new Trainer(6L, "test", "test", "test", "test", "test", "test", "1234", dateFormat.parse("2024-06-09 13:35:00.552000"), false, new ArrayList<>(), "This is the bio of a trainer. It contains a brief description about the trainer.");
+        Trainer albert = new Trainer(1L, "Eightness", "1234", "Albert", "Lozano", "Blasco", "albertlb08@gmail.com", "625760988", dateFormat.parse("2024-03-11 17:33:07.251000"), false, new ArrayList<>(), new ArrayList<>(), "Hi! I'm committed to mentoring new trainers and unlocking the hidden strengths of their Pokemon teams.");
+        Trainer sergi = new Trainer(2L, "SergiMarrahy", "1234", "Sergi", "Marrahy", "Arenas", "sergimarenas@gmail.com", "654987321", dateFormat.parse("2024-04-16 21:34:32.346000"), true, new ArrayList<>(), new ArrayList<>(), "I'm obviously the very best of all trainers in the world.");
+        Trainer duncan = new Trainer(3L, "DuncanRua", "1234", "Duncan", "Rua", "Valiente", "duncanrv@gmail.com", "654987321", dateFormat.parse("2024-05-16 11:34:08.697000"), false, new ArrayList<>(), new ArrayList<>(), "Always looking for skilled trainers to collaborate with and share knowledge to become the very best.");
+        Trainer nacho = new Trainer(4L, "Nancho", "1234", "Nacho", "Pérez", "", "nancho@gmail.com", "654987321", dateFormat.parse("2024-06-08 13:35:00.552000"), true, new ArrayList<>(), new ArrayList<>(), "Long life to masia!");
+        Trainer asdf = new Trainer(5L, "asdf", "asdf", "asdf", "asdf", "asdf", "asdf", "1234", dateFormat.parse("2024-06-09 13:35:00.552000"), false, new ArrayList<>(), new ArrayList<>(), "This is the bio of a trainer. It contains a brief description about the trainer.");
+        Trainer test = new Trainer(6L, "test", "test", "test", "test", "test", "test", "1234", dateFormat.parse("2024-06-09 13:35:00.552000"), false, new ArrayList<>(), new ArrayList<>(), "This is the bio of a trainer. It contains a brief description about the trainer.");
 
         trainerRepository.save(albert);
         trainerRepository.save(sergi);
@@ -46,21 +46,21 @@ public class DataLoader implements CommandLineRunner {
         trainerRepository.save(test);
 
         // Create Teams
-        Team team1Albert = new Team(1L, "Gen 1 Team", dateFormat.parse("2024-03-12 13:13:07.251000"), true, 21, 1, new ArrayList<>(), albert);
-        Team team2Albert = new Team(2L, "Gen 4 Team", dateFormat.parse("2024-03-21 18:33:01.251000"), true, 56, 4, new ArrayList<>(), albert);
-        Team team3Albert = new Team(3L, "Random Team", dateFormat.parse("2024-03-24 19:12:02.251000"), false, 0, 0, new ArrayList<>(), albert);
+        Team team1Albert = new Team(1L, "Gen 1 Team", dateFormat.parse("2024-03-12 13:13:07.251000"), true, 21, 1, new ArrayList<>(), albert, new ArrayList<>());
+        Team team2Albert = new Team(2L, "Gen 4 Team", dateFormat.parse("2024-03-21 18:33:01.251000"), true, 56, 4, new ArrayList<>(), albert, new ArrayList<>());
+        Team team3Albert = new Team(3L, "Random Team", dateFormat.parse("2024-03-24 19:12:02.251000"), false, 0, 0, new ArrayList<>(), albert, new ArrayList<>());
 
-        Team team1Sergi = new Team(4L, "Random1", dateFormat.parse("2024-04-17 13:33:07.251000"), true, 18, 0, new ArrayList<>(), sergi);
-        Team team2Sergi = new Team(5L, "BestTeam", dateFormat.parse("2024-04-26 13:35:09.251000"), true, 20, 0, new ArrayList<>(), sergi);
-        Team team3Sergi = new Team(6L, "PrivateTeam", dateFormat.parse("2024-05-01 13:33:07.2510009"), false, 0, 0, new ArrayList<>(), sergi);
+        Team team1Sergi = new Team(4L, "Random1", dateFormat.parse("2024-04-17 13:33:07.251000"), true, 18, 0, new ArrayList<>(), sergi, new ArrayList<>());
+        Team team2Sergi = new Team(5L, "BestTeam", dateFormat.parse("2024-04-26 13:35:09.251000"), true, 20, 0, new ArrayList<>(), sergi, new ArrayList<>());
+        Team team3Sergi = new Team(6L, "PrivateTeam", dateFormat.parse("2024-05-01 13:33:07.2510009"), false, 0, 0, new ArrayList<>(), sergi, new ArrayList<>());
 
-        Team team1Duncan = new Team(7L, "AllGen Team", dateFormat.parse("2024-05-27 13:33:07.251000"), true, 14, 0, new ArrayList<>(), duncan);
-        Team team2Duncan = new Team(8L, "Karate Team", dateFormat.parse("2024-05-28 13:33:07.251000"), true, 44, 0, new ArrayList<>(), duncan);
-        Team team3Duncan = new Team(9L, "Amazing", dateFormat.parse("2024-06-01 13:33:07.251000"), false, 0, 0, new ArrayList<>(), duncan);
+        Team team1Duncan = new Team(7L, "AllGen Team", dateFormat.parse("2024-05-27 13:33:07.251000"), true, 14, 0, new ArrayList<>(), duncan, new ArrayList<>());
+        Team team2Duncan = new Team(8L, "Karate Team", dateFormat.parse("2024-05-28 13:33:07.251000"), true, 44, 0, new ArrayList<>(), duncan, new ArrayList<>());
+        Team team3Duncan = new Team(9L, "Amazing", dateFormat.parse("2024-06-01 13:33:07.251000"), false, 0, 0, new ArrayList<>(), duncan, new ArrayList<>());
 
-        Team team1Nacho = new Team(10L, "masia team", dateFormat.parse("2024-06-08 13:33:07.251000"), true, 43, 0, new ArrayList<>(), nacho);
-        Team team2Nacho = new Team(11L, "mola", dateFormat.parse("2024-06-09 13:33:07.251000"), true, 37, 0, new ArrayList<>(), nacho);
-        Team team3Nacho = new Team(12L, "meh", dateFormat.parse("2024-06-09 13:33:07.251000"), false, 0, 0, new ArrayList<>(), nacho);
+        Team team1Nacho = new Team(10L, "masia team", dateFormat.parse("2024-06-08 13:33:07.251000"), true, 43, 0, new ArrayList<>(), nacho, new ArrayList<>());
+        Team team2Nacho = new Team(11L, "mola", dateFormat.parse("2024-06-09 13:33:07.251000"), true, 37, 0, new ArrayList<>(), nacho, new ArrayList<>());
+        Team team3Nacho = new Team(12L, "meh", dateFormat.parse("2024-06-09 13:33:07.251000"), false, 0, 0, new ArrayList<>(), nacho, new ArrayList<>());
 
         // Create Pokémon
 

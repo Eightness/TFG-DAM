@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Comment class. Defines a comment.
@@ -17,8 +18,6 @@ import java.util.Date;
 @Entity
 @Table(name = "Comment")
 @Data
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
@@ -34,8 +33,10 @@ public class Comment {
     @NotNull
     private String body;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentTeam> teams;
 }

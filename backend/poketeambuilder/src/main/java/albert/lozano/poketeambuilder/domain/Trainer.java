@@ -65,6 +65,9 @@ public class Trainer {
     @OneToMany(mappedBy = "trainer")
     private List<Team> teams;
 
+    @OneToMany(mappedBy = "trainer")
+    private List<Comment> comments;
+
     @Column
     private String bio;
 

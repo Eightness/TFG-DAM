@@ -7,6 +7,7 @@ import albert.lozano.poketeambuilder.dto.TrainerDTO;
 import albert.lozano.poketeambuilder.repository.TeamRepository;
 import albert.lozano.poketeambuilder.repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,9 @@ import java.util.stream.Collectors;
 public class TrainerTeamMapper {
     @Autowired
     PokemonMapper pokemonMapper;
+
+    @Autowired
+    CommentMapper commentMapper;
 
     @Autowired
     TrainerRepository trainerRepository;

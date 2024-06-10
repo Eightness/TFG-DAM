@@ -14,8 +14,6 @@ import lombok.*;
 @Entity
 @Table(name = "CommentTeam")
 @Data
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentTeam {

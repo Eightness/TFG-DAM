@@ -1,26 +1,36 @@
-/**
- * @author Albert Lozano Blasco
- * @version 1.0
- */
-
 package albert.lozano.poketeambuilder.dto.mappers;
 
-import albert.lozano.poketeambuilder.dto.CommentDTO;
 import albert.lozano.poketeambuilder.domain.Comment;
+import albert.lozano.poketeambuilder.domain.CommentTeam;
+import albert.lozano.poketeambuilder.domain.Trainer;
+import albert.lozano.poketeambuilder.dto.CommentDTO;
+import albert.lozano.poketeambuilder.repository.TrainerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CommentMapper interface. It's a mapper from MapStruct. Automatically maps DTOs. Extends from GenericDTOMapper, previously implemented.
+ * CommentMapper class. Implements the mapping between CommentDTO and Comment.
  */
 public class CommentMapper implements GenericDTOMapper<CommentDTO, Comment> {
+    // Attributes
+    @Autowired
+    private TrainerTeamMapper trainerTeamMapper;
+    @Autowired
+    private TrainerRepository trainerRepository;
+
     @Override
     public Comment DTOToDomain(CommentDTO commentDTO) {
         Comment comment = new Comment();
 
         comment.setCreatedDate(commentDTO.getCreatedDate());
         comment.setBody(commentDTO.getBody());
+
+        if (commentDTO.getTrainer() != null) {
+            Trainer trainer = trainerRepository.findByUsername(commentDTO.getTrainer().getUsername());
+            comment.setTrainer(trainer);
+        }
 
         return comment;
     }
@@ -43,6 +53,15 @@ public class CommentMapper implements GenericDTOMapper<CommentDTO, Comment> {
 
         commentDTO.setCreatedDate(comment.getCreatedDate());
         commentDTO.setBody(comment.getBody());
+
+        if (comment.getTrainer() != null) {
+            commentDTO.setTrainer(trainerTeamMapper.trainerToTrainerDTO(comment.getTrainer()));
+        }
+
+        // Assuming Comment is associated with a single team for simplicity
+        if (comment.getTeams() != null && !comment.getTeams().isEmpty()) {
+            commentDTO.setTeam(trainerTeamMapper.teamToTeamDTO(comment.getTeams().get(0).getTeam()));
+        }
 
         return commentDTO;
     }

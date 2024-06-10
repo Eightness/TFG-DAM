@@ -48,4 +48,7 @@ public class Team {
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private List<CommentTeam> comments;
 }

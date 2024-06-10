@@ -141,7 +141,5 @@ public class TrainerTeamMapper {
 
         return teams;
     }
-
-
 }
 

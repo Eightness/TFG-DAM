@@ -127,7 +127,7 @@ class TrainerService {
         return trainer;
       } else {
         print(
-            'Failed to retrieve trainer with username $username'); // More specific message
+            'Failed to retrieve trainer with username $username');
         print('Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
         return null;

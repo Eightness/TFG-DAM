@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * User class. Defines a user.
+ * Trainer class. Defines a trainer.
  */
 @Entity
 @Table(name = "Trainer")

@@ -15,8 +15,6 @@ import lombok.*;
 @Entity
 @Table(name = "Move")
 @Data
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Move {

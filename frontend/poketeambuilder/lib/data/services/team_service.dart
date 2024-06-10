@@ -398,12 +398,8 @@ class TeamService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-
-    print('Response body: ${response.body}');
-
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> jsonResponse = jsonDecode(response.body);
-
       List<Team> teams = [];
 
       for (var teamJson in jsonResponse) {
@@ -444,7 +440,6 @@ class TeamService {
           }
         }
 
-        // Mapping the Trainer details
         Trainer trainer = Trainer(
           name: teamJson['trainer']?['name'] ?? '',
           firstSurname: teamJson['trainer']?['firstSurname'] ?? '',
@@ -477,8 +472,6 @@ class TeamService {
           teams.add(team);
         }
       }
-
-      print('Status code: ${response.statusCode}');
       return teams;
     } else {
       print('Failed to retrieve teams');

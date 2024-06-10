@@ -1,39 +1,48 @@
 # PokéTeam Builder
 
-PokéTeam Builder es una aplicación integral y multiplataforma diseñada para los entusiastas de Pokémon. 
+PokéTeam Builder es una aplicación integral y multiplataforma (web y escritorio) diseñada para los entusiastas de Pokémon. 
 Permite a los usuarios construir, analizar y mejorar estratégicamente sus equipos Pokémon, ya sea para batallas o para uso personal. 
-La aplicación también fomenta la interacción social entre los entrenadores Pokémon, permitiéndoles compartir, valorar y comentar sobre equipos creados por otros usuarios.
+La aplicación también fomenta la interacción social entre los entrenadores Pokémon, permitiéndoles compartir, valorar y comentar equipos creados por otros usuarios.
 
 ## Características
 
-- Registro y autenticación de usuarios
+- Registro e inicio de sesión
 - Creación y gestión de equipos Pokémon
-- Análisis de equipos: cobertura y defensa de tipos
+- Análisis de equipos: tabla de tipos a disposición del usuario
 - Generación aleatoria de equipos
-- Filtros de generación para equipos
-- Interacción social: valoraciones y comentarios sobre equipos de otros usuarios
-- Perfiles de usuario con equipos públicos y privados
+- Filtro de generación para la selección de Pokémon
+- Interacción social: sistema de me gusta y comentarios hacia equipos de otros usuarios
+- Perfiles de usuario editables con equipos públicos y privados
+- Filtros de búsqueda de equipos y perfiles en la pestaña de comunidad
 
 ## Tecnologías Utilizadas
 
 ### Backend
-- **Java Spring Boot**
+- **Java**
+- **Spring Boot**
 - **Spring Data JPA**
+- **Spring Web**
 - **MySQL**
-- **MapStruct** (Mapeo de objetos)
+- **MapStruct** (Mapeado automático de código)
 - **Lombok** (Automatización de código)
 
 ### Frontend
-- **Flutter**
 - **Dart**
+- **Flutter**
 - **Adobe Photoshop & Illustrator** (Diseño de interfaz)
 - **Figma** (Prototipos de interfaz y diseño de experiencia de usuario)
 
-### Herramientas
+### Entorno de desarrollo
+- **IntelliJ IDEA**
+- **Android Studio**
 - **Maven** (Gestión de dependencias)
 - **Git - GitHub** (Control de versiones)
-- **Docker** (Contenedorización)
 - **Spring Initializr** (Inicialización del proyecto)
+
+### Herramientas
+- **Excalidraw**
+- **Draw.io**
+- **Microsoft Word**
 
 ## Licencia
 

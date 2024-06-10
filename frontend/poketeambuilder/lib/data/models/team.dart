@@ -15,15 +15,15 @@ class Team {
   final Trainer trainer;
 
   Team({
-        required this.isPublic,
-        required this.numLikes,
-        required this.generation,
-        required this.pokemon,
-        required this.trainer,
-        required this.name,
-        required this.createdDate,
-        required this.comments,
-      });
+    required this.isPublic,
+    required this.numLikes,
+    required this.generation,
+    required this.pokemon,
+    required this.trainer,
+    required this.name,
+    required this.createdDate,
+    required this.comments,
+  });
 
   Team.withName(this.name)
       : createdDate = DateTime.now(),
@@ -75,5 +75,4 @@ class Team {
     final pokemonList = pokemon.map((p) => p.name).join(', ');
     return 'Team(name: $name, createdDate: $createdDate, isPublic: $isPublic, numLikes: $numLikes, generation: $generation, trainer: ${trainer.username}, pokemon: [$pokemonList])';
   }
-
 }

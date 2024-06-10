@@ -83,8 +83,8 @@ class _TeamDisplayScreenState extends State<TeamDisplayScreen> {
                       );
                     }).toList(),
                     onSelected: (item) => onMenuItemSelected(context, item),
-                    // Handle menu item selection
-                    icon: const Icon(Icons.person, color: Colors.white, size: 40),
+                    icon:
+                        const Icon(Icons.person, color: Colors.white, size: 40),
                   ),
                   const SizedBox(width: 5),
                   Text(
@@ -104,7 +104,8 @@ class _TeamDisplayScreenState extends State<TeamDisplayScreen> {
                   tabs: [
                     Tab(
                       height: 75,
-                      text: ' T E A M  D I S P L A Y  (${widget.selectedTeam.name} - ${widget.selectedTeam.trainer.username})',
+                      text:
+                          ' T E A M  D I S P L A Y  (${widget.selectedTeam.name} - ${widget.selectedTeam.trainer.username})',
                       icon: Icon(Icons.catching_pokemon_outlined),
                     ),
                   ],
@@ -113,7 +114,9 @@ class _TeamDisplayScreenState extends State<TeamDisplayScreen> {
               body: Center(
                 child: TabBarView(
                   children: [
-                    TeamDisplay(currentTrainer: widget.currentTrainer, team: widget.selectedTeam)
+                    TeamDisplay(
+                        currentTrainer: widget.currentTrainer,
+                        team: widget.selectedTeam)
                   ],
                 ),
               ),
@@ -131,7 +134,8 @@ class _TeamDisplayScreenState extends State<TeamDisplayScreen> {
         MaterialPageRoute(
           builder: (context) => ProfileScreen(
             currentTrainer: widget.currentTrainer,
-            editable: true, trainerToSee: widget.currentTrainer,
+            editable: true,
+            trainerToSee: widget.currentTrainer,
           ),
         ),
       );
@@ -139,7 +143,8 @@ class _TeamDisplayScreenState extends State<TeamDisplayScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SettingsScreen(currentTrainer: widget.currentTrainer)));
+              builder: (context) =>
+                  SettingsScreen(currentTrainer: widget.currentTrainer)));
     } else if (item.text == 'Log out') {
       Navigator.push(
         context,
@@ -151,11 +156,15 @@ class _TeamDisplayScreenState extends State<TeamDisplayScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  HomeScreen(currentTrainer: widget.currentTrainer,
-                    team: TeamBuilder(currentTrainer: widget.currentTrainer,),
+              builder: (context) => HomeScreen(
+                    currentTrainer: widget.currentTrainer,
+                    team: TeamBuilder(
+                      currentTrainer: widget.currentTrainer,
+                    ),
                     community: Community(
-                      currentTrainer: widget.currentTrainer,),)));
+                      currentTrainer: widget.currentTrainer,
+                    ),
+                  )));
     }
   }
 }

@@ -25,14 +25,16 @@ class CommentService {
 
   Future<List<Comment>> getCommentsByTeam(Team team) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/get-by-team?teamName=${team.name}&trainerUsername=${team.trainer.username}'),
+      Uri.parse(
+          '$baseUrl/get-by-team?teamName=${team.name}&trainerUsername=${team.trainer.username}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
 
     if (response.statusCode == 200) {
-      List<Comment> commentList = (jsonDecode(response.body) as List<dynamic>).map((commentJson) {
+      List<Comment> commentList =
+          (jsonDecode(response.body) as List<dynamic>).map((commentJson) {
         return Comment.fromJson(jsonEncode(commentJson));
       }).toList();
 
@@ -41,8 +43,6 @@ class CommentService {
       throw Exception('Failed to fetch comments by team');
     }
   }
-
-
 
   Future<void> deleteComment(Comment comment) async {
     final response = await http.delete(

@@ -51,10 +51,17 @@ public class TeamController {
         return new ResponseEntity<>(allPublicTeams, HttpStatus.OK);
     }
 
+    @GetMapping("/teams-with-comments")
+    public ResponseEntity<List<TeamDTO>> getTeamsWithComments() {
+        List<TeamDTO> teamsWithComments = teamService.getTeamsWithComments();
+        return ResponseEntity.ok(teamsWithComments);
+    }
+
+
     // Update methods
     @PutMapping("/update")
-    public ResponseEntity<TeamDTO> updateTeam(@RequestParam long id, @RequestBody TeamDTO teamDTO) {
-        TeamDTO updatedTeam = teamService.updateEntity(id, teamDTO);
+    public ResponseEntity<TeamDTO> updateTeam(@RequestBody TeamDTO teamDTO, @RequestBody TeamDTO updatedTeamDTO) {
+        TeamDTO updatedTeam = teamService.updateTeam(teamDTO, updatedTeamDTO);
         return new ResponseEntity<>(updatedTeam, HttpStatus.OK);
     }
 

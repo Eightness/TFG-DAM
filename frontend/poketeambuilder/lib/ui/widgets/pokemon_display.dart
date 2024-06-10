@@ -52,7 +52,10 @@ class PokemonDisplayState extends State<PokemonDisplay> {
                       children: [
                         Text(
                           widget.pokemon.name.toUpperCase(),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0, color: Constants.red),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0,
+                              color: Constants.red),
                         ),
                         if (widget.pokemon.isShiny)
                           Padding(
@@ -68,17 +71,21 @@ class PokemonDisplayState extends State<PokemonDisplay> {
                     const SizedBox(height: 15.0),
                     Text(
                       'Sprite:',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14.0),
                     ),
                     Image.network(
-                      widget.pokemon.spriteUrl.isNotEmpty ? widget.pokemon.spriteUrl : 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/f720bb6e-b303-4877-bffb-d61df0ab183f/d3b98cf-4fc5c76b-2a99-47fc-98b6-d7d4ee8d9d9f.png',
+                      widget.pokemon.spriteUrl.isNotEmpty
+                          ? widget.pokemon.spriteUrl
+                          : 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/f720bb6e-b303-4877-bffb-d61df0ab183f/d3b98cf-4fc5c76b-2a99-47fc-98b6-d7d4ee8d9d9f.png',
                       height: 90.0,
                       width: 90.0,
                     ),
                     const SizedBox(height: 10.0),
                     Text(
                       'Nature:',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14.0),
                     ),
                     Text(
                       widget.pokemon.nature,
@@ -96,7 +103,8 @@ class PokemonDisplayState extends State<PokemonDisplay> {
                   children: [
                     Text(
                       'Item:',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14.0),
                     ),
                     Text(
                       widget.pokemon.item,
@@ -105,7 +113,8 @@ class PokemonDisplayState extends State<PokemonDisplay> {
                     const SizedBox(height: 5.0),
                     Text(
                       'Ability:',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14.0),
                     ),
                     Text(
                       widget.pokemon.ability,
@@ -114,7 +123,8 @@ class PokemonDisplayState extends State<PokemonDisplay> {
                     const SizedBox(height: 10.0),
                     Text(
                       'Moves:',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14.0),
                     ),
                     for (int i = 0; i < widget.pokemon.moves.length; i++)
                       Text(

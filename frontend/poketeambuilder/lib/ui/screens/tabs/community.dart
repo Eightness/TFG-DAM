@@ -11,7 +11,7 @@ import '../../widgets/team_display_mini.dart';
 class Community extends StatefulWidget {
   final Trainer currentTrainer;
 
-  const Community({super.key, required this.currentTrainer});
+  const Community({Key? key, required this.currentTrainer}) : super(key: key);
 
   @override
   _CommunityState createState() => _CommunityState();
@@ -25,12 +25,17 @@ class _CommunityState extends State<Community> {
   TeamService _teamService = TeamService();
   List<Team> _teams = [];
   List<Team> _filteredTeams = [];
+  List<Team> _publicTeams = [];
+
   FilterType? _selectedFilter;
 
   @override
   void initState() {
     super.initState();
-    _fetchAllTeams();
+    _fetchAllTeams().then((_) {
+      _selectedFilter = FilterType.newest;
+      _applyFilter();
+    });
   }
 
   Future<void> _fetchAllTeams() async {
@@ -38,10 +43,26 @@ class _CommunityState extends State<Community> {
       List<Team> teams = await _teamService.getAllPublicTeams();
       setState(() {
         _teams = teams;
+        _publicTeams = List.from(teams);
         _applyFilter();
       });
     } catch (e) {
-      print('Error fetching natures: $e');
+      print('Error fetching teams: $e');
+    }
+  }
+
+  Future<void> _fetchTeamsWithComments() async {
+    try {
+      List<Team> teams = await _teamService.getTeamsWithComments();
+
+      print('Teams fetched successfully: $teams');
+
+      setState(() {
+        _publicTeams = List.from(teams);
+        _applyFilter();
+      });
+    } catch (e) {
+      print('Error fetching teams with comments: $e');
     }
   }
 
@@ -49,13 +70,15 @@ class _CommunityState extends State<Community> {
     setState(() {
       switch (_selectedFilter) {
         case FilterType.mostVoted:
-          _filteredTeams = List.from(_teams)..sort((a, b) => b.numLikes.compareTo(a.numLikes));
+          _filteredTeams = List.from(_teams)
+            ..sort((a, b) => b.numLikes.compareTo(a.numLikes));
           break;
         case FilterType.commented:
-          _filteredTeams = _teams.where((team) => team.comments.isNotEmpty).toList();
+          _filteredTeams = _publicTeams;
           break;
         case FilterType.newest:
-          _filteredTeams = List.from(_teams)..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+          _filteredTeams = List.from(_teams)
+            ..sort((a, b) => b.createdDate.compareTo(a.createdDate));
           break;
         case FilterType.oldest:
         default:
@@ -68,7 +91,11 @@ class _CommunityState extends State<Community> {
   void _onFilterSelected(FilterType filter) {
     setState(() {
       _selectedFilter = filter;
-      _applyFilter();
+      if (_selectedFilter == FilterType.commented) {
+        _fetchTeamsWithComments();
+      } else {
+        _applyFilter();
+      }
     });
   }
 
@@ -166,18 +193,19 @@ class _CommunityState extends State<Community> {
                                   child: Column(
                                     children: [
                                       Expanded(
-                                        child: ListView.builder(
-                                          itemCount: _filteredTeams.length,
-                                          itemBuilder: (context, index) {
-                                            return TeamDisplayMini(
-                                              isCurrentTrainer: false,
-                                              currentTeam: _filteredTeams[index],
-                                              onActionPerformed: () {},
-                                              currentTrainer: widget.currentTrainer,
-                                            );
-                                          },
-                                        ),
-                                      ),
+                                          child: ListView.builder(
+                                        itemCount: _filteredTeams.length,
+                                        itemBuilder: (context, index) {
+                                          return TeamDisplayMini(
+                                            key: UniqueKey(),
+                                            isCurrentTrainer: false,
+                                            currentTeam: _filteredTeams[index],
+                                            onActionPerformed: () {},
+                                            currentTrainer:
+                                                widget.currentTrainer,
+                                          );
+                                        },
+                                      )),
                                     ],
                                   ),
                                 ),
@@ -262,7 +290,8 @@ class _CommunityState extends State<Community> {
                                     style: TextStyle(color: Constants.red),
                                   ),
                                   content: Text(
-                                      'The trainer with username $username was not found.'),
+                                    'The trainer with username $username was not found.',
+                                  ),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
@@ -303,7 +332,8 @@ class _CommunityState extends State<Community> {
       },
       style: ElevatedButton.styleFrom(
         foregroundColor: Constants.white,
-        backgroundColor: _selectedFilter == filter ? Constants.darkRed : Constants.red,
+        backgroundColor:
+            _selectedFilter == filter ? Constants.darkRed : Constants.red,
       ),
       child: Text(text),
     );

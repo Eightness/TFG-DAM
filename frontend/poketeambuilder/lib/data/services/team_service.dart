@@ -302,14 +302,12 @@ class TeamService {
             generation: teamJson['generation'] ?? 0,
             pokemon: pokemonList,
             comments: [],
-            // Assuming comments are empty for now
             trainer: trainer,
           );
 
           if (team.isPublic == true) {
             teams.add(team);
           }
-
         }
 
         print('Status code: ${response.statusCode}');
@@ -339,8 +337,8 @@ class TeamService {
 
   Future<bool> teamExists(String trainerUsername, String teamName) async {
     try {
-      final response = await http.get(
-          Uri.parse('$baseUrl/check/$teamName/$trainerUsername'));
+      final response = await http
+          .get(Uri.parse('$baseUrl/check/$teamName/$trainerUsername'));
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
@@ -370,7 +368,7 @@ class TeamService {
       }
     } catch (e) {
       print('Error liking team: $e');
-      rethrow; // Re-throwing the exception to handle it in the UI layer if necessary
+      rethrow;
     }
   }
 
@@ -389,16 +387,104 @@ class TeamService {
       }
     } catch (e) {
       print('Error disliking team: $e');
-      rethrow; // Re-throwing the exception to handle it in the UI layer if necessary
+      rethrow;
     }
   }
 
-  getMostVotedTeams() {}
+  Future<List<Team>> getTeamsWithComments() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/teams-with-comments'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
 
-  getCommentedTeams() {}
+    print('Response body: ${response.body}');
 
-  getTeamsByGeneration() {}
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final List<dynamic> jsonResponse = jsonDecode(response.body);
 
-  getNewestTeams() {}
+      List<Team> teams = [];
 
+      for (var teamJson in jsonResponse) {
+        if (teamJson == null) {
+          print('Warning: teamJson is null');
+          continue;
+        }
+
+        List<Pokemon> pokemonList = [];
+        if (teamJson['pokemon'] != null) {
+          for (var pokemonJson in teamJson['pokemon']) {
+            if (pokemonJson == null) {
+              print('Warning: pokemonJson is null');
+              continue;
+            }
+            Pokemon pokemon = Pokemon(
+              name: pokemonJson['name'] ?? 'Unknown',
+              spriteUrl: pokemonJson['spriteUrl'] ?? '',
+              item: pokemonJson['item'] ?? '',
+              ability: pokemonJson['ability'] ?? '',
+              nature: pokemonJson['nature'] ?? '',
+              moves: [],
+              ivDef: pokemonJson['ivDef'] ?? 0,
+              ivAtk: pokemonJson['ivAtk'] ?? 0,
+              ivSpDef: pokemonJson['ivSpDef'] ?? 0,
+              ivSpAtk: pokemonJson['ivSpAtk'] ?? 0,
+              ivSpeed: pokemonJson['ivSpeed'] ?? 0,
+              ivHealth: pokemonJson['ivHealth'] ?? 0,
+              evDef: pokemonJson['evDef'] ?? 0,
+              evAtk: pokemonJson['evAtk'] ?? 0,
+              evSpDef: pokemonJson['evSpDef'] ?? 0,
+              evSpAtk: pokemonJson['evSpAtk'] ?? 0,
+              evSpeed: pokemonJson['evSpeed'] ?? 0,
+              evHealth: pokemonJson['evHealth'] ?? 0,
+              isShiny: pokemonJson['isShiny'] ?? false,
+            );
+            pokemonList.add(pokemon);
+          }
+        }
+
+        // Mapping the Trainer details
+        Trainer trainer = Trainer(
+          name: teamJson['trainer']?['name'] ?? '',
+          firstSurname: teamJson['trainer']?['firstSurname'] ?? '',
+          secondSurname: teamJson['trainer']?['secondSurname'] ?? '',
+          email: teamJson['trainer']?['email'] ?? '',
+          phone: teamJson['trainer']?['phone'] ?? '',
+          username: teamJson['trainer']?['username'] ?? '',
+          password: teamJson['trainer']?['password'] ?? '',
+          createdDate: teamJson['trainer']?['createdDate'] != null
+              ? DateTime.parse(teamJson['trainer']['createdDate'])
+              : DateTime.now(),
+          theme: teamJson['trainer']?['theme'] ?? false,
+          bio: teamJson['trainer']?['bio'] ?? '',
+        );
+
+        Team team = Team(
+          name: teamJson['name'] ?? 'Unknown',
+          createdDate: teamJson['createdDate'] != null
+              ? DateTime.parse(teamJson['createdDate'])
+              : DateTime.now(),
+          isPublic: teamJson['isPublic'] ?? false,
+          numLikes: teamJson['numLikes'] ?? 0,
+          generation: teamJson['generation'] ?? 0,
+          pokemon: pokemonList,
+          comments: [],
+          trainer: trainer,
+        );
+
+        if (team.isPublic == true) {
+          teams.add(team);
+        }
+      }
+
+      print('Status code: ${response.statusCode}');
+      return teams;
+    } else {
+      print('Failed to retrieve teams');
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return [];
+    }
+  }
 }

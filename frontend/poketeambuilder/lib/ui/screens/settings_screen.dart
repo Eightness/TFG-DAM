@@ -40,11 +40,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _initializeTheme();
     nameController = TextEditingController(text: widget.currentTrainer.name);
     surnamesController = TextEditingController(
-        text: '${widget.currentTrainer.firstSurname} ${widget.currentTrainer.secondSurname}');
+        text:
+            '${widget.currentTrainer.firstSurname} ${widget.currentTrainer.secondSurname}');
     emailController = TextEditingController(text: widget.currentTrainer.email);
     phoneController = TextEditingController(text: widget.currentTrainer.phone);
-    usernameController = TextEditingController(text: widget.currentTrainer.username);
-    passwordController = TextEditingController(text: widget.currentTrainer.password);
+    usernameController =
+        TextEditingController(text: widget.currentTrainer.username);
+    passwordController =
+        TextEditingController(text: widget.currentTrainer.password);
   }
 
   void _initializeTheme() {
@@ -69,7 +72,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Delete Account'),
-          content: Text('Are you sure you want to delete your account? This action cannot be undone.'),
+          content: Text(
+              'Are you sure you want to delete your account? This action cannot be undone.'),
           actions: [
             TextButton(
               child: Text('Cancel', style: TextStyle(color: Constants.red)),
@@ -80,10 +84,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             TextButton(
               child: Text('Delete', style: TextStyle(color: Constants.red)),
               onPressed: () async {
-                await _trainerService.deleteCurrentTrainer(widget.currentTrainer);
+                await _trainerService
+                    .deleteCurrentTrainer(widget.currentTrainer);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => WelcomeScreen(signIn: SignIn(), register: Register())),
+                  MaterialPageRoute(
+                      builder: (context) => WelcomeScreen(
+                          signIn: SignIn(), register: Register())),
                 );
               },
             ),
@@ -144,7 +151,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 automaticallyImplyLeading: false,
                 actions: [
                   PopupMenuButton<MenuItem>(
-                    itemBuilder: (context) => MenuItems.settingsList.map((item) {
+                    itemBuilder: (context) =>
+                        MenuItems.settingsList.map((item) {
                       return PopupMenuItem<MenuItem>(
                         value: item,
                         child: Row(
@@ -157,8 +165,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     }).toList(),
                     onSelected: (item) => onMenuItemSelected(context, item),
-                    // Handle menu item selection
-                    icon: const Icon(Icons.person, color: Colors.white, size: 40),
+                    icon:
+                        const Icon(Icons.person, color: Colors.white, size: 40),
                   ),
                   const SizedBox(width: 5),
                   Text(
@@ -258,13 +266,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               children: [
                                 CircleAvatar(
                                   radius: 50,
-                                  backgroundImage: AssetImage('assets/images/profile_picture.png'),
+                                  backgroundImage: AssetImage(
+                                      'assets/images/profile_picture.png'),
                                 ),
                                 SizedBox(height: 20),
                                 _buildUserInfoField('Name', nameController),
-                                _buildUserInfoField('Surnames', surnamesController),
+                                _buildUserInfoField(
+                                    'Surnames', surnamesController),
                                 _buildUserInfoField('Phone', phoneController),
-                                _buildUserInfoField('Password', passwordController, isPassword: true),
+                                _buildUserInfoField(
+                                    'Password', passwordController,
+                                    isPassword: true),
                                 SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {
@@ -298,7 +310,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.person_off, color: Constants.darkBrown, size: 50.0),
+                              Icon(Icons.person_off,
+                                  color: Constants.darkBrown, size: 50.0),
                               SizedBox(height: 20.0),
                               ElevatedButton(
                                 onPressed: _showDeleteAccountDialog,
@@ -323,7 +336,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildUserInfoField(String label, TextEditingController controller, {bool isEditable = true, bool isPassword = false}) {
+  Widget _buildUserInfoField(String label, TextEditingController controller,
+      {bool isEditable = true, bool isPassword = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
@@ -364,7 +378,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         MaterialPageRoute(
           builder: (context) => ProfileScreen(
             currentTrainer: widget.currentTrainer,
-            editable: true, trainerToSee: widget.currentTrainer,
+            editable: true,
+            trainerToSee: widget.currentTrainer,
           ),
         ),
       );
@@ -372,7 +387,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SettingsScreen(currentTrainer: widget.currentTrainer)));
+              builder: (context) =>
+                  SettingsScreen(currentTrainer: widget.currentTrainer)));
     } else if (item.text == 'Log out') {
       Navigator.push(
         context,
@@ -384,8 +400,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                HomeScreen(team: TeamBuilder(currentTrainer: widget.currentTrainer,), community: Community(currentTrainer: widget.currentTrainer,), currentTrainer: widget.currentTrainer)),
+            builder: (context) => HomeScreen(
+                team: TeamBuilder(
+                  currentTrainer: widget.currentTrainer,
+                ),
+                community: Community(
+                  currentTrainer: widget.currentTrainer,
+                ),
+                currentTrainer: widget.currentTrainer)),
       );
     }
   }
@@ -398,13 +420,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     setState(() {
       widget.currentTrainer.name = name;
-      widget.currentTrainer.firstSurname = surnames.isNotEmpty ? surnames[0] : '';
-      widget.currentTrainer.secondSurname = surnames.length > 1 ? surnames[1] : '';
+      widget.currentTrainer.firstSurname =
+          surnames.isNotEmpty ? surnames[0] : '';
+      widget.currentTrainer.secondSurname =
+          surnames.length > 1 ? surnames[1] : '';
       widget.currentTrainer.phone = phone;
       widget.currentTrainer.password = password;
     });
 
     await _trainerService.updateCurrentTrainer(widget.currentTrainer);
   }
-
 }

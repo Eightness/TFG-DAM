@@ -8,13 +8,15 @@ class PokeAPIService {
   Future<String> fetchPokemonSprite(String pokemonName, bool isShiny) async {
     if (isShiny) {
       try {
-        final response = await http.get(Uri.parse('$_baseUrl/pokemon/${pokemonName.toLowerCase()}'));
+        final response = await http
+            .get(Uri.parse('$_baseUrl/pokemon/${pokemonName.toLowerCase()}'));
 
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
           return data['sprites']['front_shiny'];
         } else {
-          throw Exception('Failed to load Pokémon sprite: ${response.statusCode}');
+          throw Exception(
+              'Failed to load Pokémon sprite: ${response.statusCode}');
         }
       } catch (e) {
         print('Error fetching Pokémon sprite: $e');
@@ -22,13 +24,15 @@ class PokeAPIService {
       }
     } else {
       try {
-        final response = await http.get(Uri.parse('$_baseUrl/pokemon/${pokemonName.toLowerCase()}'));
+        final response = await http
+            .get(Uri.parse('$_baseUrl/pokemon/${pokemonName.toLowerCase()}'));
 
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
           return data['sprites']['front_default'];
         } else {
-          throw Exception('Failed to load Pokémon sprite: ${response.statusCode}');
+          throw Exception(
+              'Failed to load Pokémon sprite: ${response.statusCode}');
         }
       } catch (e) {
         print('Error fetching Pokémon sprite: $e');
@@ -40,11 +44,13 @@ class PokeAPIService {
   // Get Pokémon moves from Pokémon name
   Future<List<String>> fetchPokemonMoves(String pokemonName) async {
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/pokemon/${pokemonName.toLowerCase()}'));
+      final response = await http
+          .get(Uri.parse('$_baseUrl/pokemon/${pokemonName.toLowerCase()}'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         List<dynamic> movesData = data['moves'];
-        List<String> movesList = movesData.map((move) => formatName(move['move']['name'])).toList();
+        List<String> movesList =
+            movesData.map((move) => formatName(move['move']['name'])).toList();
         return movesList;
       } else {
         throw Exception('Failed to load Pokémon moves');
@@ -58,14 +64,18 @@ class PokeAPIService {
   // Get Pokémon abilities from Pokémon name
   Future<List<String>> fetchPokemonAbilities(String pokemonName) async {
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/pokemon/${pokemonName.toLowerCase()}'));
+      final response = await http
+          .get(Uri.parse('$_baseUrl/pokemon/${pokemonName.toLowerCase()}'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         List<dynamic> abilitiesData = data['abilities'];
-        List<String> abilitiesList = abilitiesData.map((ability) => formatName(ability['ability']['name'])).toList();
+        List<String> abilitiesList = abilitiesData
+            .map((ability) => formatName(ability['ability']['name']))
+            .toList();
         return abilitiesList;
       } else {
-        throw Exception('Failed to load Pokémon abilities: ${response.statusCode}');
+        throw Exception(
+            'Failed to load Pokémon abilities: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching Pokémon abilities: $e');
@@ -80,7 +90,8 @@ class PokeAPIService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         List<dynamic> itemList = data['items'];
-        List<String> items = itemList.map((item) => formatName(item['name'])).toList();
+        List<String> items =
+            itemList.map((item) => formatName(item['name'])).toList();
         return items;
       } else {
         throw Exception('Failed to load item options: ${response.statusCode}');
@@ -91,7 +102,6 @@ class PokeAPIService {
     }
   }
 
-
   // Get Pokémon natures
   Future<List<String>> fetchNatures() async {
     try {
@@ -99,7 +109,8 @@ class PokeAPIService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         List<dynamic> natureList = data['results'];
-        List<String> natures = natureList.map((nature) => formatName(nature['name'])).toList();
+        List<String> natures =
+            natureList.map((nature) => formatName(nature['name'])).toList();
         return natures;
       } else {
         throw Exception('Failed to load natures: ${response.statusCode}');
@@ -112,7 +123,8 @@ class PokeAPIService {
 
   Future<List<String>> fetchPokemonNamesByGeneration(int generation) async {
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/generation/$generation'));
+      final response =
+          await http.get(Uri.parse('$_baseUrl/generation/$generation'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -122,7 +134,8 @@ class PokeAPIService {
             .toList();
         return pokemonNames;
       } else {
-        throw Exception('Failed to load Pokémon names for generation: ${response.statusCode}');
+        throw Exception(
+            'Failed to load Pokémon names for generation: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching Pokémon names: $e');
@@ -136,14 +149,17 @@ class PokeAPIService {
       List<String> allPokemonNames = [];
 
       for (int generation = 1; generation <= 9; generation++) {
-        final response = await http.get(Uri.parse('$_baseUrl/generation/$generation/'));
+        final response =
+            await http.get(Uri.parse('$_baseUrl/generation/$generation/'));
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
           List<dynamic> species = data['pokemon_species'];
-          List<String> generationPokemonNames = species.map((pokemon) => formatName(pokemon['name'])).toList();
+          List<String> generationPokemonNames =
+              species.map((pokemon) => formatName(pokemon['name'])).toList();
           allPokemonNames.addAll(generationPokemonNames);
         } else {
-          throw Exception('Failed to load Pokémon names for generation $generation: ${response.statusCode}');
+          throw Exception(
+              'Failed to load Pokémon names for generation $generation: ${response.statusCode}');
         }
       }
 
@@ -163,5 +179,4 @@ class PokeAPIService {
       return word[0].toUpperCase() + word.substring(1);
     }).join(' ');
   }
-
 }

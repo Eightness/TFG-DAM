@@ -69,5 +69,4 @@ class Trainer {
       bio: decodedJson['bio'] as String,
     );
   }
-
 }

@@ -143,18 +143,6 @@ public class TrainerServiceImpl implements GenericCRUDService<TrainerDTO, Long> 
     @Transactional
     public void deleteCurrentTrainer(TrainerDTO trainerDTO) {
         Trainer trainer = trainerRepository.findByUsername(trainerDTO.getUsername());
-        List<Team> teamsFromTrainer = trainer.getTeams();
-        List<Pokemon> currentTeamPokemon;
-
-        for (Team team : teamsFromTrainer) {
-            currentTeamPokemon = team.getPokemon();
-            for (Pokemon pokemon : currentTeamPokemon) {
-                pokemonRepository.delete(pokemon);
-            }
-            currentTeamPokemon.clear();
-        }
-
-        teamRepository.deleteByTrainer(trainer);
 
         trainerRepository.deleteByUsername(trainerDTO.getUsername());
     }

@@ -28,4 +28,5 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Team> findByIsPublicTrue();
     void deleteByNameAndTrainerUsername(String teamName, String trainerUsername);
     void deleteByTrainer(Trainer trainer);
+    List<Team> findAllByCommentsIsNotEmpty();
 }

@@ -10,15 +10,16 @@ class TeamDisplay extends StatefulWidget {
   final Trainer currentTrainer;
   final Team team;
 
-  TeamDisplay({Key? key, required this.currentTrainer, required this.team}) : super(key: key);
+  TeamDisplay({Key? key, required this.currentTrainer, required this.team})
+      : super(key: key);
 
   @override
   _TeamDisplayState createState() => _TeamDisplayState();
 }
 
 class _TeamDisplayState extends State<TeamDisplay> {
-    List<PokemonDisplay> _pokemonDisplayers = [];
-    late List<Pokemon> _pokemonFromTeam;
+  List<PokemonDisplay> _pokemonDisplayers = [];
+  late List<Pokemon> _pokemonFromTeam;
 
   @override
   void initState() {

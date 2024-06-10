@@ -47,15 +47,15 @@ class TrainerService {
         print('Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
         return exists;
-    } else {
-    print('Failed to check username existence');
-    print('Status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
-    return false;
-    }
+      } else {
+        print('Failed to check username existence');
+        print('Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return false;
+      }
     } catch (e) {
-    print('Error checking username existence: $e');
-    return false;
+      print('Error checking username existence: $e');
+      return false;
     }
   }
 
@@ -88,7 +88,8 @@ class TrainerService {
   Future<bool> checkCredentials(String username, String password) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/check-credentials?username=$username&password=$password'),
+        Uri.parse(
+            '$baseUrl/check-credentials?username=$username&password=$password'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -125,7 +126,8 @@ class TrainerService {
         print('Response body: ${response.body}');
         return trainer;
       } else {
-        print('Failed to retrieve trainer with username $username'); // More specific message
+        print(
+            'Failed to retrieve trainer with username $username'); // More specific message
         print('Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
         return null;
@@ -188,5 +190,4 @@ class TrainerService {
       print('Error deleting trainer: $e');
     }
   }
-
 }

@@ -29,7 +29,8 @@ class Register extends StatelessWidget {
             child: Container(
               width: 520,
               height: 540,
-              padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -67,9 +68,11 @@ class Register extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildTextField('Username', controller: usernameController),
+                      _buildTextField('Username',
+                          controller: usernameController),
                       SizedBox(width: 20),
-                      _buildTextField('Password', isPassword: true, controller: passwordController),
+                      _buildTextField('Password',
+                          isPassword: true, controller: passwordController),
                     ],
                   ),
                   SizedBox(height: 20),
@@ -78,7 +81,8 @@ class Register extends StatelessWidget {
                     children: [
                       _buildTextField('Name', controller: nameController),
                       SizedBox(width: 20),
-                      _buildTextField('Surnames', controller: surnamesController),
+                      _buildTextField('Surnames',
+                          controller: surnamesController),
                     ],
                   ),
                   SizedBox(height: 20),
@@ -87,7 +91,8 @@ class Register extends StatelessWidget {
                     children: [
                       _buildTextField('Email', controller: emailController),
                       SizedBox(width: 20),
-                      _buildTextField('Phone', controller: phoneController, onlyDigits: true),
+                      _buildTextField('Phone',
+                          controller: phoneController, onlyDigits: true),
                     ],
                   ),
                   SizedBox(height: 40),
@@ -113,7 +118,9 @@ class Register extends StatelessWidget {
   }
 
   Widget _buildTextField(String labelText,
-      {bool isPassword = false, bool onlyDigits = false, TextEditingController? controller}) {
+      {bool isPassword = false,
+      bool onlyDigits = false,
+      TextEditingController? controller}) {
     return Container(
       width: 200,
       child: TextField(
@@ -129,7 +136,8 @@ class Register extends StatelessWidget {
             borderSide: BorderSide(color: Constants.darkBlue),
           ),
         ),
-        inputFormatters: onlyDigits ? [FilteringTextInputFormatter.digitsOnly] : [],
+        inputFormatters:
+            onlyDigits ? [FilteringTextInputFormatter.digitsOnly] : [],
       ),
     );
   }
@@ -140,23 +148,22 @@ class Register extends StatelessWidget {
       String surnames = surnamesController.text;
       int spaceIndex = surnames.indexOf(' ');
       String firstSurname =
-      spaceIndex != -1 ? surnames.substring(0, spaceIndex) : surnames;
+          spaceIndex != -1 ? surnames.substring(0, spaceIndex) : surnames;
       String secondSurname =
-      spaceIndex != -1 ? surnames.substring(spaceIndex + 1) : '';
+          spaceIndex != -1 ? surnames.substring(spaceIndex + 1) : '';
 
       Trainer newTrainer = Trainer(
-        name: nameController.text,
-        firstSurname: firstSurname,
-        secondSurname: secondSurname,
-        email: emailController.text,
-        phone: phoneController.text,
-        username: usernameController.text,
-        password: passwordController.text,
-        createdDate: DateTime.now(),
-        theme: false,
-        bio:
-        'This is the bio of a trainer. It contains a brief description about the trainer.'
-      );
+          name: nameController.text,
+          firstSurname: firstSurname,
+          secondSurname: secondSurname,
+          email: emailController.text,
+          phone: phoneController.text,
+          username: usernameController.text,
+          password: passwordController.text,
+          createdDate: DateTime.now(),
+          theme: false,
+          bio:
+              'This is the bio of a trainer. It contains a brief description about the trainer.');
 
       bool registered = await _trainerService.registerTrainer(newTrainer);
 
@@ -183,7 +190,6 @@ class Register extends StatelessWidget {
       );
 
       if (registered) {
-        // Clear text fields
         nameController.clear();
         surnamesController.clear();
         emailController.clear();

@@ -80,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }).toList(),
                     onSelected: (item) => onMenuItemSelected(context, item),
-                    // Handle menu item selection
-                    icon: const Icon(Icons.person, color: Colors.white, size: 40),
+                    icon:
+                        const Icon(Icons.person, color: Colors.white, size: 40),
                   ),
                   const SizedBox(width: 5),
                   Text(
@@ -134,7 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
         MaterialPageRoute(
           builder: (context) => ProfileScreen(
             currentTrainer: widget.currentTrainer,
-            editable: true, trainerToSee: widget.currentTrainer,
+            editable: true,
+            trainerToSee: widget.currentTrainer,
           ),
         ),
       );
@@ -142,7 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SettingsScreen(currentTrainer: widget.currentTrainer)));
+              builder: (context) =>
+                  SettingsScreen(currentTrainer: widget.currentTrainer)));
     } else if (item.text == 'Log out') {
       Navigator.push(
         context,

@@ -60,6 +60,12 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
         return trainerTeamMapper.teamsToTeamsDTO(allPublicTeams);
     }
 
+    public List<TeamDTO> getTeamsWithComments() {
+        List<Team> teamsWithComments = teamRepository.findAllByCommentsIsNotEmpty();
+        return trainerTeamMapper.teamsToTeamsDTO(teamsWithComments);
+    }
+
+
     @Override
     public TeamDTO addEntity(TeamDTO EntityDTO) {
         Team team = trainerTeamMapper.teamDTOToTeam(EntityDTO);
@@ -153,6 +159,19 @@ public class TeamServiceImpl implements GenericCRUDService<TeamDTO, Long> {
 
         teamRepository.save(team);
 
+        return trainerTeamMapper.teamToTeamDTO(team);
+    }
+
+    public TeamDTO updateTeam(TeamDTO teamDTO, TeamDTO updatedTeamDTO) {
+        Team team = teamRepository.findByNameAndTrainerUsername(teamDTO.getName(), teamDTO.getTrainer().getUsername());
+        Team updatedTeam = trainerTeamMapper.teamDTOToTeam(updatedTeamDTO);
+
+        team.setName(updatedTeam.getName());
+        team.setPublic(updatedTeam.isPublic());
+        team.setGeneration(updatedTeam.getGeneration());
+        team.setPokemon(updatedTeam.getPokemon());
+
+        teamRepository.save(team);
         return trainerTeamMapper.teamToTeamDTO(team);
     }
 }

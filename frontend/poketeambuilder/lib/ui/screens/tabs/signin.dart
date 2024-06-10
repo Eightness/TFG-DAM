@@ -30,7 +30,8 @@ class SignIn extends StatelessWidget {
             child: Container(
               width: 300,
               height: 460,
-              padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -67,15 +68,17 @@ class SignIn extends StatelessWidget {
                   SizedBox(height: 20),
                   _buildTextField('Username', controller: usernameController),
                   SizedBox(height: 10),
-                  _buildTextField('Password', isPassword: true, controller: passwordController),
+                  _buildTextField('Password',
+                      isPassword: true, controller: passwordController),
                   SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: () async {
                       await _signInTrainer(context);
                     },
                     style: ElevatedButton.styleFrom(
-                        foregroundColor: Constants.white, backgroundColor: Constants.red, fixedSize: Size(200, 35)
-                    ),
+                        foregroundColor: Constants.white,
+                        backgroundColor: Constants.red,
+                        fixedSize: Size(200, 35)),
                     child: Text('Sign In'),
                   ),
                 ],
@@ -90,11 +93,21 @@ class SignIn extends StatelessWidget {
   Future<void> _signInTrainer(BuildContext context) async {
     bool isValid = await _checkCredentials(context);
     if (isValid) {
-      currentTrainer = (await _trainerService.getTrainerByUsername(usernameController.text))!;
+      currentTrainer = (await _trainerService
+          .getTrainerByUsername(usernameController.text))!;
       Constants.isDarkTheme = currentTrainer.theme;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen(team: TeamBuilder(currentTrainer: currentTrainer,), community: Community(currentTrainer: currentTrainer,), currentTrainer: currentTrainer,)),
+        MaterialPageRoute(
+            builder: (context) => HomeScreen(
+                  team: TeamBuilder(
+                    currentTrainer: currentTrainer,
+                  ),
+                  community: Community(
+                    currentTrainer: currentTrainer,
+                  ),
+                  currentTrainer: currentTrainer,
+                )),
       );
     } else {
       showDialog(

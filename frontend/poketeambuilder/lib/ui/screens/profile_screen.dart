@@ -54,9 +54,11 @@ class ProfileScreenState extends State<ProfileScreen> {
       List<Team>? trainerTeams;
 
       if (widget.editable == true) {
-        trainerTeams = await widget._teamService.getTeamsByTrainerUsername(widget.trainerToSee.username);
+        trainerTeams = await widget._teamService
+            .getTeamsByTrainerUsername(widget.trainerToSee.username);
       } else {
-        trainerTeams = await widget._teamService.getPublicTeamsByTrainerUsername(widget.trainerToSee.username);
+        trainerTeams = await widget._teamService
+            .getPublicTeamsByTrainerUsername(widget.trainerToSee.username);
       }
 
       if (trainerTeams != null) {
@@ -113,7 +115,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                       );
                     }).toList(),
                     onSelected: (item) => onMenuItemSelected(context, item),
-                    // Handle menu item selection
                     icon:
                         const Icon(Icons.person, color: Colors.white, size: 40),
                   ),
@@ -225,7 +226,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                     icon: Icon(Icons.edit,
                                                         color: Constants.blue),
                                                     onPressed: () {
-                                                      // Update bio logic
                                                       showDialog(
                                                         context: context,
                                                         builder: (context) {
@@ -252,7 +252,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                                           widget
                                                                               .currentTrainer);
                                                                   setState(
-                                                                      () {}); // Update UI
+                                                                      () {});
                                                                   Navigator.of(
                                                                           context)
                                                                       .pop();
@@ -285,13 +285,15 @@ class ProfileScreenState extends State<ProfileScreen> {
                                               itemCount: _trainerTeams.length,
                                               itemBuilder: (context, index) {
                                                 return TeamDisplayMini(
-                                                  currentTrainer: widget.currentTrainer,
-                                                  isCurrentTrainer: widget.editable,
-                                                  currentTeam: _trainerTeams[index],
-                                                  onActionPerformed: () {
-                                                    loadTrainerTeams();
-                                                  }
-                                                );
+                                                    currentTrainer:
+                                                        widget.currentTrainer,
+                                                    isCurrentTrainer:
+                                                        widget.editable,
+                                                    currentTeam:
+                                                        _trainerTeams[index],
+                                                    onActionPerformed: () {
+                                                      loadTrainerTeams();
+                                                    });
                                               },
                                             ),
                                           ),
@@ -356,7 +358,9 @@ class ProfileScreenState extends State<ProfileScreen> {
         context,
         MaterialPageRoute(
             builder: (context) => HomeScreen(
-                team: TeamBuilder(currentTrainer: widget.currentTrainer,),
+                team: TeamBuilder(
+                  currentTrainer: widget.currentTrainer,
+                ),
                 community: Community(
                   currentTrainer: widget.currentTrainer,
                 ),

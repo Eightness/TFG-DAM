@@ -28,7 +28,6 @@ class Comment {
     };
   }
 
-
   factory Comment.fromJson(String json) {
     final decodedJson = jsonDecode(json) as Map<String, dynamic>;
 
@@ -43,5 +42,4 @@ class Comment {
       team: Team.withName(teamName),
     );
   }
-
 }
